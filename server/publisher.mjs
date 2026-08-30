@@ -1,6 +1,22 @@
 import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { getPublicationConfig, APP_ROOT } from './document-store.mjs';
+import { getPublicationConfig, APP_ROOT } from './project-document-store.mjs';
+
+const PUBLICATION_PATHS = [
+  '.github/workflows/pages.yml',
+  '.gitignore',
+  'README.md',
+  'docs-project',
+  'index.html',
+  'package-lock.json',
+  'package.json',
+  'postcss.config.js',
+  'scripts',
+  'server',
+  'src',
+  'tailwind.config.js',
+  'vite.config.js',
+];
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
@@ -23,6 +39,12 @@ async function runGit(args) {
   return run('git', args);
 }
 
+function githubRepositorySlug(value) {
+  const normalized = String(value || '').replace(/\/+$/, '').replace(/\.git$/i, '');
+  const match = /github\.com[/:]([^/]+\/[^/]+)$/i.exec(normalized);
+  return match?.[1]?.toLowerCase() || '';
+}
+
 export async function publishDocumentation({ push = true } = {}) {
   const buildScript = path.join(APP_ROOT, 'scripts', 'build-site.mjs');
   const build = await run(process.execPath, [buildScript]);
@@ -36,7 +58,10 @@ export async function publishDocumentation({ push = true } = {}) {
     : { code: 1, stdout: '' };
   const publication = await getPublicationConfig();
 
-  if (!push || insideRepository.code !== 0 || remote.code !== 0 || !remote.stdout) {
+  const expectedRepository = githubRepositorySlug(publication.repository);
+  const configuredRepository = githubRepositorySlug(remote.stdout);
+  const canPushCurrentProject = expectedRepository && expectedRepository === configuredRepository;
+  if (!push || insideRepository.code !== 0 || remote.code !== 0 || !remote.stdout || !canPushCurrentProject) {
     return {
       status: 'local-build-ready',
       pushed: false,
@@ -46,7 +71,7 @@ export async function publishDocumentation({ push = true } = {}) {
     };
   }
 
-  const add = await runGit(['add', '--all']);
+  const add = await runGit(['add', '--', ...PUBLICATION_PATHS]);
   if (add.code !== 0) throw new Error(add.stderr || 'Unable to stage documentation changes.');
 
   const stagedDiff = await runGit(['diff', '--cached', '--quiet']);

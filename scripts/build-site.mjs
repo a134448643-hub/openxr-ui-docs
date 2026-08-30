@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { APP_ROOT, DOCS_ROOT, loadDocument } from '../server/document-store.mjs';
+import { APP_ROOT, getDocumentRoot, loadDocument } from '../server/project-document-store.mjs';
 
 const SITE_DIR = path.join(APP_ROOT, 'site-dist');
 
@@ -38,11 +38,12 @@ function assetsForPublishedSite(document) {
 
 const document = await loadDocument();
 if (!document) throw new Error('Document project is not initialized.');
+const docsRoot = await getDocumentRoot();
 await runViteBuild();
 await fs.writeFile(
   path.join(SITE_DIR, 'document-data.json'),
   JSON.stringify(assetsForPublishedSite(document)),
   'utf8',
 );
-await fs.cp(path.join(DOCS_ROOT, 'assets'), path.join(SITE_DIR, 'docs-assets'), { recursive: true });
+await fs.cp(path.join(docsRoot, 'assets'), path.join(SITE_DIR, 'docs-assets'), { recursive: true });
 console.log(`Static documentation site generated at ${SITE_DIR}`);

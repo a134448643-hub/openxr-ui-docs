@@ -18,7 +18,9 @@ npm install
 npm run dev
 ```
 
-打开 `http://127.0.0.1:5173/`。网页中的文字、排版和图片变更会在约 700 ms 后自动保存，顶栏显示“已保存”即代表文件已经写入本地项目目录。
+打开 `http://127.0.0.1:5173/` 后先进入“项目文档工作区”，选择“打开项目”或“新建项目”。`127.0.0.1` 只代表当前电脑，不是公开分享地址。
+
+进入项目后，“使用文档”中的文字、排版和图片变更会在约 700 ms 后自动保存；“开发记录”也会单独自动保存。顶栏显示“已保存”即代表内容已经写入本地文件。
 
 完成编辑后点击“发布”：
 
@@ -35,6 +37,17 @@ npm run build:site
 
 构建结果位于 `site-dist/`，该目录不提交到 Git；GitHub Actions 会在云端重新生成。
 
+## 项目管理
+
+项目主页提供“新建项目”和“打开项目”。每个项目包含两套互相隔离的内容：
+
+- **使用文档**：给其他开发者学习插件功能，支持图文排版、GitHub Pages 发布、复制分享链接和打印/PDF。
+- **开发记录**：记录进度、异常、原因、最近解决方法、存储规则和 AI 交接，只保存在 `.local/`。
+
+当前 OpenXR 项目的公开文档仍位于 `docs-project/`，因此可以继续发布到现有仓库。新建项目先保存到 `.local/projects/<项目标识>/public/`；配置独立 GitHub 仓库前，“发布”只会生成本地站点，不会误推送到 OpenXR 仓库。
+
+“复制分享链接”读取当前项目的 `publication.siteUrl`。OpenXR 项目会复制固定的 GitHub Pages 地址；尚未配置 Pages 的新项目会显示未发布。
+
 ## 文档目录
 
 ```text
@@ -43,6 +56,14 @@ docs-project/
 ├─ manual/              # 每页正文，Markdown，适合 Codex 等 AI 直接编辑
 ├─ layouts/             # 每页排版、块样式、悬浮元素和附件信息
 └─ assets/              # 真实图片文件，按内容哈希去重命名
+```
+
+```text
+.local/
+├─ projects.yaml
+└─ projects/<项目标识>/
+   ├─ public/                     # 新项目的公开文档
+   └─ development/development.md # 私有开发记录，Codex 等 AI 可直接编辑
 ```
 
 磁盘中的正式文档不再是单一 JSON 文件。本地 API 和发布构建内部仍会使用 JSON 传输运行时数据，但它只是程序通信格式，不是需要人工管理的文档文件。
@@ -65,11 +86,11 @@ npm run migrate -- "C:\path\Documentation.json"
 npm ci → npm run build:site → 上传 Pages 构建物 → 部署
 ```
 
-远程仓库建立后，需要在 `docs-project/document.yaml` 的 `publication` 中记录仓库和 Pages 地址。公开页面仅包含只读文档，不包含编辑按钮、本地保存接口或发布按钮。
+远程仓库建立后，需要在项目 `document.yaml` 的 `publication` 中记录仓库和 Pages 地址。发布器还会核对该地址是否与当前 Git 远程仓库一致，不一致时不会推送。公开页面仅包含只读使用文档，不包含项目主页、开发记录、编辑按钮、本地保存接口或发布按钮。
 
-## 其他导出
+## 打印 / PDF
 
-编辑器保留“导出 HTML”和浏览器打印为 PDF 的流程，方便生成离线文件。PDF 是导出结果；GitHub Pages 链接是持续更新的在线版本。
+点击“打印 / PDF”会打开浏览器原生打印窗口，可选择打印机或“另存为 PDF”。GitHub Pages 链接是持续更新的在线版本。
 
 ## 原版本来源
 

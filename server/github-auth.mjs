@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { APP_ROOT, getPublicationConfig } from './document-store.mjs';
+import { APP_ROOT, getPublicationConfig } from './project-document-store.mjs';
 
 let loginProcess = null;
 

@@ -5,7 +5,8 @@ import {
   Check, X, Languages, Loader2, Copy, Sticker, MousePointer2, 
   FileText, Pencil, Eye, UploadCloud, Bold, Underline, Heading, 
   Anchor, ClipboardCopy, FileCode, AlertTriangle, Palette,
-  Maximize2, Minimize2, MoreHorizontal, Save, LogIn
+  Maximize2, Minimize2, MoreHorizontal, Save, LogIn, FolderOpen,
+  FolderPlus, LockKeyhole, Printer, Share2, Home, ExternalLink
 } from 'lucide-react';
 
 // --- 1. Constants & Dictionaries ---
@@ -15,6 +16,18 @@ const UI_TEXT = {
   aiTranslate: { zh: 'AI 全文翻译', en: 'Translate All' },
   translating: { zh: '翻译中...', en: 'Translating...' },
   exportHtml: { zh: '导出 HTML', en: 'Export HTML' },
+  printPdf: { zh: '打印 / PDF', en: 'Print / PDF' },
+  copyShare: { zh: '复制分享链接', en: 'Copy Share Link' },
+  shareCopied: { zh: '分享链接已复制', en: 'Share link copied' },
+  shareUnavailable: { zh: '当前项目还没有分享链接', en: 'This project has no share link yet' },
+  projectHome: { zh: '项目主页', en: 'Projects' },
+  publicDocs: { zh: '使用文档', en: 'Documentation' },
+  development: { zh: '开发记录', en: 'Development' },
+  localOnly: { zh: '仅本机可见', en: 'Local only' },
+  devSaved: { zh: '开发记录已保存', en: 'Development record saved' },
+  devSaving: { zh: '开发记录保存中...', en: 'Saving development record...' },
+  createProject: { zh: '新建项目', en: 'New Project' },
+  openProject: { zh: '打开项目', en: 'Open Project' },
   publish: { zh: '发布', en: 'Publish' },
   publishing: { zh: '发布中...', en: 'Publishing...' },
   githubLogin: { zh: '登录 GitHub', en: 'Sign in to GitHub' },
@@ -525,6 +538,65 @@ const FlowBlock = ({ children, isEditMode, onDelete, onUpdateStyle, style, index
   );
 };
 
+const ProjectHub = ({ workspace, onOpen, onCreate }) => {
+  const [showCreate, setShowCreate] = useState(false);
+  const [name, setName] = useState('');
+  const [id, setId] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  const submit = async (event) => {
+    event.preventDefault();
+    setBusy(true);
+    setError('');
+    try {
+      await onCreate({ name, id });
+    } catch (createError) {
+      setError(createError.message);
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-white px-6 py-10 overflow-auto">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-start justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 text-blue-300 text-sm font-bold mb-3"><BookOpen size={18}/> Local Documentation Studio</div>
+            <h1 className="text-4xl font-black tracking-tight">项目文档工作区</h1>
+            <p className="text-slate-400 mt-3 max-w-2xl">公开使用文档可以发布到 GitHub Pages；开发记录只保存在本机，用于进度、异常、解决方法和 AI 交接。</p>
+          </div>
+          <button onClick={() => setShowCreate(!showCreate)} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold shadow-lg shadow-blue-900/30"><FolderPlus size={18}/> 新建项目</button>
+        </div>
+
+        {showCreate && (
+          <form onSubmit={submit} className="mb-8 bg-slate-900 border border-slate-700 rounded-2xl p-6 grid md:grid-cols-[1fr_1fr_auto] gap-4 items-end">
+            <label className="text-sm text-slate-300">项目名称<input autoFocus value={name} onChange={(event) => setName(event.target.value)} className="mt-2 w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="例如：VR Grab Plugin"/></label>
+            <label className="text-sm text-slate-300">项目标识<input value={id} onChange={(event) => setId(event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))} className="mt-2 w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="vr-grab-plugin"/></label>
+            <button disabled={busy || !name.trim()} className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 rounded-lg font-bold">{busy ? '创建中...' : '创建并打开'}</button>
+            {error && <div className="md:col-span-3 text-red-300 text-sm">{error}</div>}
+          </form>
+        )}
+
+        <div className="grid md:grid-cols-2 gap-5">
+          {(workspace?.projects || []).map((project) => (
+            <article key={project.id} className="bg-slate-900 border border-slate-800 hover:border-blue-500/60 rounded-2xl p-6 transition-colors">
+              <div className="flex items-start justify-between gap-4">
+                <div className="w-11 h-11 rounded-xl bg-blue-600/15 text-blue-300 flex items-center justify-center"><FolderOpen size={22}/></div>
+                {project.publication?.siteUrl ? <a href={project.publication.siteUrl} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white" title="打开分享页面"><ExternalLink size={18}/></a> : <span className="text-xs px-2 py-1 rounded-full bg-amber-400/10 text-amber-300">未发布</span>}
+              </div>
+              <h2 className="text-xl font-bold mt-5">{project.name}</h2>
+              <p className="text-slate-400 text-sm mt-1">{project.docTitle}</p>
+              <div className="flex items-center gap-4 text-xs text-slate-500 mt-5"><span>{project.pageCount} 页</span><span>标识：{project.id}</span></div>
+              <button onClick={() => onOpen(project.id)} className="mt-6 w-full py-2.5 border border-slate-700 hover:bg-white hover:text-slate-950 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"><FolderOpen size={17}/> 打开项目</button>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- 4. Main Application ---
 
 const App = () => {
@@ -549,33 +621,70 @@ const App = () => {
   const [toast, setToast] = useState(null);
   const [confirmModal, setConfirmModal] = useState(null);
   const [anyFloatHovered, setAnyFloatHovered] = useState(false); // [FIX] Global state for float hovering
+  const [workspace, setWorkspace] = useState(null);
+  const [showProjectHub, setShowProjectHub] = useState(!IS_PUBLISHED);
+  const [activeSection, setActiveSection] = useState('docs');
+  const [developmentRecord, setDevelopmentRecord] = useState('');
+  const [developmentPath, setDevelopmentPath] = useState('');
+  const [developmentLoaded, setDevelopmentLoaded] = useState(false);
+  const [developmentSaveState, setDevelopmentSaveState] = useState('saved');
   const [isLoaded, setIsLoaded] = useState(false);
   const [saveState, setSaveState] = useState(IS_PUBLISHED ? 'saved' : 'loading');
   const [isPublishing, setIsPublishing] = useState(false);
   const [githubStatus, setGithubStatus] = useState(null);
   const [isGithubConnecting, setIsGithubConnecting] = useState(false);
   const saveTimerRef = useRef(null);
+  const developmentTimerRef = useRef(null);
   const lastPersistedRef = useRef('');
+  const lastDevelopmentRef = useRef('');
   const latestDocumentRef = useRef(INITIAL_DATA);
   const canvasRef = useRef(null); 
   const apiKey = ""; 
+
+  const applyLoadedDocument = (document) => {
+    const serialized = JSON.stringify(document);
+    lastPersistedRef.current = serialized;
+    latestDocumentRef.current = document;
+    setDocData(document);
+    setActivePageId(document.pages?.[0]?.id || '');
+    setSaveState('saved');
+    setIsLoaded(true);
+  };
+
+  const loadLocalProject = async (nextWorkspace) => {
+    setIsLoaded(false);
+    setDevelopmentLoaded(false);
+    const [documentResponse, developmentResponse] = await Promise.all([
+      fetch('/api/document', { cache: 'no-store' }),
+      fetch('/api/development', { cache: 'no-store' }),
+    ]);
+    if (!documentResponse.ok) throw new Error(`Document load failed (${documentResponse.status})`);
+    if (!developmentResponse.ok) throw new Error(`Development record load failed (${developmentResponse.status})`);
+    const [document, development] = await Promise.all([documentResponse.json(), developmentResponse.json()]);
+    setWorkspace(nextWorkspace);
+    applyLoadedDocument(document);
+    setDevelopmentRecord(development.content || '');
+    setDevelopmentPath(development.path || '');
+    lastDevelopmentRef.current = development.content || '';
+    setDevelopmentSaveState('saved');
+    setDevelopmentLoaded(true);
+  };
 
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
       try {
-        const endpoint = IS_PUBLISHED ? './document-data.json' : '/api/document';
-        const response = await fetch(endpoint, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Document load failed (${response.status})`);
-        const document = await response.json();
-        if (cancelled) return;
-        const serialized = JSON.stringify(document);
-        lastPersistedRef.current = serialized;
-        latestDocumentRef.current = document;
-        setDocData(document);
-        setActivePageId(document.pages?.[0]?.id || '');
-        setSaveState('saved');
-        setIsLoaded(true);
+        if (IS_PUBLISHED) {
+          const response = await fetch('./document-data.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`Document load failed (${response.status})`);
+          const document = await response.json();
+          if (!cancelled) applyLoadedDocument(document);
+          return;
+        }
+        const workspaceResponse = await fetch('/api/workspace', { cache: 'no-store' });
+        if (!workspaceResponse.ok) throw new Error(`Workspace load failed (${workspaceResponse.status})`);
+        const nextWorkspace = await workspaceResponse.json();
+        if (!cancelled) await loadLocalProject(nextWorkspace);
       } catch (error) {
         console.error(error);
         if (!cancelled) {
@@ -644,6 +753,32 @@ const App = () => {
     return () => window.clearTimeout(saveTimerRef.current);
   }, [docData, isLoaded]);
 
+  useEffect(() => {
+    if (!developmentLoaded || IS_PUBLISHED) return undefined;
+    if (developmentRecord === lastDevelopmentRef.current) return undefined;
+    setDevelopmentSaveState('saving');
+    window.clearTimeout(developmentTimerRef.current);
+    developmentTimerRef.current = window.setTimeout(async () => {
+      try {
+        const response = await fetch('/api/development', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: developmentRecord }),
+        });
+        if (!response.ok) {
+          const result = await response.json().catch(() => ({}));
+          throw new Error(result.error || `Development save failed (${response.status})`);
+        }
+        lastDevelopmentRef.current = developmentRecord;
+        setDevelopmentSaveState('saved');
+      } catch (error) {
+        console.error(error);
+        setDevelopmentSaveState('error');
+      }
+    }, 700);
+    return () => window.clearTimeout(developmentTimerRef.current);
+  }, [developmentRecord, developmentLoaded]);
+
   const showToast = (message, type = 'info') => setToast({ message, type });
 
   const saveImmediately = async () => {
@@ -695,6 +830,69 @@ const App = () => {
       setIsGithubConnecting(false);
       showToast(`${getUi('githubUnavailable', lang)}：${error.message}`, 'error');
     }
+  };
+
+  const openWorkspaceProject = async (projectId) => {
+    try {
+      await saveImmediately();
+      const response = await fetch('/api/projects/open', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: projectId }),
+      });
+      const nextWorkspace = await response.json();
+      if (!response.ok) throw new Error(nextWorkspace.error || `Open project failed (${response.status})`);
+      await loadLocalProject(nextWorkspace);
+      await refreshGithubStatus();
+      setActiveSection('docs');
+      setShowProjectHub(false);
+    } catch (error) {
+      console.error(error);
+      showToast(`打开项目失败：${error.message}`, 'error');
+      throw error;
+    }
+  };
+
+  const createWorkspaceProject = async ({ name, id }) => {
+    await saveImmediately();
+    const response = await fetch('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, id }),
+    });
+    const nextWorkspace = await response.json();
+    if (!response.ok) throw new Error(nextWorkspace.error || `Create project failed (${response.status})`);
+    await loadLocalProject(nextWorkspace);
+    await refreshGithubStatus();
+    setActiveSection('docs');
+    setShowProjectHub(false);
+  };
+
+  const copyShareLink = async () => {
+    const project = workspace?.projects?.find((entry) => entry.id === workspace.activeProjectId);
+    const shareUrl = project?.publication?.siteUrl || '';
+    if (!shareUrl) {
+      showToast(getUi('shareUnavailable', lang), 'error');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = shareUrl;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    }
+    showToast(getUi('shareCopied', lang), 'success');
+  };
+
+  const printDocument = () => {
+    setIsEditMode(false);
+    window.setTimeout(() => window.print(), 100);
   };
 
   const updateContent = (fn) => {
@@ -984,6 +1182,21 @@ data.pages.forEach((p, i) => {
   const translateAllText = async () => { setIsTranslating(true); try { const page = docData.content[activePageId]; if (!page) return; const updated = [...page.blocks]; for (let i = 0; i < updated.length; i++) { const b = updated[i]; if (b.type !== 'text' || !b.data.zh) continue; try { const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Translate to English (Unreal Engine context), only output text: "${b.data.zh}"` }] }] }) }); const json = await res.json(); const text = json.candidates?.[0]?.content?.parts?.[0]?.text; if (text) updated[i] = { ...b, data: { ...b.data, en: text.trim() } }; } catch (e) { console.warn(e); } } setDocData(prev => ({ ...prev, content: { ...prev.content, [activePageId]: { ...page, blocks: updated } } })); } catch (err) { showToast("Error", "error"); } finally { setIsTranslating(false); } };
   const translateBlock = async (id) => { setTranslatingBlockId(id); try { const page = docData.content[activePageId]; let textToTranslate = ""; let found = false; const mainBlock = page.blocks.find(b => b.id === id); if (mainBlock) { textToTranslate = mainBlock.data.zh; found = true; } if (!found) { for (const b of page.blocks) { if (b.attachments) { const att = b.attachments.find(a => a.id === id); if (att) { textToTranslate = att.data.zh; found = true; break; } } } } if (!textToTranslate) return; const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Translate to English (Unreal Engine context), only output text: "${textToTranslate}"` }] }] }) }); const json = await res.json(); const text = json.candidates?.[0]?.content?.parts?.[0]?.text; if (text) { updateContent(blocks => blocks.map(b => { if (b.id === id) return { ...b, data: { ...b.data, en: text.trim() } }; if (b.attachments) { return { ...b, attachments: b.attachments.map(a => a.id === id ? { ...a, data: { ...a.data, en: text.trim() } } : a) }; } return b; })); showToast(getUi('translateSuccess', lang), "success"); } } catch (e) { console.warn(e); showToast("翻译失败", "error"); } finally { setTranslatingBlockId(null); } };
 
+  const activeProject = workspace?.projects?.find((project) => project.id === workspace.activeProjectId) || null;
+
+  if (!IS_PUBLISHED && showProjectHub) {
+    if (!workspace) {
+      return <div className="h-screen bg-slate-950 text-white flex items-center justify-center gap-3"><Loader2 className="animate-spin"/> 正在载入项目...</div>;
+    }
+    return (
+      <ProjectHub
+        workspace={workspace}
+        onOpen={openWorkspaceProject}
+        onCreate={createWorkspaceProject}
+      />
+    );
+  }
+
   const blocks = docData.content[activePageId]?.blocks || [];
   const flowBlocks = blocks.filter(b => !b.isFloating);
 
@@ -995,11 +1208,13 @@ data.pages.forEach((p, i) => {
 
       <nav className="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm shrink-0 z-40 print:hidden">
          <div className="p-5 flex items-center gap-3 border-b border-gray-100">
+             {!isViewOnly && <button onClick={() => setShowProjectHub(true)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500" title={getUi('projectHome', lang)}><Home size={17}/></button>}
              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0"><BookOpen size={18}/></div>
-             {!isViewOnly && isEditMode ? <input className="font-bold text-gray-800 bg-transparent outline-none w-full" value={docData.sidebarTitle} onChange={(e) => setDocData({...docData, sidebarTitle: e.target.value})}/> : <div className="font-bold">{docData.sidebarTitle}</div>}
+             {!isViewOnly && isEditMode && activeSection === 'docs' ? <input className="font-bold text-gray-800 bg-transparent outline-none w-full min-w-0" value={docData.sidebarTitle} onChange={(e) => setDocData({...docData, sidebarTitle: e.target.value})}/> : <div className="font-bold truncate">{activeSection === 'development' ? activeProject?.name : docData.sidebarTitle}</div>}
          </div>
+         {!isViewOnly && <div className="p-2 grid grid-cols-2 gap-1 border-b border-gray-100 bg-gray-50"><button onClick={() => setActiveSection('docs')} className={`px-2 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 ${activeSection === 'docs' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><BookOpen size={14}/> {getUi('publicDocs', lang)}</button><button onClick={() => setActiveSection('development')} className={`px-2 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 ${activeSection === 'development' ? 'bg-amber-100 text-amber-800 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><LockKeyhole size={14}/> {getUi('development', lang)}</button></div>}
          <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            {docData.pages.map(p => (
+            {activeSection === 'docs' ? <>{docData.pages.map(p => (
               <div key={p.id} onClick={() => setActivePageId(p.id)} draggable={!isViewOnly && isEditMode} onDragStart={(e) => { setDraggedPageId(p.id); e.dataTransfer.effectAllowed = "move"; }} onDrop={(e) => { e.preventDefault(); if(!draggedPageId || draggedPageId === p.id) return; const ps = [...docData.pages]; const f = ps.findIndex(x=>x.id===draggedPageId); const t = ps.findIndex(x=>x.id===p.id); const [m] = ps.splice(f,1); ps.splice(t,0,m); setDocData(d=>({...d, pages: ps})); setDraggedPageId(null); }} onDragOver={(e) => e.preventDefault()} className={`group flex items-center justify-between w-full px-3 py-2.5 rounded-lg cursor-pointer transition-all ${activePageId === p.id ? 'bg-blue-50 text-blue-700 shadow-sm' : 'hover:bg-gray-100 text-gray-600'}`}>
                 <div className="flex items-center gap-3 overflow-hidden w-full relative">
                    <div className="flex items-center gap-3 overflow-hidden w-full">
@@ -1054,15 +1269,21 @@ data.pages.forEach((p, i) => {
                 </div>
                 {!isViewOnly && isEditMode && activePageId === p.id && !editingPageId && <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"><button onClick={(e) => { e.stopPropagation(); setEditingPageId(p.id); setTempPageTitle(p.title.zh); setTempPageTitleEn(p.title.en || ""); }} className="p-1 hover:bg-blue-200 rounded text-blue-600"><Pencil size={12}/></button><button onClick={(e) => deletePage(p.id, e)} className="p-1 hover:bg-red-200 rounded text-red-500"><Trash2 size={12}/></button></div>}
               </div>
-            ))}
+            ))}</> : (
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
+                <div className="flex items-center gap-2 font-bold text-sm"><LockKeyhole size={16}/> {getUi('localOnly', lang)}</div>
+                <p className="text-xs leading-relaxed mt-2 text-amber-800">开发进度、异常原因、解决方法、项目存储规则和 AI 交接信息只保存在本机。</p>
+                <p className="text-[10px] break-all mt-3 text-amber-700">{developmentPath}</p>
+              </div>
+            )}
          </div>
          <div className="p-4 border-t border-gray-100 bg-gray-50/50 space-y-3">
-             {!isViewOnly && isEditMode && <button onClick={addPage} className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 text-sm hover:border-blue-400 hover:text-blue-600 hover:bg-white transition-all flex items-center justify-center gap-2"><Plus size={14}/> {getUi('newPage', lang)}</button>}
-             <div>
+             {!isViewOnly && isEditMode && activeSection === 'docs' && <button onClick={addPage} className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 text-sm hover:border-blue-400 hover:text-blue-600 hover:bg-white transition-all flex items-center justify-center gap-2"><Plus size={14}/> {getUi('newPage', lang)}</button>}
+             {activeSection === 'docs' && <div>
                 {/* [UPDATE] Added Language Label */}
                 <div className="text-xs font-bold text-gray-500 text-center mb-2">{getUi('langLabel', lang)}</div>
                 <div className="flex bg-white p-1 rounded-lg border shadow-sm">{['zh', 'en', 'bilingual'].map(l => (<button key={l} onClick={() => setLang(l)} className={`flex-1 py-1.5 text-[10px] rounded font-medium uppercase transition-colors ${lang === l ? 'bg-gray-800 text-white shadow' : 'text-gray-400 hover:text-gray-600'}`}>{l}</button>))}</div>
-             </div>
+             </div>}
          </div>
       </nav>
 
@@ -1070,10 +1291,10 @@ data.pages.forEach((p, i) => {
         {/* Header */}
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 z-30 transition-all print:hidden">
           <div className="flex-1 mr-8">
-             {!isViewOnly && isEditMode ? <input className="text-xl font-bold text-gray-800 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none w-full py-1" value={docData.docTitle} onChange={e => setDocData({...docData, docTitle: e.target.value})} placeholder={getUi('docTitlePlaceholder', lang)}/> : <h2 className="text-xl font-bold text-gray-800">{docData.docTitle}</h2>}
+             {activeSection === 'development' ? <div><h2 className="text-xl font-bold text-gray-800">{getUi('development', lang)} · {activeProject?.name}</h2><p className="text-xs text-amber-700 mt-0.5 flex items-center gap-1"><LockKeyhole size={11}/> {getUi('localOnly', lang)}</p></div> : !isViewOnly && isEditMode ? <input className="text-xl font-bold text-gray-800 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none w-full py-1" value={docData.docTitle} onChange={e => setDocData({...docData, docTitle: e.target.value})} placeholder={getUi('docTitlePlaceholder', lang)}/> : <h2 className="text-xl font-bold text-gray-800">{docData.docTitle}</h2>}
           </div>
           <div className="flex items-center gap-4 shrink-0">
-             {!isViewOnly && (
+             {!isViewOnly && (activeSection === 'docs' ? (
                <>
                  <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0"><button onClick={() => setIsEditMode(false)} className={`px-2 py-1.5 text-xs font-bold rounded-md flex gap-1 items-center ${!isEditMode ? 'bg-white shadow-sm' : 'text-gray-400'}`}><Eye size={14}/> {getUi('previewMode', lang)}</button><button onClick={() => setIsEditMode(true)} className={`px-2 py-1.5 text-xs font-bold rounded-md flex gap-1 items-center ${isEditMode ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}><Edit3 size={14}/> {getUi('editMode', lang)}</button></div>
                  <div className="h-6 w-px bg-gray-200 shrink-0"></div>
@@ -1086,19 +1307,41 @@ data.pages.forEach((p, i) => {
                     {isGithubConnecting ? <Loader2 size={15} className="animate-spin"/> : <LogIn size={15}/>}
                     <span>{isGithubConnecting ? getUi('githubConnecting', lang) : githubStatus?.authenticated ? githubStatus.accounts[0] : getUi('githubLogin', lang)}</span>
                   </button>
-                  <button onClick={handleExportHtml} className="w-8 h-8 flex items-center justify-center text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg" title={getUi('exportHtml', lang)}><FileCode size={16}/></button>
+                  <button onClick={copyShareLink} disabled={!activeProject?.publication?.siteUrl} className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 disabled:bg-gray-100 disabled:text-gray-400 rounded-lg" title={getUi('copyShare', lang)}><Share2 size={15}/><span className="hidden 2xl:inline">{getUi('copyShare', lang)}</span></button>
+                  <button onClick={printDocument} className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg" title={getUi('printPdf', lang)}><Printer size={15}/><span className="hidden 2xl:inline">{getUi('printPdf', lang)}</span></button>
                   <button onClick={publishDocument} disabled={isPublishing || saveState === 'error'} className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 transition-all shadow-md text-sm font-bold">
                     {isPublishing ? <Loader2 size={16} className="animate-spin"/> : <UploadCloud size={16}/>} 
                     <span>{isPublishing ? getUi('publishing', lang) : getUi('publish', lang)}</span>
                   </button>
                </>
-             )}
+             ) : (
+               <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold ${developmentSaveState === 'error' ? 'bg-red-50 text-red-700' : developmentSaveState === 'saving' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                 {developmentSaveState === 'saving' ? <Loader2 size={15} className="animate-spin"/> : developmentSaveState === 'error' ? <AlertTriangle size={15}/> : <Save size={15}/>} {developmentSaveState === 'saving' ? getUi('devSaving', lang) : developmentSaveState === 'error' ? getUi('saveError', lang) : getUi('devSaved', lang)}
+               </div>
+             ))}
           </div>
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto bg-[#f3f4f6] relative print:bg-white print:overflow-visible" onContextMenu={(e) => { if(isEditMode) { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, targetBlockId: null }); } }}>
-          {/* FIX: Locked width to A4 (794px) to match export layout */}
+        <div className="flex-1 overflow-auto bg-[#f3f4f6] relative print:bg-white print:overflow-visible" onContextMenu={(e) => { if(activeSection === 'docs' && isEditMode) { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, targetBlockId: null }); } }}>
+          {activeSection === 'development' && !isViewOnly ? (
+            <div className="max-w-5xl min-h-full mx-auto px-8 py-10 flex flex-col">
+              <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-950 shadow-sm">
+                <div className="flex items-center gap-2 font-bold"><LockKeyhole size={18}/> 私有开发记录</div>
+                <p className="mt-2 text-sm leading-relaxed text-amber-800">这里用于记录开发进度、异常现象、原因、最近解决方法、项目存储规则和 AI 交接内容。文件只保存在本机，不会进入 GitHub 或分享页面。</p>
+                <p className="mt-3 text-xs break-all text-amber-700">本地文件：{developmentPath}</p>
+              </div>
+              <textarea
+                value={developmentRecord}
+                onChange={(event) => setDevelopmentRecord(event.target.value)}
+                spellCheck={false}
+                aria-label="开发记录"
+                className="flex-1 min-h-[720px] w-full resize-none rounded-2xl border border-slate-300 bg-white px-8 py-7 font-mono text-[15px] leading-7 text-slate-800 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                placeholder={"# 开发记录\n\n在这里记录当前进度、异常原因和 AI 交接信息……"}
+              />
+            </div>
+          ) : (
+          /* FIX: Locked width to A4 (794px) to match export layout */
           <div ref={canvasRef} className="w-[794px] mx-auto my-12 bg-white min-h-[1000px] shadow-sm border border-gray-200 px-16 py-16 relative print:shadow-none print:border-none print:m-0 print:w-full print:max-w-none">
             <div className="relative z-10 space-y-4">
               {/* FIX: InsertZone top - also receives hidden prop */}
@@ -1151,10 +1394,11 @@ data.pages.forEach((p, i) => {
               ))}
             </div>
           </div>
+          )}
         </div>
 
-        <RightToolbar isEditMode={!isViewOnly && isEditMode} onAdd={addBlock} lang={lang} />
-        {contextMenu && !isViewOnly && (
+        <RightToolbar isEditMode={activeSection === 'docs' && !isViewOnly && isEditMode} onAdd={addBlock} lang={lang} />
+        {activeSection === 'docs' && contextMenu && !isViewOnly && (
           <>
             <div className="fixed inset-0 z-[9998]" onClick={() => setContextMenu(null)} />
             <ContextMenu x={contextMenu.x} y={contextMenu.y} onClose={() => setContextMenu(null)} onAdd={addBlock} targetBlockId={contextMenu.targetBlockId} clipboard={clipboard} onPaste={(tid) => { if(!clipboard) return; const newAtt = { id: `a${Date.now()}`, type: clipboard.type, isFloating: true, layout: { x: contextMenu.relativeX, y: contextMenu.relativeY, width: 150, height: 100 }, data: JSON.parse(JSON.stringify(clipboard.data)), style: { size: 'text-xs', bgColor: '#fffbeb' } }; updateContent(blocks => blocks.map(b => b.id !== tid ? b : { ...b, attachments: [...(b.attachments || []), newAtt] })); }} lang={lang} />

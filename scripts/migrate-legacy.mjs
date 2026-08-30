@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { migrateLegacyDocument } from '../server/document-store.mjs';
+import { migrateLegacyDocument } from '../server/project-document-store.mjs';
 
 const source = process.argv[2];
 if (!source) {

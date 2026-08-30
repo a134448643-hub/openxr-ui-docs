@@ -1,8 +1,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { loadDocument, resolveAssetPath, saveDocument } from './document-store.mjs';
+import { loadDocument, resolveAssetPath, saveDocument } from './project-document-store.mjs';
 import { getGitHubAuthStatus, startGitHubLogin } from './github-auth.mjs';
 import { publishDocumentation } from './publisher.mjs';
+import {
+  createProject,
+  listProjects,
+  openProject,
+  readDevelopmentRecord,
+  writeDevelopmentRecord,
+} from './project-store.mjs';
 
 const CONTENT_TYPES = {
   '.png': 'image/png',
@@ -44,6 +51,34 @@ export function localDocsPlugin() {
       server.middlewares.use(async (request, response, next) => {
         const requestUrl = new URL(request.url, 'http://127.0.0.1');
         try {
+          if (requestUrl.pathname === '/api/workspace' && request.method === 'GET') {
+            const workspace = await listProjects();
+            return sendJson(response, 200, workspace);
+          }
+
+          if (requestUrl.pathname === '/api/projects' && request.method === 'POST') {
+            const body = JSON.parse(await readRequestBody(request));
+            const workspace = await createProject(body);
+            return sendJson(response, 201, workspace);
+          }
+
+          if (requestUrl.pathname === '/api/projects/open' && request.method === 'POST') {
+            const body = JSON.parse(await readRequestBody(request));
+            const workspace = await openProject(body.id);
+            return sendJson(response, 200, workspace);
+          }
+
+          if (requestUrl.pathname === '/api/development' && request.method === 'GET') {
+            const record = await readDevelopmentRecord();
+            return sendJson(response, 200, record);
+          }
+
+          if (requestUrl.pathname === '/api/development' && request.method === 'POST') {
+            const body = JSON.parse(await readRequestBody(request));
+            const record = await writeDevelopmentRecord(body.content);
+            return sendJson(response, 200, record);
+          }
+
           if (requestUrl.pathname === '/api/document' && request.method === 'GET') {
             const document = await loadDocument();
             if (!document) return sendJson(response, 404, { error: 'Document project is not initialized.' });
@@ -73,7 +108,7 @@ export function localDocsPlugin() {
 
           if (requestUrl.pathname.startsWith('/docs-assets/') && request.method === 'GET') {
             const fileName = requestUrl.pathname.slice('/docs-assets/'.length);
-            const assetPath = resolveAssetPath(fileName);
+            const assetPath = await resolveAssetPath(fileName);
             const contents = await fs.readFile(assetPath);
             response.statusCode = 200;
             response.setHeader('Content-Type', CONTENT_TYPES[path.extname(assetPath).toLowerCase()] || 'application/octet-stream');
