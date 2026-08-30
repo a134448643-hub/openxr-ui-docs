@@ -1,0 +1,126 @@
+version: 1
+blockOrder:
+  - b1
+  - b1770631228179
+  - b1769097870950
+  - b1769015769773
+  - b1769097976247
+  - b1769015831025
+  - b1769015850260
+  - b1769097789400
+  - b1769098258075
+  - b1769098710934
+blocks:
+  b1:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: true
+    attachments: []
+  b1770631228179:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769097870950:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769015769773:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769097976247:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769015831025:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769015850260:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769097789400:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769861180642
+        type: image
+        isFloating: true
+        layout:
+          x: 259.82672119140625
+          y: 184.66761779785156
+          width: 259
+          height: 165
+        data:
+          src: assets/336f99af980033f2f75a.png
+        style:
+          size: text-xs
+          bgColor: "#fffbeb"
+  b1769098258075:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769098710934:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []

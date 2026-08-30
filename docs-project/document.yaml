@@ -1,0 +1,33 @@
+schemaVersion: 1
+sidebarTitle: UE5 Documentation
+docTitle: UE5 OpenXR_UI Documentation
+pages:
+  - id: p1769101542580
+    file: manual/01-prerequisites-project-info.md
+    layout: layouts/p1769101542580.yaml
+    title:
+      zh: 前置条件/项目须知
+      en: Prerequisites/Project Info
+  - id: p1
+    file: manual/02-import-project.md
+    layout: layouts/p1.yaml
+    title:
+      zh: 1. 导入项目
+      en: Import Project
+  - id: p1769099094056
+    file: manual/03-quick-setup.md
+    layout: layouts/p1769099094056.yaml
+    title:
+      zh: 2.快速配置
+      en: Quick Setup
+  - id: p2
+    file: manual/04-3-core-functions-introduction.md
+    layout: layouts/p2.yaml
+    title:
+      zh: 3. 核心功能介绍
+      en: 3. Core Functions Introduction
+publication:
+  provider: github-pages
+  account: a134448643-hub
+  repository: https://github.com/a134448643-hub/openxr-ui-docs
+  siteUrl: https://a134448643-hub.github.io/openxr-ui-docs/

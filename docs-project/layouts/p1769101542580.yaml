@@ -1,0 +1,312 @@
+version: 1
+blockOrder:
+  - b1769102094154
+  - b1770631134935
+  - b1770630818555
+  - b1770630691946
+  - b1770630924744
+  - b1769101719820
+  - b1770631382759
+  - b1769101784227
+  - b1770631522831
+  - b1769102137437
+  - b1769102318681
+  - b1769102332387
+  - b1769102693857
+  - b1769102562259
+  - b1769102970651
+  - b1769107144266
+  - b1769772192795
+  - b1769772212293
+  - b1769773154230
+  - b1769101967375
+  - b1769101929413
+  - b1769102275493
+  - b1769860394222
+  - b1769103626628
+  - b1769103749145
+blocks:
+  b1769102094154:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: true
+    attachments: []
+  b1770631134935:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1770630818555:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1770630691946:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1770630924744:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769101719820:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1770631382759:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769101784227:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1770631522831:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769102137437:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769102318681:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: true
+    attachments: []
+  b1769102332387:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769102693857:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769102562259:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769107020869
+        type: image
+        isFloating: true
+        layout:
+          x: 407.5
+          y: 31
+          width: 262
+          height: 326
+        data:
+          src: assets/6829459609682ebd9175.png
+  b1769102970651:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769107144266:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769772192795:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      weight: font-bold
+      color: "#dc2626"
+      decoration: none
+      isSectionHeader: true
+    attachments: []
+  b1769772212293:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-bold
+      color: "#d97706"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769773154230:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769101967375:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      weight: font-bold
+      color: "#dc2626"
+      decoration: none
+      isSectionHeader: true
+    attachments: []
+  b1769101929413:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-bold
+      color: "#d97706"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769102275493:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-bold
+      color: "#d97706"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769860394222:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-bold
+      color: "#d97706"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769103626628:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-bold
+      color: "#d97706"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769103749145:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769107417371
+        type: text
+        isFloating: true
+        layout:
+          x: 228.5
+          y: 21.890625
+          width: 355
+          height: 88
+        data:
+          zh: 红色箭头，小方块手势轮廓为Pico手势真实骨骼位置
+          en: Red Arrow, Small Square Gesture Outline is the Pico Gesture Actual Skeleton
+            Position
+      - id: a1769107427039
+        type: text
+        isFloating: true
+        layout:
+          x: 237.5
+          y: 459.890625
+          width: 410
+          height: 90
+        data:
+          zh: 蓝色箭头为Openxr手势,Quest手势骨骼可以严丝合缝的匹配
+          en: The blue arrow is the OpenXR Hand Pose, and the Quest hand skeleton can
+            flawlessly match.

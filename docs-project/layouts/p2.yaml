@@ -1,0 +1,208 @@
+version: 1
+blockOrder:
+  - b1769098930999
+  - b1769098949033
+  - b1769107957809
+  - b1769108002406
+  - b1769108993632
+  - b1769099005408
+  - b1769099062803
+  - b1769104614867
+  - b1769104564180
+  - b1769107515317
+  - b1769107743088
+  - b1769109148024
+  - b1769107912077
+  - b1769109050165
+  - b1769109503054
+blocks:
+  b1769098930999:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: true
+    attachments: []
+  b1769098949033:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769107957809:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769108015121
+        type: image
+        isFloating: true
+        layout:
+          x: 296.5
+          y: -14.890625
+          width: 266
+          height: 100
+        data:
+          src: assets/b6e4bfc012a33d84c66b.png
+  b1769108002406:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769108993632:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769099005408:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769107490377
+        type: image
+        isFloating: true
+        layout:
+          x: 318.5
+          y: -30.890625
+          width: 206
+          height: 127
+        data:
+          src: assets/9b6ac8905f41638bc50e.png
+  b1769099062803:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769104614867:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769104564180:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769107515317:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769107729200
+        type: image
+        isFloating: true
+        layout:
+          x: 327.5
+          y: -45.859375
+          width: 225
+          height: 134
+        data:
+          src: assets/ebcefe4dc9e5d157cd52.png
+  b1769107743088:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769109148024:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769107912077:
+    type: text
+    isFloating: false
+    style:
+      size: text-xl
+      weight: font-bold
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments:
+      - id: a1769109042697
+        type: image
+        isFloating: true
+        layout:
+          x: 345.5
+          y: -46.859375
+          width: 225
+          height: 127
+        data:
+          src: assets/56087b7a886d5a084ded.png
+  b1769109050165:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
+  b1769109503054:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+    attachments: []
