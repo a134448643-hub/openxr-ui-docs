@@ -1,0 +1,19 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),{_electron}=require('C:/Users/10728/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const root=path.resolve(import.meta.dirname,'..'),fixture=path.join(root,'.local/checks/display-response-'+Date.now()),store=path.join(fixture,'.local/project-delivery-state');await fs.mkdir(store,{recursive:true});
+for(const name of ['config.json','source-report.json','latest-copy.json','latest-scan.json','translation-result.json'])await fs.copyFile(path.join(root,'.local/project-delivery-state',name),path.join(store,name));
+const copy=JSON.parse(await fs.readFile(path.join(store,'latest-copy.json'),'utf8'));await fs.mkdir(path.join(store,'jobs'));await fs.writeFile(path.join(store,'jobs',copy.id+'.json'),JSON.stringify(copy));
+let app;
+try{
+ app=await _electron.launch({executablePath:process.env.UE_DESKTOP_TEST_EXE||path.join(root,'node_modules/electron/dist/electron.exe'),args:process.env.UE_DESKTOP_TEST_EXE?[]:[path.join(root,'desktop/main.mjs')],cwd:root,env:{...process.env,UE_DESKTOP_WORKSPACE:fixture,UE_DESKTOP_SMOKE:'1'},timeout:60000});const page=await app.firstWindow();await page.locator('[data-nav=project-translation]').click();await page.locator('.pt-folder-tree').waitFor();await page.waitForFunction(()=>!document.querySelector('.pt-export-button').disabled);await page.locator('[data-xlate=browse-all]').click();
+ assert.ok(await page.locator('.pt-table tbody [data-pt-row]').count()<=18);assert.equal(await page.locator('.topbar').evaluate(n=>getComputedStyle(n).backdropFilter),'none');
+ const displays=await app.evaluate(({screen})=>screen.getAllDisplays().map(d=>({bounds:d.workArea,scale:d.scaleFactor}))),gpu=await app.evaluate(({app})=>app.getGPUFeatureStatus());assert.match(gpu.gpu_compositing,/disabled/);
+ const samples=[];for(let i=0;i<10;i++){const d=displays[i%displays.length];await app.evaluate(({BrowserWindow},bounds)=>{BrowserWindow.getAllWindows()[0].setBounds({x:bounds.x+20,y:bounds.y+20,width:Math.min(1400,bounds.width-40),height:Math.min(900,bounds.height-40)});},d.bounds);const duration=await page.evaluate(async()=>{const start=performance.now();await new Promise(r=>setTimeout(r,0));return performance.now()-start;});samples.push(duration);}
+ assert.ok(Math.max(...samples)<150,'window positioning must leave renderer responsive');
+ await page.locator('.pt-advanced').evaluate(n=>{n.open=true;n.dispatchEvent(new Event('toggle'));});await page.locator('#pt-copy-name').fill('PreviewOnly');await app.evaluate(({dialog},folder)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[folder]});},fixture);await page.locator('.pt-export-button').click();await page.locator('[data-pt-live=export-confirm]').waitFor({timeout:60000});assert.ok((await page.locator('.pt-output-path').innerText()).includes('PreviewOnly'));assert.equal(await fs.stat(path.join(fixture,'PreviewOnly')).catch(()=>null),null);await page.locator('[data-action=close-modal]').first().click();
+ await page.locator('[data-xlate=tab][data-id=rules]').click();assert.ok(await page.locator('.pt-terms tbody tr').count()>=80);await page.locator('[data-xlate=tab][data-id=translation]').click();await page.locator('.pt-translation-runbar').scrollIntoViewIfNeeded();
+ console.log(JSON.stringify({passed:['software desktop compositor','desktop blur disabled','bounded real project list','display positioning responsiveness','typed project glossary','actual new project preview without creation'],displays:displays.map(d=>({scale:d.scale,width:d.bounds.width,height:d.bounds.height})),gpuCompositing:gpu.gpu_compositing,maxResponseMs:Math.max(...samples),fixture}));
+}finally{if(app)await app.close();}

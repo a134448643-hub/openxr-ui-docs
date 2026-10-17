@@ -1,15 +1,37 @@
 ---
 id: p1769101542580
 title:
-  zh: 前置条件/项目须知
+  zh: 更新说明/项目须知
   en: Prerequisites/Project Info
 ---
 
 <!-- DOCBLOCK id="b1769102094154" type="text" -->
 <!-- ZH -->
-前置条件
+更新说明
 <!-- EN -->
 Prerequisites
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvb3elmhpg2u270" type="text" -->
+<!-- ZH -->
+新增
+1.适配SteamVR手势追踪
+2.添加手势角色基础交互：传送移动，旋转，抓取功能
+3.新增控件交互组件_射线
+常规的远程UI交互，捏合点击UI触发交互
+优化重置
+1.优化蓝图逻辑，简化配置流程。
+2.重置手势模型更新功能，现在只需要调用对应节点，切换对应手势数据资产即可切换手势模型，而不是之前通过切换玩家Pawn。
+3.重置滚动框逻辑，变回模拟鼠标右键拖拽滚动框
+<!-- EN -->
+
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvb3e8xajlphza4" type="text" -->
+<!-- ZH -->
+前置条件
+<!-- EN -->
+
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1770631134935" type="text" -->
@@ -23,29 +45,15 @@ https://www.youtube.com/watch?v=pUs-mc1Vdtw
 
 <!-- DOCBLOCK id="b1770630818555" type="text" -->
 <!-- ZH -->
-PC串流说明
+
 <!-- EN -->
 PC Streaming Instructions
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1770630691946" type="text" -->
-<!-- ZH -->
-Quest
-设备请使用Meta Horizon Link进行PC串流
-Pico
-设备请使用PICO 互联进行PC串流
-不同串流软件对应的Openxr手势差异巨大！
-<!-- EN -->
-Quest 
-devices should use Meta Horizon Link for PC streaming.
-Pico 
-devices should use PICO Connect for PC streaming.
-The OpenXR hand gestures corresponding to different streaming software vary greatly!
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1770630924744" type="text" -->
 <!-- ZH -->
 开发环境说明
+手势追踪识别的精度与设备等硬件设备有关，与项目功能无关。
 <!-- EN -->
 Development Environment Notes
 <!-- /DOCBLOCK -->
@@ -57,31 +65,42 @@ Development Environment Notes
 1. Ensure you have a functioning VR development environment, developer permissions, Unreal Engine VR Streaming/Link setup, and that hand tracking/gestures are working correctly.
 <!-- /DOCBLOCK -->
 
+<!-- DOCBLOCK id="b1791986912346" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+...
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="b1770631382759" type="text" -->
 <!-- ZH -->
-2.此项目必须开启openxr和OpenXRHandTracking，缺少插件蓝图会报错！
+2.此项目必须开启Openxr和OpenXRHandTracking，缺少插件蓝图会报错！
 <!-- EN -->
 2. This project must have OpenXR and OpenXRHandTracking enabled. Blueprints will throw an error if these plugins are missing.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1769101784227" type="text" -->
 <!-- ZH -->
-3.支持UE5.3-5.7，测试平台Quest3/Pico4pro,打包Demo版本为5.6
+3.测试平台Quest3/Pico4pro,打包Demo版本为5.6
 <!-- EN -->
 3.Supports UE 5.3 - 5.7, tested platforms Quest 3 / Pico 4 Pro, packaged demo version is 5.6.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1770631522831" type="text" -->
 <!-- ZH -->
-手势模型
+更换手势模型
 <!-- EN -->
 Gesture Model
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1769102137437" type="text" -->
 <!-- ZH -->
-1.手势模型需要与openxr骨骼相近的模型，包括骨骼坐标旋转
+1.手势模型需要与openxr骨骼相近的模型，并且骨骼坐标旋转统一
 2.需要准备两只手的模型（如何你需要双手UI交互）
+PC串流平台
+Meta Horizon Link
+SteamVR
+PICO 互联
 <!-- EN -->
 1. The gesture model needs to be close to the OpenXR skeleton model, including bone coordinates and rotation.
 2. Two hand models are required (if you need two-hand UI interaction).
@@ -89,46 +108,9 @@ Gesture Model
 
 <!-- DOCBLOCK id="b1769102318681" type="text" -->
 <!-- ZH -->
-项目版本差异/修复
+
 <!-- EN -->
 Project Version Differences / Fixes
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769102332387" type="text" -->
-<!-- ZH -->
-由于虚幻引擎VR模板版本更迭的原因，VR模板变更，节点被弃用，若你使用低版本：5.3→5.7需要手动修复。在 2.快速配置 中会详细教学如何修复！
-<!-- EN -->
-Due to the version iteration of the Unreal Engine VR Template, the VR Template has changed, and nodes have been deprecated. If you are using a lower version: 5.3 -> 5.7, manual repair is required. The detailed instructions on how to repair will be provided in the 2. Quick Configuration section!
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769102693857" type="text" -->
-<!-- ZH -->
-1.BPC_OpenXR手势
-GetMotionControllerData节点，5.5之后变更，5.7被弃用
-需要变更为GetHandTrackingState节点
-<!-- EN -->
-1.BPC_OpenXRGesture
-The `GetMotionControllerData` node was modified after 5.5 and deprecated in 5.7.
-Requires migration/change to the `GetHandTrackingState` node.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769102562259" type="image" -->
-![b1769102562259](../assets/cc279cee8940d4ae8f59.png)
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769102970651" type="text" -->
-<!-- ZH -->
-2.BP_手柄角色（5.7报错）
-UE5.7 VR模板变更，文件夹/蓝图命名变更，导致5.7之前版本的角色索引丢失。
-所以5.7需要重新配置XRPawn 2.快速配置 会详细教学如何配置新的角色
-<!-- EN -->
-2. BP_Controller Character (5.7 Error)
-UE5.7 VR template modifications and folder/Blueprint name changes have resulted in the loss of the character index from pre-5.7 versions.
-Therefore, 5.7 requires the XRPawn to be reconfigured. "2. Quick Configuration" will provide detailed instructions on how to set up the new character.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769107144266" type="image" -->
-![b1769107144266](../assets/f6f7dd2a2d87c2034326.png)
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1769772192795" type="text" -->
@@ -152,7 +134,6 @@ UE5.6之前版本Quest打包安卓手势无效
 
 MetaXR下载链接：
 https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
-
 <!-- EN -->
 Hand gestures fail when packaging Quest for Android in UE versions prior to 5.6.
 
@@ -186,6 +167,15 @@ PICO Notice
 1.PICO Android packaging using version 5.7 results in a crash upon launch on the standalone headset. This is unrelated to the current project, as the issue still occurs even when packaging the official PICO sample project. (As of 2026.1.23)
 <!-- /DOCBLOCK -->
 
+<!-- DOCBLOCK id="b1769102970651" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+2. BP_Controller Character (5.7 Error)
+UE5.7 VR template modifications and folder/Blueprint name changes have resulted in the loss of the character index from pre-5.7 versions.
+Therefore, 5.7 requires the XRPawn to be reconfigured. "2. Quick Configuration" will provide detailed instructions on how to set up the new character.
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="b1769102275493" type="text" -->
 <!-- ZH -->
 2.Pico安卓打包需要picoopenxr/picoxr插件
@@ -203,10 +193,62 @@ PICO Notice
 <!-- DOCBLOCK id="b1769103626628" type="text" -->
 <!-- ZH -->
 4.pico默认手势骨骼与openxr手势骨骼存在偏移，需要手动矫正（已配置对应的数据资产）
+
+项目版本差异/修复
 <!-- EN -->
 4. The default Pico hand skeleton is misaligned with the OpenXR hand skeleton, requiring manual correction (the corresponding Data Asset has been configured)
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769103749145" type="image" -->
-![b1769103749145](../assets/7934883bbd6944b72311.png)
+<!-- DOCBLOCK id="b1769102332387" type="text" -->
+<!-- ZH -->
+由于虚幻引擎VR模板版本更迭的原因，VR模板变更，节点被弃用，若你使用低版本：5.3→5.7需要手动修复。在 2.快速配置 中会详细教学如何修复！
+<!-- EN -->
+Due to the version iteration of the Unreal Engine VR Template, the VR Template has changed, and nodes have been deprecated. If you are using a lower version: 5.3 -> 5.7, manual repair is required. The detailed instructions on how to repair will be provided in the 2. Quick Configuration section!
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="b1769102693857" type="text" -->
+<!-- ZH -->
+1.BPC_OpenXR手势
+GetMotionControllerData节点，5.5之后变更，5.7被弃用
+需要变更为GetHandTrackingState节点
+<!-- EN -->
+1.BPC_OpenXRGesture
+The `GetMotionControllerData` node was modified after 5.5 and deprecated in 5.7.
+Requires migration/change to the `GetHandTrackingState` node.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="a1792076102619" type="text" -->
+<!-- ZH -->
+...
+<!-- EN -->
+
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="a1792076112551" type="image" -->
+![a1792076112551]()
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="a1792076114095" type="text" -->
+<!-- ZH -->
+...
+<!-- EN -->
+
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="bmv9glrhpb1xn" type="image" -->
+![bmv9glrhpb1xn](../assets/cc279cee8940d4ae8f59.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvaulp3uyukcz4o" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvaulp3uw59yam7" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+
 <!-- /DOCBLOCK -->

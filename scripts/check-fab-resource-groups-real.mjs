@@ -1,0 +1,35 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';import {createFabClassification} from '../server/fab-classification.mjs';import {runProcess} from '../server/ue-windows.mjs';const root=process.cwd(),fixture=path.join(root,'.local/checks/fab-groups-'+Date.now()),source=path.join(fixture,'.local/checks/GroupProject'),descriptor=path.join(source,'GroupCheck.uproject'),editor='C:/Program Files/Epic Games/UE_5.3/Engine/Binaries/Win64/UnrealEditor-Cmd.exe';for(const dir of ['Content','Config','Plugins'])await fs.mkdir(path.join(source,dir),{recursive:true});const build=(await fs.readFile('.local/delivery-bridge-build-path.txt','utf8')).trim();await fs.cp(path.join(build,'Plugins/DeliveryVerification'),path.join(source,'Plugins/DeliveryVerification'),{recursive:true});await fs.writeFile(descriptor,JSON.stringify({FileVersion:3,EngineAssociation:'5.3',Plugins:[{Name:'DeliveryVerification',Enabled:true},{Name:'PythonScriptPlugin',Enabled:true},{Name:'EditorScriptingUtilities',Enabled:true}]}));const script=path.join(fixture,'create.py'),created=path.join(fixture,'created.json');await fs.writeFile(script,`import unreal,json,traceback
+r={'success':False}
+try:
+ t=unreal.AssetToolsHelpers.get_asset_tools()
+ skeleton=t.duplicate_asset('SharedSkeleton','/Game/VRUI/Assets/Hands',unreal.load_asset('/Engine/EngineMeshes/SkeletalCube_Skeleton'))
+ loaded=[skeleton]
+ for group in ['CartoonHand','RealisticHand']:
+  folder='/Game/VRUI/Assets/Hands/'+group
+  texture=t.create_asset('T_Hand',folder+'/Textures',unreal.Texture2D,unreal.Texture2DFactoryNew())
+  material=t.create_asset('M_Hand',folder+'/Materials',unreal.Material,unreal.MaterialFactoryNew())
+  expression=unreal.MaterialEditingLibrary.create_material_expression(material,unreal.MaterialExpressionTextureSample,0,0)
+  expression.set_editor_property('texture',texture)
+  mesh=t.duplicate_asset('SK_Hand',folder,unreal.load_asset('/Engine/EngineMeshes/SkeletalCube'))
+  assert unreal.DeliveryVerificationLibrary.set_mesh_group_fixture(mesh,skeleton,material)
+  loaded.extend([texture,material,mesh])
+ ui_texture=t.create_asset('T_UI','/Game/VRUI/Blueprints/GestureUI/Textures',unreal.Texture2D,unreal.Texture2DFactoryNew())
+ ui_material=t.create_asset('M_UI','/Game/VRUI/Blueprints/GestureUI/Materials',unreal.Material,unreal.MaterialFactoryNew())
+ expr=unreal.MaterialEditingLibrary.create_material_expression(ui_material,unreal.MaterialExpressionTextureSample,0,0)
+ expr.set_editor_property('texture',ui_texture)
+ factory=unreal.BlueprintFactory()
+ factory.set_editor_property('parent_class',unreal.StaticMeshComponent)
+ bp=t.create_asset('BP_Interaction','/Game/VRUI/Blueprints/GestureUI',unreal.Blueprint,factory)
+ unreal.BlueprintEditorLibrary.compile_blueprint(bp)
+ cdo=unreal.get_default_object(bp.generated_class())
+ cdo.set_material(0,ui_material)
+ loaded.extend([ui_texture,ui_material,bp])
+ world=t.create_asset('DemoMap','/Game/GroupCheck/Demo',unreal.World,unreal.WorldFactory())
+ assert unreal.EditorAssetLibrary.save_loaded_assets(loaded,False)
+ assert unreal.EditorLoadingAndSavingUtils.save_map(world,'/Game/GroupCheck/Demo/DemoMap')
+ r['success']=True
+except Exception as e:r.update(error=str(e),traceback=traceback.format_exc())
+with open(${JSON.stringify(created)},'w') as f:json.dump(r,f)
+`);const result=await runProcess(editor,[descriptor,'-run=pythonscript','-script='+script,'-unattended','-nop4','-NullRHI','-NoSound','-abslog='+path.join(fixture,'create.log')],{cwd:source,timeout:120000});const made=JSON.parse(await fs.readFile(created));assert.equal(result.code,0);assert.equal(made.success,true,made.traceback);await fs.writeFile(path.join(source,'Config/DefaultEngine.ini'),'[/Script/EngineSettings.GameMapsSettings]\nEditorStartupMap=/Game/GroupCheck/Demo/DemoMap.DemoMap\nGameDefaultMap=/Game/GroupCheck/Demo/DemoMap\n');const options={root:fixture,runner:runProcess,engines:async()=>({items:[{version:'5.3',installed:true,editor}]}),resourceRoot:path.join(root,'desktop/resources/delivery'),launcher:async()=>({})},service=createFabClassification(options);async function wait(id){let last='';for(;;){const j=service.job(id);if(j.phase!==last){last=j.phase;console.log(j.phase);}if(j.status!=='running')return j;await new Promise(r=>setTimeout(r,300));}}
+const legacy=await service.beginPreview({path:descriptor,mode:'feature',modules:{VRUI:'VRUI'}}),legacyPlan=await wait(legacy.jobId);assert.equal(legacyPlan.status,'completed',legacyPlan.error);assert.ok(legacyPlan.plan.collisions>0);const old=await service.apply({planId:legacyPlan.plan.planId,inPlace:true}),flattened=await wait(old.jobId);assert.equal(flattened.status,'completed',flattened.error);
+const next=await service.beginPreview({path:descriptor,mode:'group',modules:{'GroupCheck/VRUI':'VRUI'}}),plan=await wait(next.jobId);assert.equal(plan.status,'completed',plan.error);assert.ok(plan.plan.history.recovered>=10);assert.equal(plan.plan.shared.length,1);assert.equal(plan.plan.shared[0].groups.length,2);assert.equal(plan.plan.shared[0].path.split('/').pop(),'SharedSkeleton');for(const group of ['CartoonHand','RealisticHand']){const match=plan.plan.groups.find(g=>g.label.endsWith('/'+group));assert.ok(match?.bundled);assert.equal(match.count,3);const moves=plan.plan.moves.filter(m=>m.newPath.includes('/'+group+'/'));assert.equal(moves.length,3);assert.ok(moves.some(m=>m.newPath.includes('/Materials/')));assert.ok(moves.some(m=>m.newPath.includes('/Textures/')));}assert.equal(plan.plan.collisions,0);const applied=await service.apply({planId:plan.plan.planId,inPlace:true}),done=await wait(applied.jobId);assert.equal(done.status,'completed',done.error);assert.equal(done.verification.assets.length,11);assert.equal(done.compiler.errors,0);const skeleton=done.verification.assets.find(a=>a.name==='SharedSkeleton');for(const mesh of done.verification.assets.filter(a=>a.class.endsWith('.SkeletalMesh')))assert.ok(mesh.dependencies.includes(skeleton.path));assert.equal(done.verification.assets.filter(a=>a.class.endsWith('.Skeleton')).length,1);assert.ok(done.verification.assets.some(a=>a.path==='/Game/GroupCheck/Demo/DemoMap'));const repeated=await service.beginPreview({path:descriptor,mode:'group',modules:{'GroupCheck/Meshes':'Meshes','GroupCheck/Animations':'Animations','GroupCheck/Components':'Components'}}),again=await wait(repeated.jobId);assert.equal(again.status,'completed',again.error);assert.equal(again.plan.moves.length,0);await fs.writeFile(path.join(root,'.local/last-fab-groups-check.txt'),JSON.stringify({fixture,descriptor,backupPath:done.backupPath,initialBackup:flattened.backupPath}));console.log(JSON.stringify({passed:['two genuine skeletal mesh resource groups','dedicated Materials and Textures stay in group folders','blueprint group stays with its dedicated resources','shared skeleton stored once with both mesh references','legacy flattening recovered from completed records','fresh reload and startup/blueprint checks','repeated grouping plans zero moves'],fixture,assets:11,moved:done.moved}));

@@ -1,0 +1,62 @@
+version: 1
+blockOrder:
+  - b1791904209440
+  - pmv9x7bn81kg12jc
+blocks:
+  b1791904209440:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 1.适配SteamVR手势追踪
+          - type: hardBreak
+          - type: text
+            text: 2.添加手势角色基础交互：传送移动，旋转，抓取功能
+          - type: hardBreak
+          - type: text
+            text: 3.新增控件交互组件_射线
+          - type: hardBreak
+          - type: text
+            text: 常规的远程UI交互，捏合点击UI触发交互
+          - type: hardBreak
+          - type: text
+            text: 4.优化蓝图逻辑，简化配置流程。
+          - type: hardBreak
+          - type: text
+            text: 5.重置手势模型更新功能，现在只需要调用对应节点，切换对应手势数据资产即可切换手势模型，而不是之前通过切换玩家Pawn。
+          - type: hardBreak
+          - type: text
+            text: 6.重置滚动框逻辑，变回模拟鼠标右键拖拽滚动框
+          - type: hardBreak
+          - type: text
+            text: 新增
+      documentOrder:
+        zh: 0
+    attachments: []
+  pmv9x7bn81kg12jc:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 1
+    attachments: []

@@ -5,51 +5,70 @@ blockOrder:
   - b1769101422823
   - b1769110697908
   - b1769110856334
-  - b1769110669099
   - b1769111147376
-  - b1769111406051
   - b1769111480132
   - b1769113229920
   - b1769111571536
-  - b1769112053523
   - b1769113202817
   - b1769111911501
-  - b1769112250592
+  - b1769114443578
   - b1769113251285
+  - b1769114436642
+  - pmvaunl4wu5t4d9t
   - b1769112980660
   - b1769113318494
-  - b1769112988024
   - b1769113120549
   - b1769113313515
-  - b1769113566263
   - b1769113874001
   - b1769113896239
   - b1769113969671
   - b1769114011940
   - b1769114156899
-  - b1769114111616
-  - b1769114443578
-  - b1769114436642
 blocks:
   b1769101324105:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 功能验证
+      documentOrder:
+        zh: 0
+        en: 1
     attachments: []
   b1769101324860:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 完成1.导入项目之后
+          - type: hardBreak
+          - type: text
+            text: 更换手柄/手势角色验证是否正常运行
+      documentOrder:
+        zh: 2
+        en: 3
     attachments: []
   b1769101422823:
     type: image
@@ -60,302 +79,199 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 4
     attachments: []
   b1769110697908:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      headingLevel: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 5
+        en: 6
     attachments: []
   b1769110856334:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 7
+        en: 8
     attachments: []
-  b1769110669099:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments:
-      - id: a1769110921987
-        type: image
-        isFloating: true
-        layout:
-          x: 425.5
-          y: 31.515625
-          width: 233
-          height: 320
-        data:
-          src: assets/6829459609682ebd9175.png
   b1769111147376:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
-    attachments: []
-  b1769111406051:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 9
+        en: 10
     attachments: []
   b1769111480132:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      headingLevel: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 11
+        en: 12
     attachments: []
   b1769113229920:
     type: text
     isFloating: false
     style:
       size: text-lg
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 13
+        en: 14
     attachments: []
   b1769111571536:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
-    attachments: []
-  b1769112053523:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 15
+        en: 16
     attachments: []
   b1769113202817:
     type: text
     isFloating: false
     style:
       size: text-lg
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 17
+        en: 18
     attachments: []
   b1769111911501:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
-    attachments: []
-  b1769112250592:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments:
-      - id: a1769861481064
-        type: image
-        isFloating: true
-        layout:
-          x: 1.82672119140625
-          y: 132.75567626953125
-          width: 323
-          height: 222
-        data:
-          src: assets/d0779b3210f8a796b865.png
-        style:
-          size: text-xs
-          bgColor: "#fffbeb"
-  b1769113251285:
-    type: text
-    isFloating: false
-    style:
-      size: text-lg
-      weight: font-bold
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769112980660:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769113318494:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769112988024:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769113120549:
-    type: text
-    isFloating: false
-    style:
-      size: text-lg
-      weight: font-bold
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769113313515:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769113566263:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments:
-      - id: a1769862257691
-        type: image
-        isFloating: true
-        layout:
-          x: 14.82672119140625
-          y: 141.9261474609375
-          width: 322
-          height: 211
-        data:
-          src: assets/63abf76cfe1f7d94d9be.png
-        style:
-          size: text-xs
-          bgColor: "#fffbeb"
-  b1769113874001:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769113896239:
-    type: text
-    isFloating: false
-    style:
-      size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
-      isSectionHeader: true
-    attachments: []
-  b1769113969671:
-    type: text
-    isFloating: false
-    style:
-      size: text-lg
-      weight: font-bold
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769114011940:
-    type: text
-    isFloating: false
-    style:
-      size: text-lg
-      weight: font-bold
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769114156899:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769114111616:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 19
+        en: 20
     attachments: []
   b1769114443578:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#dc2626"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#dc2626"
+              - type: bold
+            text: 注意：该项目没有包含HTAB手部资产，按所需去FAB自行购买！
+      documentOrder:
+        zh: 21
+        en: 22
+    attachments: []
+  b1769113251285:
+    type: text
+    isFloating: false
+    style:
+      size: text-lg
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 23
+        en: 24
     attachments: []
   b1769114436642:
     type: image
@@ -366,4 +282,185 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 25
+    attachments: []
+  pmvaunl4wu5t4d9t:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 26
+    attachments: []
+  b1769112980660:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 27
+        en: 28
+    attachments: []
+  b1769113318494:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 29
+        en: 30
+    attachments: []
+  b1769113120549:
+    type: text
+    isFloating: false
+    style:
+      size: text-lg
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 31
+        en: 32
+    attachments: []
+  b1769113313515:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 33
+        en: 34
+    attachments: []
+  b1769113874001:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 35
+        en: 36
+    attachments: []
+  b1769113896239:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      headingLevel: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 37
+        en: 38
+    attachments: []
+  b1769113969671:
+    type: text
+    isFloating: false
+    style:
+      size: text-lg
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 39
+        en: 40
+    attachments: []
+  b1769114011940:
+    type: text
+    isFloating: false
+    style:
+      size: text-lg
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 41
+        en: 42
+    attachments: []
+  b1769114156899:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 43
+        en: 44
     attachments: []

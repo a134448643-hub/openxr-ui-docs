@@ -1,0 +1,20 @@
+version: 1
+blockOrder:
+  - pmvaunwzklytma04
+blocks:
+  pmvaunwzklytma04:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 0
+    attachments: []

@@ -1,0 +1,252 @@
+version: 1
+blockOrder:
+  - p-component-ui-button-group-0
+  - p-component-ui-button-body-0
+  - p-component-ui-button-group-1
+  - p-component-ui-button-body-1
+  - pmvb21hj5wiiiq9k
+  - pmvb1zzofl302xb3
+  - pmvb23af3mxj1f8h
+  - pmvb20o5rvok4qgs
+  - pmvb20r6h8ca6u60
+blocks:
+  p-component-ui-button-group-0:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 控件设置
+        en: []
+      documentOrder:
+        zh: 0
+    attachments: []
+  p-component-ui-button-body-0:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 按钮名称
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置按钮上显示的文字。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 按钮图像
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置按钮显示的图像纹理。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 最小按压距离（x轴）
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置按钮沿自身 X 轴完成按压所需的距离，用于调整按钮的触发深度。
+        en: []
+      documentOrder:
+        zh: 1
+    attachments: []
+  p-component-ui-button-group-1:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 事件分发器
+        en: []
+      documentOrder:
+        zh: 2
+    attachments: []
+  p-component-ui-button-body-1:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 完成按压时
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 按钮达到设定的按压深度、完成按压时触发，可绑定需要执行的按钮功能。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 取消按压时
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 取消按压并让按钮回弹时触发，可绑定松开按钮后的处理逻辑。
+          - type: hardBreak
+          - type: hardBreak
+        en: []
+      documentOrder:
+        zh: 3
+    attachments: []
+  pmvb21hj5wiiiq9k:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 1
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 需要在运行时添加设置按压按钮UMG样式节点
+          - type: hardBreak
+          - type: text
+            text: 如果需要在蓝图视口看到UI的情况，需要在构造脚本里面添加设置按压按钮UMG样式节点
+      headingLevel: 1
+      documentOrder:
+        zh: 4
+    attachments: []
+  pmvb1zzofl302xb3:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 72
+      documentOrder: 5
+    attachments: []
+  pmvb23af3mxj1f8h:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 6
+    attachments: []
+  pmvb20o5rvok4qgs:
+    type: image
+    isFloating: true
+    style:
+      imageWidth: 72
+      documentOrder: 7
+    layout:
+      x: 342.34827348066295
+      y: 127.33591160220995
+      width: 79.45193370165747
+      height: 70.58453038674033
+      rx: 0.5332527624309392
+      ry: 0.1983425414364641
+      rw: 0.12375690607734807
+      rh: 0.10994475138121547
+    attachments: []
+  pmvb20r6h8ca6u60:
+    type: text
+    isFloating: false
+    style:
+      richText:
+        zh: []
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      documentOrder:
+        zh: 8
+    attachments: []

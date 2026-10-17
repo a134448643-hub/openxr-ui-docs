@@ -1,0 +1,3 @@
+import http from 'node:http';import fs from 'node:fs/promises';import path from 'node:path';
+const file=path.resolve(import.meta.dirname,'../界面原型/ue-ai-devmanager-updated.html');
+http.createServer(async(req,res)=>{const url=new URL(req.url,'http://127.0.0.1');if(!['/','/ue-ai-devmanager-updated.html'].includes(url.pathname)){res.writeHead(404);res.end();return;}try{const html=await fs.readFile(file);res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});res.end(html);}catch(e){res.writeHead(500,{'Content-Type':'text/plain; charset=utf-8'});res.end('管理器页面未生成，请先运行构建脚本。');}}).listen(8771,'127.0.0.1',()=>console.log('UE manager: http://127.0.0.1:8771/ue-ai-devmanager-updated.html'));

@@ -1,0 +1,160 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { DesktopStateStore } from '../desktop/state-store.mjs';
+
+const root = path.resolve(import.meta.dirname, '..');
+const fixture = path.join(root, '.local/checks', `image-paragraph-${Date.now()}`);
+await fs.mkdir(fixture, { recursive: true });
+const temporary = path.join(fixture, 'temp'); await fs.mkdir(temporary);
+process.env.TEMP = temporary; process.env.TMP = temporary;
+process.env.UE_MANAGER_WORKSPACE_ROOT = fixture;
+const { createProject } = await import('../server/project-store.mjs');
+const { saveDocument, loadDocument } = await import('../server/project-document-store.mjs');
+await createProject({ id: 'image-paragraph', name: '图片后续正文验证' });
+const image = { id: 'picture', type: 'image', data: { src: 'data:image/svg+xml;base64,' + Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200"><rect width="640" height="200" fill="gray"/></svg>').toString('base64') }, style: { imageWidth: 48 }, annotations: [{ id: 'keep', type: 'arrow', x1: .1, y1: .1, x2: .5, y2: .5, color: '#dc2626' }], attachments: [] };
+const text = (id, zh, en) => ({ id, type: 'text', data: { zh, en }, style: {}, attachments: [] });
+await saveDocument({ sidebarTitle: '图片编辑', docTitle: '图片后续正文验证', pages: [{ id: 'main', title: { zh: '正文与图片', en: 'Image' } }, { id: 'last-image', title: { zh: '末尾图片', en: 'Last image' } }], content: { main: { blocks: [text('before', '图片前正文', 'Preserve before'), image, text('after', '保留的后续正文', 'Preserve after')] }, 'last-image': { blocks: [{ ...image, id: 'last-picture' }] } } }, 'image-paragraph');
+const originalImage = (await loadDocument('image-paragraph')).content.main.blocks.find(b => b.id === 'picture');
+const store = new DesktopStateStore(path.join(fixture, '.local/desktop-data')); await store.load();
+const project = { id: 'image-project', name: '图片操作测试', path: fixture, ue: '5.3', type: 'UE 工程', imported: true, plugins: [], category: 'uncategorized', status: 'active' };
+await store.set('ue-pm-theme', 'epic-launcher');
+await store.set('ue-nexus-prototype-v1', JSON.stringify({ theme: 'epic-launcher', catalog: [project], order: [project.id], overrides: {}, docsBindings: { [project.id]: 'image-paragraph' } }));
+const require = createRequire(import.meta.url);
+const { _electron } = require('C:/Users/10728/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const launch = () => _electron.launch({ executablePath: process.env.UE_DESKTOP_TEST_EXE || path.join(root, 'node_modules/electron/dist/electron.exe'), args: process.env.UE_DESKTOP_TEST_EXE ? [] : [path.join(root, 'desktop/main.mjs')], cwd: root, env: { ...process.env, UE_DESKTOP_WORKSPACE: fixture, UE_DESKTOP_SMOKE: '1' }, timeout: 60000 });
+let app, page, frame, surface;
+const checks = [], errors = [];
+async function open() {
+  page = await app.firstWindow(); page.setDefaultTimeout(20000); page.on('pageerror', e => errors.push(e.message));
+  await app.evaluate(({ BrowserWindow }) => { const w = BrowserWindow.getAllWindows()[0]; w.webContents.setBackgroundThrottling(false); w.showInactive(); w.setSize(1440, 1000); });
+  await page.locator('[data-project-card="image-project"] [data-action="open-project"]').first().click();
+  await page.locator('[data-action="project-tab"][data-id="documents"]').click();
+  frame = page.frameLocator('#desktop-doc-editor'); surface = frame.locator('.doc-surface');
+  await surface.waitFor();
+  await frame.locator('nav').getByRole('button', { name: 'zh', exact: true }).click();
+  await frame.locator('.doc-scroll[data-document-language="zh"]').waitFor();
+}
+async function flush() { await page.evaluate(() => window.ueDesktopFlush()); return loadDocument('image-paragraph'); }
+async function close() { const done = app.waitForEvent('close', { timeout: 15000 }); await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].close()); await done; app = null; }
+async function selection() { return surface.evaluate(el => { const native = window.getSelection(); const anchor = native?.anchorNode; const host = anchor?.nodeType === 1 ? anchor : anchor?.parentElement; const paragraph = host?.closest('p,h1,h2,h3'); const image = el.querySelector('.doc-image-wrap.is-selected'); return { node: image ? 'documentImage' : undefined, parent: paragraph ? 'paragraph' : host?.tagName?.toLowerCase(), field: paragraph?.dataset.language }; }); }
+async function rightBlank(id) {
+  const row = surface.locator(`[data-image-id="${id}"]`);
+  await row.scrollIntoViewIfNeeded();
+  const size = await row.boundingBox();
+  await row.click({ position: { x: size.width - 12, y: size.height / 2 } });
+}
+try {
+  app = await launch(); await open();
+  // Real pointer and keyboard events exercise both node-view focus and PM focus.
+  await rightBlank('picture');
+  assert.equal((await selection()).parent, 'paragraph');
+  assert.notEqual((await selection()).node, 'documentImage');
+  assert.equal((await flush()).content.main.blocks.filter(b => b.type === 'text').length, 2, 'Blank click reuses the next paragraph');
+  checks.push('right-side blank focuses the next paragraph without selecting the image or adding duplicates');
+  await surface.locator('[data-image-id="picture"] img').click();
+  await page.keyboard.press('Shift+Enter');
+  await page.keyboard.insertText('图片下新增正文');
+  let saved = await flush();
+  let pictureIndex = saved.content.main.blocks.findIndex(b => b.id === 'picture');
+  assert.equal(saved.content.main.blocks[pictureIndex + 1].data.zh, '图片下新增正文');
+  assert.equal(saved.content.main.blocks[pictureIndex + 2].data.zh, '保留的后续正文');
+  assert.equal(saved.content.main.blocks.find(b => b.id === 'after').data.en, 'Preserve after');
+  checks.push('Shift+Enter on a focused image inserts a paragraph before existing text and keeps hidden English');
+  await page.keyboard.press('Shift+Enter'); await page.keyboard.insertText('同段换行');
+  saved = await flush();
+  assert.equal(saved.content.main.blocks[pictureIndex + 1].data.zh, '图片下新增正文\n同段换行');
+  checks.push('Shift+Enter in text retains its normal soft line break');
+  await surface.locator('[data-image-id="picture"] img').click();
+  await surface.evaluate(el => el.focus());
+  await page.keyboard.press('Shift+Enter'); await page.keyboard.insertText('编辑器焦点后续');
+  saved = await flush();
+  assert.equal(saved.content.main.blocks[pictureIndex + 1].data.zh, '编辑器焦点后续');
+  checks.push('Shift+Enter also works with ProseMirror node-selection focus');
+  await surface.locator('[data-image-id="picture"] img').click(); await page.keyboard.press('Enter');
+  assert.equal((await selection()).parent, 'paragraph');
+  await frame.getByRole('button', { name: '撤销', exact: true }).first().click();
+  await frame.getByRole('button', { name: '重做', exact: true }).first().click();
+  assert.equal((await selection()).parent, 'paragraph');
+  checks.push('Enter, undo and redo retain a valid text caret');
+  await frame.getByText('末尾图片', { exact: true }).click();
+  await rightBlank('last-picture'); await page.keyboard.insertText('末尾留白后输入');
+  saved = await flush();
+  assert.equal(saved.content['last-image'].blocks[1].data.zh, '末尾留白后输入');
+  await surface.locator('[data-image-id="last-picture"] img').click(); await page.keyboard.press('Shift+Enter'); await page.keyboard.insertText('末尾图片换行');
+  saved = await flush(); assert.equal(saved.content['last-image'].blocks[1].data.zh, '末尾图片换行');
+  checks.push('a page ending in an image supports blank-click typing and Shift+Enter');
+  const language = async value => { await frame.locator('nav').getByRole('button', { name: value, exact: true }).click(); await frame.locator(`.doc-scroll[data-document-language="${value}"]`).waitFor(); };
+  const sourceSize = await surface.locator('[data-image-id="last-picture"] img').boundingBox();
+  await language('en');
+  const englishPicture = surface.locator('[data-image-id="last-picture"] [data-image-language="en"]');
+  await englishPicture.locator('.doc-image-empty').waitFor();
+  await page.waitForFunction(() => { const d = document.querySelector('#desktop-doc-editor').contentDocument; const e = d.querySelector('[data-image-id="last-picture"] .doc-image-empty'); return e && Math.abs(e.clientWidth / e.clientHeight - 3.2) < .04; });
+  const placeholderSize = await englishPicture.locator('.doc-image-empty').boundingBox();
+  assert.ok(Math.abs(sourceSize.width - placeholderSize.width) < 1 && Math.abs(sourceSize.height - placeholderSize.height) < 1, 'English placeholder matches the Chinese image dimensions');
+  await page.screenshot({ path: path.join(fixture, 'english-placeholder.png') });
+  await englishPicture.locator('.doc-image-empty').click();
+  await englishPicture.getByRole('button', { name: '同步中文图片', exact: true }).click();
+  assert.equal(await englishPicture.locator('img').getAttribute('src'), originalImage.data.src);
+  await englishPicture.getByRole('button', { name: '取消同步中文图片', exact: true }).click();
+  await englishPicture.locator('.doc-image-empty').waitFor();
+  const englishUpload = { name: 'english-test.svg', mimeType: 'image/svg+xml', buffer: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200"><rect width="640" height="200" fill="silver"/><text x="10" y="30">English</text></svg>') };
+  const upload = async () => { await surface.locator('[data-image-id="last-picture"] input[type=file]').setInputFiles(englishUpload); await englishPicture.locator('img').waitFor(); };
+  await upload();
+  saved = await flush();
+  assert.ok(saved.content['last-image'].blocks[0].data.srcEn.startsWith('/docs-assets/'));
+  assert.equal(saved.content['last-image'].blocks[0].data.shareWithEnglish, false);
+  await page.screenshot({ path: path.join(fixture, 'english-upload.png') });
+  const separateEnglish = await englishPicture.locator('img').getAttribute('src');
+  await englishPicture.locator('img').click();
+  await englishPicture.getByRole('button', { name: '同步中文图片', exact: true }).click();
+  await englishPicture.getByRole('button', { name: '取消同步中文图片', exact: true }).click();
+  assert.equal(await englishPicture.locator('img').getAttribute('src'), separateEnglish, 'Canceling sync restores the separately uploaded English image');
+  await englishPicture.getByRole('button', { name: '清除英文图片', exact: true }).click();
+  await englishPicture.locator('.doc-image-empty').waitFor();
+  await language('bilingual');
+  const bilingualImage = surface.locator('[data-image-id="last-picture"]');
+  assert.equal(await bilingualImage.locator('[data-image-language="zh"] img').count(), 1);
+  assert.equal(await bilingualImage.locator('[data-image-language="en"] .doc-image-empty').count(), 1);
+  saved = await flush(); assert.equal(saved.content['last-image'].blocks[0].data.src, originalImage.data.src);
+  await bilingualImage.locator('[data-image-language="zh"] img').click();
+  await bilingualImage.getByRole('button', { name: '悬浮', exact: true }).click();
+  const floating = surface.locator('[data-image-id="last-picture"] .doc-float');
+  const floatingChinese = await floating.locator('img').boundingBox();
+  await floating.getByRole('button', { name: '显示英文配图', exact: true }).click();
+  const floatingPlaceholder = await floating.locator('.doc-image-empty').boundingBox();
+  assert.ok(Math.abs(floatingChinese.width - floatingPlaceholder.width) < 1 && Math.abs(floatingChinese.height - floatingPlaceholder.height) < 1);
+  await floating.getByRole('button', { name: '嵌入正文', exact: true }).click();
+  await language('en'); await upload(); await flush(); await language('zh');
+  checks.push('same-size English placeholder, Chinese sync/cancel, independent English upload/clear, bilingual prompt, floating roundtrip, source preserved');
+  for (const theme of ['dark-unreal', 'light-clean', 'dark-graphite', 'cyber-blue', 'epic-launcher']) {
+    await page.locator('.theme-picker-btn').first().click();
+    await page.locator(`[data-action="set-theme"][data-theme-id="${theme}"]`).first().click();
+    await page.waitForFunction(t => document.querySelector('#desktop-doc-editor')?.contentDocument?.documentElement.dataset.platformTheme === t, theme);
+    if (!await surface.locator('[data-image-id="last-picture"]').isVisible()) await frame.getByText('末尾图片', { exact: true }).click();
+    await language('zh');
+    for (const width of [1000, 1440, 1800]) {
+      await app.evaluate(({ BrowserWindow }, w) => BrowserWindow.getAllWindows()[0].setSize(w, 1000), width);
+      await rightBlank('last-picture'); assert.equal((await selection()).parent, 'paragraph');
+      await surface.locator('[data-image-id="last-picture"] img').click();
+      assert.equal((await selection()).node, 'documentImage');
+      assert.ok(await surface.locator('[data-image-id="last-picture"] .doc-resize').isVisible());
+      await page.keyboard.press('Shift+Enter'); assert.equal((await selection()).parent, 'paragraph');
+      await page.screenshot({ path: path.join(fixture, `${theme}-${width}.png`) });
+    }
+  }
+  checks.push('five themes at 1000/1440/1800: blank click, image selection, resize handle and keyboard continuation');
+  saved = await flush();
+  const keptImage = saved.content.main.blocks.find(b => b.id === 'picture');
+  assert.deepEqual(keptImage.data, originalImage.data); assert.deepEqual(keptImage.annotations, originalImage.annotations);
+  assert.equal(keptImage.style.imageWidth, originalImage.style.imageWidth);
+  const expected = saved;
+  await close(); app = await launch(); await open();
+  assert.deepEqual(await loadDocument('image-paragraph'), expected);
+  checks.push('normal close/restart preserves entered text, image width, annotations and hidden English');
+  assert.deepEqual(errors, []);
+  await close();
+  await fs.writeFile(path.join(fixture, 'report.json'), JSON.stringify({ passed: true, checks, errors, userImagesRead: false, executable: process.env.UE_DESKTOP_TEST_EXE || 'development electron' }, null, 2));
+  console.log(JSON.stringify({ passed: true, checks, fixture }));
+} finally { if (app) await close(); }

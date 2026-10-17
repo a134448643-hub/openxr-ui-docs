@@ -1,0 +1,183 @@
+version: 1
+blockOrder:
+  - p-component-widget-interaction-category-0
+  - p-component-widget-interaction-parameters-0
+  - p-component-widget-interaction-category-1
+  - p-component-widget-interaction-parameters-1
+blocks:
+  p-component-widget-interaction-category-0:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件设置
+        en: []
+      documentOrder:
+        zh: 0
+    attachments: []
+  p-component-widget-interaction-parameters-0:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 检测通道
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置检测 UI 时使用的碰撞通道，需要与目标 UI 的碰撞响应对应。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 交互距离
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置手指触碰 UI 的有效检测距离，超出距离时不触发交互。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 指针索引
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置当前交互指针的编号，用于区分不同的交互指针，组件类别做了编号命名重叠的机制，会获取角色所有控件交互组件自动排序。
+        en: []
+      documentOrder:
+        zh: 1
+    attachments: []
+  p-component-widget-interaction-category-1:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 调试设置
+        en: []
+      documentOrder:
+        zh: 2
+    attachments: []
+  p-component-widget-interaction-parameters-1:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 是否显示调试
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 开启后显示交互调试辅助信息，方便检查指尖位置与检测方向。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 调试球体线条粗细度
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置调试球体的线条粗细。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 调试线条粗细度
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置交互检测调试线的粗细。
+        en: []
+      documentOrder:
+        zh: 3
+    attachments: []

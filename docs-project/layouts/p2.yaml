@@ -21,10 +21,22 @@ blocks:
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 1.组件介绍
+      documentOrder:
+        zh: 0
+        en: 1
     attachments: []
   b1769098949033:
     type: image
@@ -35,16 +47,27 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 2
     attachments: []
   b1769107957809:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: BPC_控件交互组件
+      documentOrder:
+        zh: 3
+        en: 4
     attachments:
       - id: a1769108015121
         type: image
@@ -56,35 +79,85 @@ blocks:
           height: 100
         data:
           src: assets/b6e4bfc012a33d84c66b.png
+        style:
+          documentOrder: 5
   b1769108002406:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件作用：
+          - type: hardBreak
+          - type: text
+            text: 该组件用于与UI控件交互，命中UI切换限制到UI面板上的UI手
+          - type: hardBreak
+          - type: text
+            text: 注意：所以，需要在该组件下面添加一个PoseableMesh UI手并且设置对应骨骼网格体，这非常重要！
+      documentOrder:
+        zh: 6
+        en: 7
     attachments: []
   b1769108993632:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件设置：
+          - type: hardBreak
+          - type: text
+            text: 1.是否为手势交互？：选择你的交互模式
+          - type: hardBreak
+          - type: text
+            text: 2.E_控制器手：判断作用的是左手还是右手
+          - type: hardBreak
+          - type: text
+            text: 3.检测通道：默认与UI通道的UI交互，组件命中UI时切换检测通道（当前命中的UI通道），始终至于第一次命中的UI交互，防止UI重叠的情况下，交互出现异常。
+          - type: hardBreak
+          - type: text
+            text: 4.指针索引：控件组件的编号，用于控件区分命中的是哪种手的控件交互组件
+      documentOrder:
+        zh: 8
+        en: 9
     attachments: []
   b1769099005408:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: BPC_OpenXR手势
+      documentOrder:
+        zh: 10
+        en: 11
     attachments:
       - id: a1769107490377
         type: image
@@ -96,25 +169,101 @@ blocks:
           height: 127
         data:
           src: assets/9b6ac8905f41638bc50e.png
+        style:
+          documentOrder: 12
   b1769099062803:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件作用：
+          - type: hardBreak
+          - type: text
+            text: 1.UE5.6之后可以脱离MetaXR/PICOXR插件的手势组件运行手势功能。
+          - type: hardBreak
+          - type: text
+            text: 2.用于手势追踪，基于Openxr提供的手势骨骼变换，驱动PoseableMesh。
+          - type: hardBreak
+          - type: text
+            text: 注意：所以，该组件需要放置在PoseableMesh下面！这非常重要！
+      documentOrder:
+        zh: 13
+        en: 14
     attachments: []
   b1769104614867:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 该组件通过数据资产设置对应的参数
+          - type: hardBreak
+          - type: text
+            text: 数据资产设置：
+          - type: hardBreak
+          - type: text
+            text: 1.是否开启调试？：
+          - type: hardBreak
+          - type: text
+            text: 基于Openxr提供的26个手势骨骼的变换，生成26个小方块跟随对应手势骨骼，便于参考手势真实的位置。
+          - type: hardBreak
+          - type: text
+            text: 2.E 控制器手：
+          - type: hardBreak
+          - type: text
+            text: 用于判断当前组件驱动的是左手还是右手
+          - type: hardBreak
+          - type: text
+            text: 3.XR手势/自定义骨骼映射：用于匹配Openxr手势骨骼和自定义手势骨骼的名称
+          - type: hardBreak
+          - type: text
+            text: 4.设置手势相对偏移：
+          - type: hardBreak
+          - type: text
+            text: 用于纠正手势骨骼位置注意！该参数仅在pico设备上生效，详细原因看前置条件-PICO须知
+          - type: hardBreak
+          - type: text
+            text: 5.设置手势相对旋转：
+          - type: hardBreak
+          - type: text
+            text: 用于矫正手势模型的整体旋转
+          - type: hardBreak
+          - type: text
+            text: 6.手势骨骼旋转校准：
+          - type: hardBreak
+          - type: text
+            text: 用于矫正手势骨骼的旋转轴向，手势模型所有骨骼需要轴向统一！
+          - type: hardBreak
+          - type: text
+            text: 7.XR手势参照网格体：
+          - type: hardBreak
+          - type: text
+            text: 用于观察Openxr手势的参考小方块模型
+          - type: hardBreak
+          - type: text
+            text: 8.骨骼网格体样式：用于快速定位作用的手势模型文件夹位置
+      documentOrder:
+        zh: 15
+        en: 16
     attachments: []
   b1769104564180:
     type: image
@@ -125,16 +274,27 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 17
     attachments: []
   b1769107515317:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: BPC_UI显示组件
+      documentOrder:
+        zh: 18
+        en: 19
     attachments:
       - id: a1769107729200
         type: image
@@ -146,35 +306,82 @@ blocks:
           height: 134
         data:
           src: assets/ebcefe4dc9e5d157cd52.png
+        style:
+          documentOrder: 20
   b1769107743088:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件作用：
+          - type: hardBreak
+          - type: text
+            text: 添加到手部模型，跟随手移动的UI面板，箭头检测到玩家摄像机时显示UI
+      documentOrder:
+        zh: 21
+        en: 22
     attachments: []
   b1769109148024:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件设置：
+          - type: hardBreak
+          - type: text
+            text: 1.开启调试：是否显示调试_箭头
+          - type: hardBreak
+          - type: text
+            text: 2.显示的UI:添加需要显示的UI Actor
+          - type: hardBreak
+          - type: text
+            text: 3.设置箭头位置：设置玩家摄像头触发UI显示的位置，及箭头位置
+          - type: hardBreak
+          - type: text
+            text: 4.摄像头/箭头检测：设置检测角度阈值，控制触发UI显示/隐藏的灵敏度
+      documentOrder:
+        zh: 23
+        en: 24
     attachments: []
   b1769107912077:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: BPC_通用UI按钮
+      documentOrder:
+        zh: 25
+        en: 26
     attachments:
       - id: a1769109042697
         type: image
@@ -186,23 +393,57 @@ blocks:
           height: 127
         data:
           src: assets/56087b7a886d5a084ded.png
+        style:
+          documentOrder: 27
   b1769109050165:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件作用：
+          - type: hardBreak
+          - type: text
+            text: 一个可以在蓝图里面设置图标/文本/按压距离的UI按钮
+      documentOrder:
+        zh: 28
+        en: 29
     attachments: []
   b1769109503054:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 组件设置：
+          - type: hardBreak
+          - type: text
+            text: 1.按钮名称：生成按钮的名称
+          - type: hardBreak
+          - type: text
+            text: 2.按钮图像：设置按钮的图像
+          - type: hardBreak
+          - type: text
+            text: 3.按压距离（x轴）：按压的距离 值为0禁用按压功能，按压距离为负数-
+      documentOrder:
+        zh: 30
+        en: 31
     attachments: []

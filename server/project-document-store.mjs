@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
 import { APP_ROOT, getProjectDocsRoot } from './project-store.mjs';
+import { normalizeTypography } from './document-typography.mjs';
 
 export { APP_ROOT };
 
@@ -44,7 +45,7 @@ async function readYaml(filePath, fallback = null) {
 
 async function writeAtomic(filePath, contents) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
-  const temporaryPath = `${filePath}.${process.pid}.tmp`;
+  const temporaryPath = `${filePath}.${process.pid}.${crypto.randomUUID()}.tmp`;
   await fs.writeFile(temporaryPath, contents, 'utf8');
   await fs.rename(temporaryPath, filePath);
 }
@@ -99,15 +100,15 @@ async function storeDataUrl(dataUrl, assetDir) {
 function assetReferenceForStorage(source) {
   if (!source) return '';
   if (source.startsWith('/docs-assets/')) {
-    return `assets/${decodeURIComponent(source.slice('/docs-assets/'.length))}`;
+    return `assets/${decodeURIComponent(source.slice('/docs-assets/'.length).split('?')[0])}`;
   }
   return source;
 }
 
-function assetReferenceForApp(source) {
+function assetReferenceForApp(source, projectId) {
   if (!source) return '';
   if (source.startsWith('assets/')) {
-    return `/docs-assets/${encodeURIComponent(source.slice('assets/'.length))}`;
+    return `/docs-assets/${encodeURIComponent(source.slice('assets/'.length))}${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
   }
   return source;
 }
@@ -117,16 +118,16 @@ async function normalizeDocumentAssets(document, assetDir) {
   for (const page of normalized.pages || []) {
     const blocks = normalized.content?.[page.id]?.blocks || [];
     for (const block of blocks) {
-      if (block.type === 'image' && block.data?.src) {
-        block.data.src = block.data.src.startsWith('data:')
-          ? await storeDataUrl(block.data.src, assetDir)
-          : assetReferenceForStorage(block.data.src);
+      if (block.type === 'image') for (const field of ['src', 'srcEn']) if (block.data?.[field]) {
+        block.data[field] = block.data[field].startsWith('data:')
+          ? await storeDataUrl(block.data[field], assetDir)
+          : assetReferenceForStorage(block.data[field]);
       }
       for (const attachment of block.attachments || []) {
-        if (attachment.type === 'image' && attachment.data?.src) {
-          attachment.data.src = attachment.data.src.startsWith('data:')
-            ? await storeDataUrl(attachment.data.src, assetDir)
-            : assetReferenceForStorage(attachment.data.src);
+        if (attachment.type === 'image') for (const field of ['src', 'srcEn']) if (attachment.data?.[field]) {
+          attachment.data[field] = attachment.data[field].startsWith('data:')
+            ? await storeDataUrl(attachment.data[field], assetDir)
+            : assetReferenceForStorage(attachment.data[field]);
         }
       }
     }
@@ -134,18 +135,14 @@ async function normalizeDocumentAssets(document, assetDir) {
   return normalized;
 }
 
-function documentAssetsForApp(document) {
+function documentAssetsForApp(document, projectId) {
   const normalized = structuredClone(document);
   for (const page of normalized.pages || []) {
     const blocks = normalized.content?.[page.id]?.blocks || [];
     for (const block of blocks) {
-      if (block.type === 'image' && block.data?.src) {
-        block.data.src = assetReferenceForApp(block.data.src);
-      }
+      if (block.type === 'image') for (const field of ['src', 'srcEn']) if (block.data?.[field]) block.data[field] = assetReferenceForApp(block.data[field], projectId);
       for (const attachment of block.attachments || []) {
-        if (attachment.type === 'image' && attachment.data?.src) {
-          attachment.data.src = assetReferenceForApp(attachment.data.src);
-        }
+        if (attachment.type === 'image') for (const field of ['src', 'srcEn']) if (attachment.data?.[field]) attachment.data[field] = assetReferenceForApp(attachment.data[field], projectId);
       }
     }
   }
@@ -179,6 +176,9 @@ function serializeLayout(blocks) {
       isFloating: Boolean(block.isFloating),
       style: block.style || {},
       ...(block.layout ? { layout: block.layout } : {}),
+      ...(Array.isArray(block.annotations) ? { annotations: block.annotations } : {}),
+      ...(block.type === 'image' && ['srcEn', 'shareWithEnglish', 'enAnnotations'].some(key => key in (block.data || {}))
+        ? { imageTranslation: Object.fromEntries(['srcEn', 'shareWithEnglish', 'enAnnotations'].filter(key => key in block.data).map(key => [key, block.data[key]])) } : {}),
       attachments: block.attachments || [],
     };
   }
@@ -186,6 +186,7 @@ function serializeLayout(blocks) {
 }
 
 function parsePageMarkdown(markdown) {
+  markdown = String(markdown || '').replaceAll('\r\n', '\n');
   const frontmatterMatch = /^---\n([\s\S]*?)\n---\n?/.exec(markdown);
   const metadata = frontmatterMatch ? YAML.parse(frontmatterMatch[1]) : {};
   const body = frontmatterMatch ? markdown.slice(frontmatterMatch[0].length) : markdown;
@@ -212,7 +213,17 @@ function parsePageMarkdown(markdown) {
   return { metadata, blocks };
 }
 
+const documentWrites = new Map();
 export async function saveDocument(document, projectId) {
+  const key = projectId || '__default__';
+  const snapshot = structuredClone(document);
+  const pending = (documentWrites.get(key) || Promise.resolve()).catch(() => {}).then(() => saveDocumentSnapshot(snapshot, projectId));
+  documentWrites.set(key, pending);
+  try { return await pending; }
+  finally { if (documentWrites.get(key) === pending) documentWrites.delete(key); }
+}
+
+async function saveDocumentSnapshot(document, projectId) {
   const paths = await projectPaths(projectId);
   await ensureProjectDirectories(paths);
   const normalized = await normalizeDocumentAssets(document, paths.assetDir);
@@ -244,13 +255,14 @@ export async function saveDocument(document, projectId) {
     schemaVersion: 1,
     sidebarTitle: normalized.sidebarTitle || '',
     docTitle: normalized.docTitle || '',
+    ...(normalizeTypography(normalized.typography) ? { typography: normalizeTypography(normalized.typography) } : {}),
     pages: manifestPages,
     publication: previousManifest?.publication || {
       provider: 'github-pages', account: '', repository: '', siteUrl: '',
     },
   };
   await writeAtomic(paths.manifestPath, YAML.stringify(manifest));
-  return documentAssetsForApp(normalized);
+  return documentAssetsForApp(normalized, projectId);
 }
 
 export async function loadDocument(projectId) {
@@ -258,6 +270,7 @@ export async function loadDocument(projectId) {
   const manifest = await readYaml(paths.manifestPath, null);
   if (!manifest) return null;
   const document = { sidebarTitle: manifest.sidebarTitle || '', docTitle: manifest.docTitle || '', pages: [], content: {} };
+  if (normalizeTypography(manifest.typography)) document.typography = normalizeTypography(manifest.typography);
 
   for (const manifestPage of manifest.pages || []) {
     const markdownPath = path.join(paths.docsRoot, safeRelativePath(manifestPage.file));
@@ -274,9 +287,7 @@ export async function loadDocument(projectId) {
       const metadata = layout.blocks?.[blockId] || {};
       const attachments = structuredClone(metadata.attachments || []);
       for (const attachment of attachments) {
-        if (attachment.type === 'image' && attachment.data?.src) {
-          attachment.data.src = assetReferenceForApp(attachment.data.src);
-        }
+        if (attachment.type === 'image') for (const field of ['src', 'srcEn']) if (attachment.data?.[field]) attachment.data[field] = assetReferenceForApp(attachment.data[field], projectId);
       }
       blocks.push({
         id: blockId,
@@ -284,8 +295,9 @@ export async function loadDocument(projectId) {
         isFloating: Boolean(metadata.isFloating),
         style: metadata.style || {},
         ...(metadata.layout ? { layout: metadata.layout } : {}),
+        ...(Array.isArray(metadata.annotations) ? { annotations: metadata.annotations } : {}),
         data: contentBlock.type === 'image'
-          ? { src: assetReferenceForApp(contentBlock.data?.src || '') }
+          ? { src: assetReferenceForApp(contentBlock.data?.src || '', projectId), ...(metadata.imageTranslation || {}), ...(metadata.imageTranslation?.srcEn ? { srcEn: assetReferenceForApp(metadata.imageTranslation.srcEn, projectId) } : {}) }
           : contentBlock.data,
         attachments,
       });

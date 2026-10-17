@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
+import {createDeviceMedia} from '../server/vr-device-media.mjs';
+const root=path.resolve('.local/checks/vr-media-cache-'+Date.now()),sdk=path.join(root,'sdk');await fs.mkdir(path.join(sdk,'build-tools/fixture'),{recursive:true});await fs.writeFile(path.join(sdk,'build-tools/fixture/aapt.exe'),'fixture');
+let updated=1,decoded=0,offline=false;const preview='data:image/png;base64,'+Buffer.from('fixture').toString('base64');
+const options={root,imageProcessor:async()=>preview,runner:async(file,args)=>{const command=args.at(-1);if(command.startsWith?.('pm path'))return {code:0,stdout:'package:/data/app/com.fixture/base.apk\n'};if(command.startsWith?.('stat -c'))return {code:offline?1:0,stdout:offline?'':'123:'+updated};if(args.includes('badging'))return {code:0,stdout:"application-label:'Application "+updated+"'\napplication-icon-160:'res/drawable/icon.png'\n"};throw Error('Unexpected fixture command');},binary:async()=>{decoded++;return Buffer.from('fixture');}};
+const connection={adb:path.join(sdk,'platform-tools/adb.exe'),serial:'PICO-1'},body={package:'com.fixture'};
+let media=createDeviceMedia(options);assert.equal((await media.work(connection,body)).name,'Application 1');assert.equal(decoded,3);
+media=createDeviceMedia(options);assert.equal((await media.work(connection,body)).cached,true);assert.equal(decoded,3);assert.equal((await media.cachedApp('PICO-1','com.fixture')).name,'Application 1');
+media.invalidateDevice('PICO-1');assert.equal((await media.work(connection,body)).cached,true);assert.equal(decoded,3);
+updated=2;assert.equal((await media.work(connection,body)).name,'Application 2');assert.equal(decoded,6);
+assert.equal((await media.work({...connection,serial:'QUEST-2'},body)).name,'Application 2');assert.equal(decoded,9);
+offline=true;assert.equal((await media.work(connection,body)).preview,null);assert.equal(decoded,9);
+const report={passed:true,checks:['New backend instance reuses persistent app name/icon without APK resource extraction','Reconnect/refresh invalidates memory but retains valid disk cache','Updated APK timestamp regenerates only changed app metadata','Device caches are isolated; offline/stat failure cannot claim fresh metadata'],simulatedDevice:true,actualDeviceWrites:false};await fs.writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({root,...report}));

@@ -3,83 +3,117 @@ blockOrder:
   - b1
   - b1770631228179
   - b1769097870950
-  - b1769015769773
   - b1769097976247
-  - b1769015831025
   - b1769015850260
   - b1769097789400
   - b1769098258075
   - b1769098710934
+  - pmvaulylw397l0bg
 blocks:
   b1:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 1.项目迁移注意事项
+      documentOrder:
+        zh: 0
+        en: 1
     attachments: []
   b1770631228179:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 由于FAB上传项目命名规范，无法单独上传碰撞预设文件，自行导出配置文件，可以在这里下载：
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: bold
+            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
+      documentOrder:
+        zh: 2
+        en: 3
     attachments: []
   b1769097870950:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
-    attachments: []
-  b1769015769773:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 新建UE5VR模板项目，打开压缩包将VRUI碰撞配置文件复制到新建的项目文件夹
+      documentOrder:
+        zh: 4
+        en: 5
     attachments: []
   b1769097976247:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
-    attachments: []
-  b1769015831025:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 6
+        en: 7
     attachments: []
   b1769015850260:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 8
+        en: 9
     attachments: []
   b1769097789400:
     type: image
@@ -90,6 +124,7 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 10
     attachments:
       - id: a1769861180642
         type: image
@@ -104,15 +139,26 @@ blocks:
         style:
           size: text-xs
           bgColor: "#fffbeb"
+          documentOrder: 11
   b1769098258075:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 导入VRUI碰撞配置文件重启项目，重启完成会看到新增的检测通道
+      documentOrder:
+        zh: 12
+        en: 13
     attachments: []
   b1769098710934:
     type: image
@@ -123,4 +169,21 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 14
+    attachments: []
+  pmvaulylw397l0bg:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 15
     attachments: []

@@ -4,3 +4,8 @@ site-dist/
 .vite/
 .local/
 *.log
+
+# Desktop generated resources and release outputs
+desktop/build/
+desktop/resources/
+release/

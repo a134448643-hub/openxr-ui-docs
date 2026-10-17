@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import YAML from 'yaml';
 
 const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
-export const APP_ROOT = path.resolve(SERVER_DIR, '..');
+export const APP_ROOT = path.resolve(process.env.UE_MANAGER_WORKSPACE_ROOT || path.resolve(SERVER_DIR, '..'));
 export const LOCAL_ROOT = path.join(APP_ROOT, '.local');
 const REGISTRY_PATH = path.join(LOCAL_ROOT, 'projects.yaml');
 

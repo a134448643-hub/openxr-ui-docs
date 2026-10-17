@@ -1,0 +1,54 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {DesktopStateStore} from '../desktop/state-store.mjs';
+const require=createRequire(import.meta.url),{_electron}=require('C:/Users/10728/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const root=path.resolve(import.meta.dirname,'..'),fixture=path.join(root,'.local/checks/translation-desktop-'+Date.now());
+await fs.mkdir(fixture,{recursive:true});
+const store=new DesktopStateStore(path.join(fixture,'.local/desktop-data'));await store.load();
+await store.set('ue-nexus-prototype-v1',JSON.stringify({catalog:[],plugins:[],overrides:{},docsBindings:{}}));
+let app;const errors=[],mutations=[];
+try{
+  app=await _electron.launch({executablePath:process.env.UE_DESKTOP_TEST_EXE||path.join(root,'node_modules/electron/dist/electron.exe'),args:process.env.UE_DESKTOP_TEST_EXE?[]:[path.join(root,'desktop/main.mjs')],cwd:root,env:{...process.env,UE_DESKTOP_WORKSPACE:fixture,UE_DESKTOP_SMOKE:'1'},timeout:60000});
+  const page=await app.firstWindow();page.on('pageerror',error=>errors.push(error.message));
+  await page.locator('[data-nav="project-translation"]').waitFor();
+  const initialOrder=await page.locator('.toolbox-list>[data-nav]').evaluateAll(nodes=>nodes.map(n=>n.dataset.nav));
+  // The hidden Electron window cannot receive native keyboard/drag input.
+  // Real pointer and keyboard gestures are exercised by the browser check.
+  const sortHandle=page.locator('[data-toolbox-grip="project-translation"]');await sortHandle.dispatchEvent('keydown',{key:'ArrowUp',ctrlKey:true,bubbles:true});
+  await page.evaluate(()=>window.ueDesktopFlush());
+  const keyboardOrder=await page.locator('.toolbox-list>[data-nav]').evaluateAll(nodes=>nodes.map(n=>n.dataset.nav));assert.notDeepEqual(keyboardOrder,initialOrder);
+  const stored=JSON.parse(JSON.parse(await fs.readFile(store.file,'utf8')).values['ue-nexus-prototype-v1']);assert.deepEqual(stored.toolboxOrder,keyboardOrder);
+  const dragData=await page.evaluateHandle(()=>new DataTransfer()),dragTarget=page.locator('[data-nav="project-translation"]'),targetBox=await dragTarget.boundingBox();
+  await page.locator('[data-nav="vr-install"]').dispatchEvent('dragstart',{dataTransfer:dragData});
+  await dragTarget.dispatchEvent('dragover',{dataTransfer:dragData,clientY:targetBox.y+2});await dragTarget.dispatchEvent('drop',{dataTransfer:dragData});await dragData.dispose();
+  await page.evaluate(()=>window.ueDesktopFlush());
+  const dragOrder=await page.locator('.toolbox-list>[data-nav]').evaluateAll(nodes=>nodes.map(n=>n.dataset.nav));assert.equal(dragOrder[0],'vr-install');
+  await page.reload();await page.locator('[data-nav="project-translation"]').waitFor();assert.deepEqual(await page.locator('.toolbox-list>[data-nav]').evaluateAll(nodes=>nodes.map(n=>n.dataset.nav)),dragOrder);
+  page.on('request',req=>{if(req.method()==='POST'&&/\/api\/ue\//.test(req.url()))mutations.push(req.url());});
+  await page.locator('[data-nav="project-translation"]').click();
+  await page.locator('.pt-workspace').waitFor();
+  assert.equal(await page.locator('[data-action="desktop-switch-workspace"][data-key="project-translation"]').innerText(),'项目翻译与版本适配');
+  await page.locator('[data-nav="project-translation"]').click();
+  assert.equal(await page.locator('[data-action="desktop-switch-workspace"][data-key="project-translation"]').count(),1);
+  await page.locator('#pt-name-3').fill('GrabTraceDistance');
+  assert.equal(await page.locator('.pt-version-options>label').count(),6);await page.locator('[data-pt-target="5.5"]').check();
+  await page.locator('[data-action="desktop-switch-workspace"][data-key="workspace"]').click();
+  assert.equal(await page.locator('.pt-workspace').count(),0);
+  await page.locator('[data-action="desktop-switch-workspace"][data-key="project-translation"]').click();
+  assert.equal(await page.locator('#pt-tab-translation').getAttribute('aria-selected'),'true');
+  await page.locator('[data-xlate="tab"][data-id="translation"]').click();
+  assert.equal(await page.locator('#pt-name-3').inputValue(),'GrabTraceDistance');
+  await page.locator('[data-xlate="reverse"]').click();assert.equal(await page.locator('#pt-copy-name').inputValue(),'VRHandGesture_ZH_Learning');
+  await page.locator('[data-xlate="reverse"]').click();assert.equal(await page.locator('#pt-name-3').inputValue(),'GrabTraceDistance');
+  await page.locator('[data-xlate="tab"][data-id="fab"]').click();assert.equal(await page.locator('.pt-bundle').count(),2);
+  await page.locator('#pt-product').selectOption('plugin');assert.equal(await page.locator('.pt-bundle').count(),2);
+  await page.locator('[data-xlate="tab"][data-id="translation"]').click();
+  await page.locator('[data-action="desktop-close-workspace"][data-key="project-translation"]').click();
+  assert.equal(await page.locator('.pt-workspace').count(),0);
+  await page.locator('[data-nav="project-translation"]').click();
+  assert.equal(await page.locator('#pt-name-3').inputValue(),'GrabTraceDistance');
+  assert.deepEqual(errors,[]);assert.deepEqual(mutations,[]);
+  console.log(JSON.stringify({passed:['desktop tool entry','deduplicated closable workspace tab','draft preserved across pages','inline six-version selection','no engine mutation requests','toolbox keyboard and drag persistence','order survives reload','bidirectional drafts','Fab content and plugin bundles'],fixture}));
+}finally{await app?.close();}

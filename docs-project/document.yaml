@@ -6,26 +6,62 @@ pages:
     file: manual/01-prerequisites-project-info.md
     layout: layouts/p1769101542580.yaml
     title:
-      zh: 前置条件/项目须知
+      zh: 更新说明/项目须知
       en: Prerequisites/Project Info
+  - id: p1792150504802
+    file: manual/08-new-page.md
+    layout: layouts/p1792150504802.yaml
+    title:
+      zh: 配置流程
+      en: New Page
+  - id: p1792160531812
+    file: manual/12-new-page.md
+    layout: layouts/p1792160531812.yaml
+    title:
+      zh: 手势角色
+      en: New Page
+  - id: p1791987538788
+    file: manual/07-new-page.md
+    layout: layouts/p1791987538788.yaml
+    title:
+      zh: BPC_OpenXR手势
+      en: PAD_GestureConfig
+  - id: p-component-widget-interaction
+    file: manual/09-bpc-widget-interaction.md
+    layout: layouts/p-component-widget-interaction.yaml
+    title:
+      zh: BPC_控件交互组件
+      en: ""
+  - id: p-component-widget-interaction-ray
+    file: manual/10-bpc-widget-interaction-ray.md
+    layout: layouts/p-component-widget-interaction-ray.yaml
+    title:
+      zh: BPC_控件交互组件_射线
+      en: ""
+  - id: p-component-ui-display
+    file: manual/11-bpc-ui-display.md
+    layout: layouts/p-component-ui-display.yaml
+    title:
+      zh: BPC_UI显示组件
+      en: ""
+  - id: p-component-ui-button
+    file: manual/12-bpc-ui-button.md
+    layout: layouts/p-component-ui-button.yaml
+    title:
+      zh: BPC_UI按钮
+      en: ""
   - id: p1
     file: manual/02-import-project.md
     layout: layouts/p1.yaml
     title:
-      zh: 1. 导入项目
+      zh: 项目迁移须知
       en: Import Project
-  - id: p1769099094056
-    file: manual/03-quick-setup.md
-    layout: layouts/p1769099094056.yaml
+  - id: p1792158073395
+    file: manual/10-new-page.md
+    layout: layouts/p1792158073395.yaml
     title:
-      zh: 2.快速配置
-      en: Quick Setup
-  - id: p2
-    file: manual/04-3-core-functions-introduction.md
-    layout: layouts/p2.yaml
-    title:
-      zh: 3. 核心功能介绍
-      en: 3. Core Functions Introduction
+      zh: 低版本须知
+      en: New Page
 publication:
   provider: github-pages
   account: a134448643-hub

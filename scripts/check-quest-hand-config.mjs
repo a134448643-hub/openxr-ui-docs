@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
+import {needsQuestHandTracking,questHandRequirements} from '../server/android-hand-tracking.mjs';
+import {inspectAndroidManifest} from '../server/android-manifest-info.mjs';
+const root=path.resolve('.local/checks/quest-hand-config-'+Date.now());await fs.mkdir(root,{recursive:true});
+const descriptor={Plugins:[{Name:'OpenXRHandTracking',Enabled:true}]};
+assert.equal(needsQuestHandTracking(descriptor,'universal'),true);assert.equal(needsQuestHandTracking(descriptor,'quest'),true);assert.equal(needsQuestHandTracking(descriptor,'pico'),false);assert.equal(needsQuestHandTracking({Plugins:[]},'quest'),false);
+const custom='<!-- project permissions -->\r\n<uses-permission android:name="com.example.custom" />\r\n';
+const combined=questHandRequirements(custom,true);assert.ok(combined.startsWith(custom));assert.equal(combined,questHandRequirements(combined,true));assert.equal(custom,questHandRequirements(combined,false));
+const only='<!-- project hands-only choice -->\n<uses-feature android:name="oculus.software.handtracking" android:required="true" />\n';const handOnly=questHandRequirements(only,true);assert.equal(handOnly.match(/oculus.software.handtracking/g).length,1);assert.ok(handOnly.startsWith(only));assert.match(handOnly,/com.oculus.permission.HAND_TRACKING/);
+const permission='E: manifest\n  E: uses-permission\n    A: android:name="com.oculus.permission.HAND_TRACKING"\n',feature='  E: uses-feature\n    A: android:name="oculus.software.handtracking"\n';
+assert.equal(inspectAndroidManifest(permission+feature).questHandPermission,true);assert.equal(inspectAndroidManifest(permission+feature).questHandFeature,true);assert.equal(inspectAndroidManifest(permission).questHandFeature,false);
+assert.equal(inspectAndroidManifest('E: manifest\n  E: application\n    E: uses-permission\n      A: android:name="com.oculus.permission.HAND_TRACKING"\n').questHandPermission,false);
+const report={passed:true,checks:['Quest and universal declare hands only when project hand plugin is enabled; PICO-only does not get new Quest declarations','Custom requirements and explicit hands-only feature preserved; idempotent and reversible platform additions','Manifest verifier reads root feature/permission; nested invalid declarations cannot pass'],actualUEPackaging:false,actualDeviceWrites:false};await fs.writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({root,...report}));

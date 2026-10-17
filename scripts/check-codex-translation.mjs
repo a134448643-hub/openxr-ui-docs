@@ -1,0 +1,21 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createProjectDelivery} from '../server/ue-project-delivery.mjs';
+const root=path.resolve(import.meta.dirname,'..'),fixture=path.join(root,'.local/checks/translation-api-'+Date.now()),source=path.join(fixture,'.local/checks/Source');
+await fs.mkdir(path.join(source,'Content','中文'),{recursive:true});await fs.mkdir(path.join(source,'Config'));await fs.writeFile(path.join(source,'Sample.uproject'),' {"EngineAssociation":"5.3"}');await fs.writeFile(path.join(source,'Content','中文','BP_手势.uasset'),'unchanged asset');
+let calls=0;const delivery=createProjectDelivery({root:fixture,translator:async({entries})=>{calls++;return entries.map(r=>({id:r.id,text:r.field==='Name'?'Gesture':'Gesture description'}));},translationStatus:async()=>({available:true})});
+await delivery.configure(source);const version=await wait((await delivery.createVersionProjects((await delivery.previewVersionProjects({outputRoot:path.join(fixture,'.local/checks/O'),versions:['5.3']})).planId)).jobId);await delivery.configure(version.descriptorPath);const copy=await delivery.createCopy((await delivery.previewCopy({name:'Copy'})).planId);
+async function wait(id){for(let i=0;i<2000;i++){const task=await delivery.job(id);if(task.status!=='running')return task;await new Promise(r=>setTimeout(r,5));}throw Error('timeout');}
+const copied=await wait(copy.jobId);assert.equal(copied.status,'completed');
+const scan={id:'a840384c-aaaa-4444-bbbb-3c4de9e9ac6f',kind:'editor-scan',status:'completed',copyJobId:copy.jobId,result:{assets:[],entries:[{entryKey:'variable-1',kind:'变量',field:'Name',group:'members',original:'手势',owner:'BP_Test'},{entryKey:'variable-2',kind:'变量',field:'Name',group:'members',original:'手势',owner:'BP_Other'}],warnings:[]}};
+await fs.writeFile(path.join(delivery.store,'latest-scan.json'),JSON.stringify(scan));
+const translated=await wait((await delivery.startTranslation({jobId:copy.jobId,entryKeys:['variable-1']})).jobId);assert.equal(translated.status,'completed');assert.equal(translated.entries.find(r=>r.entryKey==='variable-1').translated,'Gesture');assert.equal(translated.entries.find(r=>r.entryKey==='variable-2').translated,'');assert.equal(translated.translationApplied,false);assert.equal(calls,1);assert.equal(translated.total,1);assert.equal(translated.requestedCount,1);
+const rest=await wait((await delivery.startTranslation({jobId:copy.jobId})).jobId);assert.equal(rest.entries.find(r=>r.entryKey==='variable-2').translated,'Gesture');assert.equal(calls,2,'remaining assets and members share one request');
+await wait((await delivery.startTranslation({jobId:copy.jobId})).jobId);assert.equal(calls,2,'completed result reused rather than charged again');
+await assert.rejects(delivery.startTranslation({jobId:copy.jobId,entryKeys:['unknown-entry']}),/内容已经变化/);
+await assert.rejects(delivery.startTranslation({jobId:copy.jobId,entryKeys:[]}),/范围无效/);
+assert.equal(await fs.readFile(path.join(source,'Content','中文','BP_手势.uasset'),'utf8'),'unchanged asset');assert.equal(await fs.readFile(path.join(copied.target,'Content','中文','BP_手势.uasset'),'utf8'),'unchanged asset');
+await assert.rejects(delivery.startTranslation({jobId:copy.jobId,direction:'invalid'}),/无效/);
+const notConnected=createProjectDelivery({root:fixture,translationStatus:async()=>({available:false,message:'未登录'})});await assert.rejects(notConnected.startTranslation({jobId:copy.jobId,force:true}),/未登录/);
+console.log(JSON.stringify({passed:['Codex translation workflow','deduplicated terms mapped to all fields','persisted results and restart context','retry reuses completed results','no source or working asset mutation','invalid settings and disconnected provider rejected'],fixture}));

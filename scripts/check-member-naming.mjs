@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {normalizeMemberName,enrichMemberRows} from '../server/ue-member-naming.mjs';
+const bool={entryKey:'flag',group:'members',kind:'变量',field:'Name',valueType:'bool',container:'scalar'};
+assert.equal(normalizeMemberName('B_IsTracking',bool),'bIsTracking');
+assert.equal(normalizeMemberName('is_tracking',bool),'bIsTracking');
+assert.equal(normalizeMemberName('Grab Distance',{...bool,valueType:'real'}),'GrabDistance');
+assert.equal(normalizeMemberName('EnabledStates',{...bool,container:'array'}),'EnabledStates');
+assert.equal(normalizeMemberName('识别成功',bool),'识别成功');
+assert.equal(normalizeMemberName('B_IsTracking',bool,{direction:'en-zh'}),'B_IsTracking');
+assert.equal(normalizeMemberName('NativeName',{...bool,native:'InternalProperty'}),'NativeName');
+assert.equal(normalizeMemberName('gesture_changed',{...bool,kind:'事件',valueType:undefined}),'OnGestureChanged');
+const rows=enrichMemberRows([{entryKey:'flag',group:'members',kind:'变量',field:'Name',translated:'IsTracking'}],[bool]);assert.equal(rows[0].translated,'bIsTracking');assert.equal(rows[0].valueType,'bool');
+console.log('Type-aware bool naming, collections, PascalCase, events, native identifiers and learning direction passed.');

@@ -1,0 +1,14 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
+import {sourceBlueprintDirectory} from '../server/fab-directory-scheme.mjs';
+import {planFabMoves} from '../server/fab-classification.mjs';import {canonicalFabFolder} from '../server/fab-layout-language.mjs';
+const root=path.resolve('.local/checks/blueprint-boundary-'+Date.now());await fs.mkdir(root,{recursive:true});
+// Reuse the recorded inventory only: no user project is loaded or modified.
+const recorded=JSON.parse(await fs.readFile('.local/fab-classification/b0d1b157-c256-4998-af4b-6f6b814e5f04/scan-result.json','utf8')).assets;
+const result=planFabMoves({assets:recorded,root:'OpenXR_UI'}),kept=[];
+for(const a of recorded){const parts=a.path.slice(6).split('/'),index=parts.slice(0,-1).findIndex(p=>canonicalFabFolder(p)==='Blueprints');if(index<0||parts.some(p=>canonicalFabFolder(p)==='Demo'))continue;const expected='/Game/OpenXR_UI/Blueprints/'+parts.slice(index+1).join('/');assert.equal(result.mapping[a.path],expected);kept.push({before:a.path,after:expected});}
+assert.ok(kept.length>20);assert.ok(kept.some(p=>/控件交互组件\/UMG\/材质纹理/.test(p.after)));assert.ok(kept.some(p=>/控件交互组件_射线\/样条线资产/.test(p.after)));
+const asset=(dir,name='WBP_Test',category='Widgets',cls='WidgetBlueprint')=>({path:'/Game/P/'+dir+'/'+name,name,category,class:'/Script/Engine.'+cls,dependencies:[]});
+assert.equal(sourceBlueprintDirectory(asset('Assets/Car/Blueprints','BP_Car','Blueprints','Blueprint'),'P'),null);assert.equal(sourceBlueprintDirectory(asset('Meshes/Static/Car/Blueprints','BP_Car','Blueprints','Blueprint'),'P'),null);
+const widgets=[asset('Widgets/UI/UMG/用户控件'),asset('Widgets/Dialogs/UI/Widgets/UMG','WBP_Dialog'),asset('Widgets/UI/UMG/Materials','M_Icon','Materials','Material')],p=planFabMoves({assets:widgets,root:'P'});assert.equal(p.mapping[widgets[0].path],'/Game/P/Widgets/WBP_Test');assert.equal(p.mapping[widgets[1].path],'/Game/P/Widgets/Dialogs/WBP_Dialog');assert.equal(p.mapping[widgets[2].path],'/Game/P/Widgets/Materials/M_Icon');
+const organized=recorded.map(a=>({...a,path:result.mapping[a.path],dependencies:a.dependencies.map(d=>result.mapping[d]||d)}));assert.equal(planFabMoves({assets:organized,root:'OpenXR_UI'}).moves.length,0);
+const report={root,readOnlyRecordedInventory:true,recordedAssets:recorded.length,blueprintSubtreeAssets:kept.length,kept,checks:['all resources inside source Blueprint folders preserve their exact relative folders','widget materials and ray support assets remain with their functional Blueprint group','repeated Widgets/UI/UMG aliases collapse outside Blueprint groups','named widget subgroups retained','repeat classification stable; no UObject/member changes']};await fs.writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({...report,kept:undefined}));

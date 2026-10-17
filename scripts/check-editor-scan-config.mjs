@@ -1,0 +1,7 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
+import {captureScanConfig,restoreScanConfig} from '../server/editor-scan-config.mjs';
+const root=path.resolve('.local/checks/scan-config-'+Date.now()),config=path.join(root,'Config');await fs.mkdir(path.join(config,'Custom'),{recursive:true});
+const original=Buffer.concat([Buffer.from([255,254]),Buffer.from('[Original]\r\n','utf16le')]);await fs.writeFile(path.join(config,'DefaultEngine.ini'),original);await fs.writeFile(path.join(config,'Custom/Keep.ini'),'original custom config');
+const snapshot=await captureScanConfig(root);await fs.appendFile(path.join(config,'DefaultEngine.ini'),'plugin defaults');await fs.unlink(path.join(config,'Custom/Keep.ini'));await fs.mkdir(path.join(config,'Generated'));await fs.writeFile(path.join(config,'Generated/Plugin.ini'),'plugin defaults');
+assert.equal(await restoreScanConfig(snapshot),3);assert.deepEqual(await fs.readFile(path.join(config,'DefaultEngine.ini')),original);assert.equal(await fs.readFile(path.join(config,'Custom/Keep.ini'),'utf8'),'original custom config');await assert.rejects(fs.access(path.join(config,'Generated')));assert.equal(await restoreScanConfig(snapshot),0);
+console.log(JSON.stringify({root,checks:['UE plugin config writes restored byte for byte including BOM and newlines','removed original config restored','new plugin config and empty generated directories removed','second restore makes no writes']}));

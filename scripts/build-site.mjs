@@ -23,22 +23,19 @@ function assetsForPublishedSite(document) {
   const published = structuredClone(document);
   for (const page of published.pages || []) {
     for (const block of published.content?.[page.id]?.blocks || []) {
-      if (block.type === 'image' && block.data?.src?.startsWith('/docs-assets/')) {
-        block.data.src = `./docs-assets/${block.data.src.slice('/docs-assets/'.length)}`;
-      }
+      if (block.type === 'image') for (const field of ['src', 'srcEn']) if (block.data?.[field]?.startsWith('/docs-assets/')) block.data[field] = `./docs-assets/${block.data[field].slice('/docs-assets/'.length).split('?')[0]}`;
       for (const attachment of block.attachments || []) {
-        if (attachment.type === 'image' && attachment.data?.src?.startsWith('/docs-assets/')) {
-          attachment.data.src = `./docs-assets/${attachment.data.src.slice('/docs-assets/'.length)}`;
-        }
+        if (attachment.type === 'image') for (const field of ['src', 'srcEn']) if (attachment.data?.[field]?.startsWith('/docs-assets/')) attachment.data[field] = `./docs-assets/${attachment.data[field].slice('/docs-assets/'.length).split('?')[0]}`;
       }
     }
   }
   return published;
 }
 
-const document = await loadDocument();
+const projectId = process.env.DOC_STUDIO_PROJECT_ID || undefined;
+const document = await loadDocument(projectId);
 if (!document) throw new Error('Document project is not initialized.');
-const docsRoot = await getDocumentRoot();
+const docsRoot = await getDocumentRoot(projectId);
 await runViteBuild();
 await fs.writeFile(
   path.join(SITE_DIR, 'document-data.json'),

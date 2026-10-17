@@ -1,20 +1,20 @@
 ---
 id: p1
 title:
-  zh: 1. 导入项目
+  zh: 项目迁移须知
   en: Import Project
 ---
 
 <!-- DOCBLOCK id="b1" type="text" -->
 <!-- ZH -->
-1.导入项目
+1.项目迁移注意事项
 <!-- EN -->
 Import Project
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1770631228179" type="text" -->
 <!-- ZH -->
-由于FAB上传项目命名规范，无法单独上传碰撞预设文件，可以在这里下载：
+由于FAB上传项目命名规范，无法单独上传碰撞预设文件，自行导出配置文件，可以在这里下载：
 https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
 <!-- EN -->
 Due to the FAB project naming convention for uploads, the collision preset file cannot be uploaded separately and can be downloaded here:
@@ -28,24 +28,16 @@ https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive
 Create a new UE5 VR Template Project. Open the archive and copy the VR UI Collision Configuration File into the new project folder.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769015769773" type="image" -->
-![b1769015769773](../assets/d760bbafb90c57c8cfe3.png)
-<!-- /DOCBLOCK -->
-
 <!-- DOCBLOCK id="b1769097976247" type="text" -->
 <!-- ZH -->
-打开压缩包的Content文件夹，将UI文件夹复制到新建的项目Content目录下
+
 <!-- EN -->
 Open the Content folder of the archive, and copy the UI folder into the Content directory of your new project.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769015831025" type="image" -->
-![b1769015831025](../assets/bb2906f642b69f61dd3c.png)
-<!-- /DOCBLOCK -->
-
 <!-- DOCBLOCK id="b1769015850260" type="text" -->
 <!-- ZH -->
-打开项目设置，找到碰撞选项，导入VRUI碰撞配置
+
 <!-- EN -->
 Open Project Settings, find the Collision option, import the VRUI Collision Configuration
 <!-- /DOCBLOCK -->
@@ -63,4 +55,11 @@ Import the VRUI collision profile and restart the project. Once restarted, you w
 
 <!-- DOCBLOCK id="b1769098710934" type="image" -->
 ![b1769098710934](../assets/ffa66de06b8af88be4cc.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvaulylw397l0bg" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+
 <!-- /DOCBLOCK -->

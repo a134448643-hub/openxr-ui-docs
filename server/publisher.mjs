@@ -45,9 +45,11 @@ function githubRepositorySlug(value) {
   return match?.[1]?.toLowerCase() || '';
 }
 
-export async function publishDocumentation({ push = true } = {}) {
+export async function publishDocumentation({ push = true, projectId } = {}) {
   const buildScript = path.join(APP_ROOT, 'scripts', 'build-site.mjs');
-  const build = await run(process.execPath, [buildScript]);
+  const build = await run(process.execPath, [buildScript], {
+    env: { ...process.env, ...(process.versions.electron ? { ELECTRON_RUN_AS_NODE: '1' } : {}), DOC_STUDIO_PROJECT_ID: projectId || '' },
+  });
   if (build.code !== 0) {
     throw new Error(build.stderr || build.stdout || 'Static site build failed.');
   }
@@ -56,7 +58,7 @@ export async function publishDocumentation({ push = true } = {}) {
   const remote = insideRepository.code === 0
     ? await runGit(['config', '--get', 'remote.origin.url'])
     : { code: 1, stdout: '' };
-  const publication = await getPublicationConfig();
+  const publication = await getPublicationConfig(projectId);
 
   const expectedRepository = githubRepositorySlug(publication.repository);
   const configuredRepository = githubRepositorySlug(remote.stdout);

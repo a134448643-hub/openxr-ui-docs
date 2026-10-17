@@ -1,0 +1,27 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import {createProjectDelivery} from '../server/ue-project-delivery.mjs';
+import {createFabClassification} from '../server/fab-classification.mjs';
+import {runProcess} from '../server/ue-windows.mjs';
+
+const root=path.resolve('.local/checks/dr'+String(Date.now()).slice(-6)),source=path.join(root,'Original5.3'),descriptor=path.join(source,'P.uproject'),editor='C:/Program Files/Epic Games/UE_5.3/Engine/Binaries/Win64/UnrealEditor-Cmd.exe';
+const seed=(await fs.readFile('.local/last-classification-dependency-ui-check.txt','utf8')).trim();
+await fs.mkdir(source,{recursive:true});
+for(const name of ['Content','Config','P.uproject'])await fs.cp(path.join(seed,'S',name),path.join(source,name),{recursive:true});
+async function fingerprint(folder){const result=[];for(const name of ['Content','Config','P.uproject']){async function walk(file,rel){const st=await fs.stat(file);if(st.isDirectory())for(const n of await fs.readdir(file))await walk(path.join(file,n),rel+'/'+n);else result.push([rel,crypto.createHash('sha256').update(await fs.readFile(file)).digest('hex')]);}await walk(path.join(folder,name),name);}return result.sort();}
+const before=await fingerprint(source),calls=[];
+let fab;const delivery=createProjectDelivery({root,engineRoots:[],onVersionCreated:(version,context)=>fab.classifyCreatedVersion(version,context)});
+fab=createFabClassification({root,cacheForSource:s=>delivery.cacheLocation(s),readOnlyRoots:async()=>[source],engines:async()=>({items:[{version:'5.3',installed:true,editor}]}),resourceRoot:path.resolve('desktop/resources/delivery'),runner:async(exe,args,opts)=>{if(opts.env?.UE_FAB_REQUEST){const q=JSON.parse(await fs.readFile(opts.env.UE_FAB_REQUEST));calls.push({mode:q.mode,path:q.descriptorPath,fresh:!!q.classificationPreview?.freshTarget});}return runProcess(exe,args,opts);}});
+await delivery.configure(descriptor);
+async function wait(get,id){let phase;for(;;){const job=await get(id);if(phase!==job.phase){phase=job.phase;console.log(JSON.stringify({phase,status:job.status}));}if(job.status!=='running')return job;await new Promise(r=>setTimeout(r,300));}}
+const started=Date.now(),plan=await delivery.previewVersionProjects({outputRoot:path.join(root,'.local/checks/O'),versions:['5.3'],autoClassify:true}),done=await wait(id=>delivery.job(id),(await delivery.createVersionProjects(plan.planId)).jobId);
+assert.equal(done.status,'completed',done.error);const version=done.versions[0];assert.equal(path.basename(version.target),'Original5.3');assert.equal(version.processingState,'classified');assert.equal(version.classification.compiler.compiled,1);assert.equal(version.classification.reusedCreatedProject,true);
+assert.deepEqual(await fingerprint(source),before);assert.ok(calls.slice(0,2).every(c=>c.path===version.descriptorPath&&c.fresh));
+const location=await delivery.cacheLocation(version.descriptorPath);assert.ok(location.cacheRoot.startsWith(path.join(source,'.ue-translation-cache/p')+path.sep));await assert.rejects(fs.access(path.join(version.target,'.ue-translation-cache')));
+const tasks=path.join(location.cacheRoot,'classification');for(const id of await fs.readdir(tasks))assert.deepEqual(await fs.readdir(path.join(tasks,id)),['owner.json']);
+const selectedBefore=await fingerprint(version.target),preview=await wait(id=>fab.job(id),(await fab.beginPreview({path:version.descriptorPath,language:'en'})).jobId);assert.equal(preview.status,'completed',preview.error);assert.equal(preview.plan.moves.length,0);assert.deepEqual(await fingerprint(version.target),selectedBefore);assert.ok(preview.cacheDirectory.startsWith(location.cacheRoot+path.sep));await assert.rejects(fs.access(path.join(preview.cacheDirectory,'PreviewProject')));
+await delivery.configure(version.descriptorPath);assert.equal((await delivery.generatedProjects())[0].processingState,'classified');const work=await wait(id=>delivery.job(id),(await delivery.refreshCopy()).jobId);assert.equal(work.status,'completed',work.error);assert.ok(work.target.startsWith(location.cacheRoot+path.sep));
+const secondPlan=await delivery.previewVersionProjects({outputRoot:path.join(root,'.local/checks/O'),versions:['5.3']}),second=await wait(id=>delivery.job(id),(await delivery.createVersionProjects(secondPlan.planId)).jobId);assert.equal(second.status,'completed',second.error);assert.equal(path.basename(second.versions[0].target),'Original5.3_2');const nested=await delivery.cacheLocation(second.versions[0].descriptorPath);assert.equal(nested.host.projectRoot,source);assert.notEqual(nested.cacheRoot,location.cacheRoot);assert.deepEqual(await fingerprint(source),before);
+const report={root,elapsedMs:Date.now()-started,nativeUE:'5.3',actualModelRequests:0,calls,version,cacheRoot:location.cacheRoot,checks:['new copy classified directly without another preview project','source folder name including dot retained','native material texture dependency and Blueprint compilation verified','manual preview uses source-owned cache and leaves selected target unchanged','nested derived project cache stays at original source','distinct derived caches','source descriptor Content Config bytes unchanged']};await fs.writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));await fs.writeFile('.local/last-derived-workflow-real.txt',root);console.log(JSON.stringify(report));

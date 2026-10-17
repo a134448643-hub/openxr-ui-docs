@@ -1,220 +1,596 @@
 version: 1
 blockOrder:
   - b1769102094154
+  - pmvb3elmhpg2u270
+  - pmvb3e8xajlphza4
   - b1770631134935
   - b1770630818555
-  - b1770630691946
   - b1770630924744
   - b1769101719820
+  - b1791986912346
   - b1770631382759
   - b1769101784227
   - b1770631522831
   - b1769102137437
   - b1769102318681
-  - b1769102332387
-  - b1769102693857
-  - b1769102562259
-  - b1769102970651
-  - b1769107144266
   - b1769772192795
   - b1769772212293
   - b1769773154230
   - b1769101967375
   - b1769101929413
+  - b1769102970651
   - b1769102275493
   - b1769860394222
   - b1769103626628
-  - b1769103749145
+  - b1769102332387
+  - b1769102693857
+  - a1792076102619
+  - a1792076112551
+  - a1792076114095
+  - bmv9glrhpb1xn
+  - pmvaulp3uyukcz4o
+  - pmvaulp3uw59yam7
 blocks:
   b1769102094154:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 1
+        en:
+          type: heading
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 更新说明
+        en:
+          - type: text
+            text: Prerequisites
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
+  pmvb3elmhpg2u270:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: null
+              - type: bold
+            text: 新增
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 1.适配SteamVR手势追踪
+          - type: hardBreak
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 2.添加手势角色基础交互：传送移动，旋转，抓取功能
+          - type: hardBreak
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 3.新增控件交互组件_射线
+          - type: hardBreak
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 常规的远程UI交互，捏合点击UI触发交互
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: null
+              - type: bold
+            text: 优化重置
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 1.优化蓝图逻辑，简化配置流程。
+          - type: hardBreak
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 2.重置手势模型更新功能，现在只需要调用对应节点，切换对应手势数据资产即可切换手势模型，而不是之前通过切换玩家Pawn。
+          - type: hardBreak
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: ""
+            text: 3.重置滚动框逻辑，变回模拟鼠标右键拖拽滚动框
+      documentOrder:
+        zh: 2
+    attachments: []
+  pmvb3e8xajlphza4:
+    type: text
+    isFloating: false
+    style:
+      size: text-2xl
+      isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+      richText:
+        zh:
+          - type: text
+            text: 前置条件
+      documentOrder:
+        zh: 3
     attachments: []
   b1770631134935:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 使用此项目前置条件视频
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: bold
+            text: https://www.youtube.com/watch?v=pUs-mc1Vdtw
+        en:
+          - type: text
+            text: "Prerequisite Video for using this project:"
+          - type: hardBreak
+          - type: text
+            text: https://www.youtube.com/watch?v=pUs-mc1Vdtw
+      documentOrder:
+        zh: 4
+        en: 5
     attachments: []
   b1770630818555:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
-    attachments: []
-  b1770630691946:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      paragraphTypes:
+        en:
+          type: paragraph
+      richText:
+        en:
+          - type: text
+            text: PC Streaming Instructions
+      documentOrder:
+        en: 6
     attachments: []
   b1770630924744:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 开发环境说明
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+              - type: bold
+            text: 手势追踪识别的精度与设备等硬件设备有关，与项目功能无关。
+        en:
+          - type: text
+            text: Development Environment Notes
+      documentOrder:
+        zh: 7
+        en: 8
     attachments: []
   b1769101719820:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            text: 1.确保你有正常的VR开发环境，开发者权限/虚幻引擎VR串流/手势能正常工作。
+        en:
+          - type: text
+            text: 1. Ensure you have a functioning VR development environment, developer
+              permissions, Unreal Engine VR Streaming/Link setup, and that hand
+              tracking/gestures are working correctly.
+      documentOrder:
+        zh: 9
+        en: 10
+    attachments: []
+  b1791986912346:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        en:
+          type: paragraph
+      richText:
+        en:
+          - type: text
+            text: ...
+      documentOrder:
+        en: 11
     attachments: []
   b1770631382759:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            text: 2.此项目必
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: null
+            text: 须开启Openxr和OpenXRHandTr
+          - type: text
+            text: acking，缺少插件蓝图会报错！
+        en:
+          - type: text
+            text: 2. This project must have OpenXR and OpenXRHandTracking enabled.
+              Blueprints will throw an error if these plugins are missing.
+      documentOrder:
+        zh: 12
+        en: 13
     attachments: []
   b1769101784227:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            text: 3.测试平台Quest3/Pico4pro,打包Demo版本为5.6
+        en:
+          - type: text
+            text: 3.Supports UE 5.3 - 5.7, tested platforms Quest 3 / Pico 4 Pro, packaged
+              demo version is 5.6.
+      documentOrder:
+        zh: 14
+        en: 15
     attachments: []
   b1770631522831:
     type: text
     isFloating: false
     style:
       size: text-xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 更换手势模型
+        en:
+          - type: text
+            text: Gesture Model
+      documentOrder:
+        zh: 16
+        en: 17
     attachments: []
   b1769102137437:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            text: 1.手势模型需要与openxr骨骼相近的模型，并且骨骼坐标旋转统一
+          - type: hardBreak
+          - type: text
+            text: 2.需要准备两只手的模型（如何你需要双手UI交互）
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 20px
+                  color: null
+              - type: bold
+            text: PC串流平台
+          - type: hardBreak
+          - type: text
+            text: Meta Horizon Link
+          - type: hardBreak
+          - type: text
+            text: SteamVR
+          - type: hardBreak
+          - type: text
+            text: PICO 互联
+        en:
+          - type: text
+            text: 1. The gesture model needs to be close to the OpenXR skeleton model,
+              including bone coordinates and rotation.
+          - type: hardBreak
+          - type: text
+            text: 2. Two hand models are required (if you need two-hand UI interaction).
+      documentOrder:
+        zh: 18
+        en: 19
     attachments: []
   b1769102318681:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#374151"
-      decoration: none
       isSectionHeader: true
-    attachments: []
-  b1769102332387:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769102693857:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769102562259:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments:
-      - id: a1769107020869
-        type: image
-        isFloating: true
-        layout:
-          x: 407.5
-          y: 31
-          width: 262
-          height: 326
-        data:
-          src: assets/6829459609682ebd9175.png
-  b1769102970651:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-    attachments: []
-  b1769107144266:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
+      headingLevel: 2
+      paragraphTypes:
+        en:
+          type: heading
+          level: 2
+      richText:
+        en:
+          - type: text
+            text: Project Version Differences / Fixes
+      documentOrder:
+        en: 20
     attachments: []
   b1769772192795:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#dc2626"
-      decoration: none
       isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#dc2626"
+            text: Quest须知
+        en:
+          - type: text
+            text: Quest Notes
+      documentOrder:
+        zh: 21
+        en: 22
     attachments: []
   b1769772212293:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#d97706"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: UE5.6之前版本Quest打包安卓手势无效
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 解决方法：
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 1.Quest需要开启metaxr，项目设置找到metaxr
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 2.XR API选用Epic Native OpenXR with Oculus vendor extensions
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 3.Hand Tracking Support选择Controllers and Hands
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: MetaXR下载链接：
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
+        en:
+          - type: text
+            text: Hand gestures fail when packaging Quest for Android in UE versions prior
+              to 5.6.
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            text: "Solution:"
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            text: 1. MetaXR must be enabled for Quest. Locate MetaXR in Project Settings.
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            text: 2. Select "Epic Native OpenXR with Oculus vendor extensions" for the XR
+              API.
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            text: 3. Set Hand Tracking Support to "Controllers and Hands."
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            text: "MetaXR Download Link:"
+          - type: hardBreak
+          - type: text
+            text: https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
+      documentOrder:
+        zh: 23
+        en: 24
     attachments: []
   b1769773154230:
     type: image
@@ -225,88 +601,337 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
+      documentOrder: 25
     attachments: []
   b1769101967375:
     type: text
     isFloating: false
     style:
       size: text-2xl
-      weight: font-bold
-      color: "#dc2626"
-      decoration: none
       isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#dc2626"
+            text: PICO须知
+        en:
+          - type: text
+            text: PICO Notice
+      documentOrder:
+        zh: 26
+        en: 27
     attachments: []
   b1769101929413:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#d97706"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 1.PICO安卓打包5.7，一体机运行闪退。与本项目无关，即使打包pico官方示例依然会出现这个问题。（截止文档日期2026.1.23）
+        en:
+          - type: text
+            text: 1.PICO Android packaging using version 5.7 results in a crash upon launch
+              on the standalone headset. This is unrelated to the current
+              project, as the issue still occurs even when packaging the
+              official PICO sample project. (As of 2026.1.23)
+      documentOrder:
+        zh: 28
+        en: 29
+    attachments: []
+  b1769102970651:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        en:
+          type: paragraph
+      richText:
+        en:
+          - type: text
+            text: 2. BP_Controller Character (5.7 Error)
+          - type: hardBreak
+          - type: text
+            text: UE5.7 VR template modifications and folder/Blueprint name changes have
+              resulted in the loss of the character index from pre-5.7 versions.
+          - type: hardBreak
+          - type: text
+            text: Therefore, 5.7 requires the XRPawn to be reconfigured. "2. Quick
+              Configuration" will provide detailed instructions on how to set up
+              the new character.
+      documentOrder:
+        en: 30
     attachments: []
   b1769102275493:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#d97706"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 2.Pico安卓打包需要picoopenxr/picoxr插件
+        en:
+          - type: text
+            text: 2.Pico Android packaging requires the picoopenxr/picoxr plugin.
+      documentOrder:
+        zh: 31
+        en: 32
     attachments: []
   b1769860394222:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#d97706"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 3.UE5.5一体机安卓测试，控件交互UI异常，与pico插件BUG有关（暂无解决方法）
+        en:
+          - type: text
+            text: "3. UE 5.5 Standalone Android Test: Abnormal Widget Interaction UI due to
+              Pico plugin bug (No current solution)."
+      documentOrder:
+        zh: 33
+        en: 34
     attachments: []
   b1769103626628:
     type: text
     isFloating: false
     style:
       size: text-base
-      weight: font-bold
-      color: "#d97706"
-      decoration: none
       isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#d97706"
+              - type: bold
+            text: 4.pico默认手势骨骼与openxr手势骨骼存在偏移，需要手动矫正（已配置对应的数据资产）
+          - type: hardBreak
+          - type: hardBreak
+          - type: text
+            text: 项目版本差异/修复
+        en:
+          - type: text
+            text: 4. The default Pico hand skeleton is misaligned with the OpenXR hand
+              skeleton, requiring manual correction (the corresponding Data
+              Asset has been configured)
+      documentOrder:
+        zh: 35
+        en: 36
     attachments: []
-  b1769103749145:
+  b1769102332387:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 由于虚幻引擎VR模板版本更迭的原因，VR模板变更，节点被弃用，若你使用低版本：5.3→5.7需要手动修复。在 2.快速配置 中会详细教学如何修复！
+        en:
+          - type: text
+            text: "Due to the version iteration of the Unreal Engine VR Template, the VR
+              Template has changed, and nodes have been deprecated. If you are
+              using a lower version: 5.3 -> 5.7, manual repair is required. The
+              detailed instructions on how to repair will be provided in the 2.
+              Quick Configuration section!"
+      documentOrder:
+        zh: 37
+        en: 38
+    attachments: []
+  b1769102693857:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 1.BPC_OpenXR手势
+          - type: hardBreak
+          - type: text
+            text: GetMotionControllerData节点，5.5之后变更，5.7被弃用
+          - type: hardBreak
+          - type: text
+            text: 需要变更为GetHandTrackingState节点
+        en:
+          - type: text
+            text: 1.BPC_OpenXRGesture
+          - type: hardBreak
+          - type: text
+            text: The `GetMotionControllerData` node was modified after 5.5 and deprecated
+              in 5.7.
+          - type: hardBreak
+          - type: text
+            text: Requires migration/change to the `GetHandTrackingState` node.
+      documentOrder:
+        zh: 39
+        en: 40
+    attachments: []
+  a1792076102619:
+    type: text
+    isFloating: true
+    style:
+      size: text-xs
+      bgColor: "#fffbeb"
+      richText:
+        zh:
+          - type: text
+            text: ...
+        en: []
+      documentOrder: 41
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+    layout:
+      x: 936.4110107421875
+      y: 70.38258361816406
+      width: 150
+      height: 100
+    attachments: []
+  a1792076112551:
+    type: image
+    isFloating: true
+    style:
+      size: text-xs
+      bgColor: "#fffbeb"
+      documentOrder: 42
+    layout:
+      x: 756.4110107421875
+      y: 28.382583618164062
+      width: 150
+      height: 100
+    attachments: []
+  a1792076114095:
+    type: text
+    isFloating: true
+    style:
+      size: text-xs
+      bgColor: "#fffbeb"
+      richText:
+        zh:
+          - type: text
+            text: ...
+        en: []
+      documentOrder: 43
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+    layout:
+      x: 705.4110107421875
+      y: 27.382583618164062
+      width: 150
+      height: 100
+    attachments: []
+  bmv9glrhpb1xn:
     type: image
     isFloating: false
     style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
+      imageWidth: 72
+      annotations: []
+      documentOrder: 44
+    annotations: []
+    attachments: []
+  pmvaulp3uyukcz4o:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+      isSectionHeader: true
+      headingLevel: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 45
+    attachments: []
+  pmvaulp3uw59yam7:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
       isSectionHeader: false
-    attachments:
-      - id: a1769107417371
-        type: text
-        isFloating: true
-        layout:
-          x: 228.5
-          y: 21.890625
-          width: 355
-          height: 88
-        data:
-          zh: 红色箭头，小方块手势轮廓为Pico手势真实骨骼位置
-          en: Red Arrow, Small Square Gesture Outline is the Pico Gesture Actual Skeleton
-            Position
-      - id: a1769107427039
-        type: text
-        isFloating: true
-        layout:
-          x: 237.5
-          y: 459.890625
-          width: 410
-          height: 90
-        data:
-          zh: 蓝色箭头为Openxr手势,Quest手势骨骼可以严丝合缝的匹配
-          en: The blue arrow is the OpenXR Hand Pose, and the Quest hand skeleton can
-            flawlessly match.
+      richText:
+        zh: []
+      documentOrder:
+        zh: 46
+    attachments: []

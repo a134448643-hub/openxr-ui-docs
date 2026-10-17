@@ -13,7 +13,7 @@ title:
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1769098949033" type="image" -->
-![b1769098949033](../assets/68af4a2d1e9d2bac45ed.png)
+![b1769098949033]()
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="b1769107957809" type="text" -->

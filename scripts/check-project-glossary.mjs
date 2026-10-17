@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createProjectDelivery} from '../server/ue-project-delivery.mjs';
+const root=path.resolve(import.meta.dirname,'..'),fixture=path.join(root,'.local/checks/glossary-'+Date.now());await fs.mkdir(path.join(fixture,'.local/project-delivery-state'),{recursive:true});
+const config=JSON.parse(await fs.readFile(path.join(root,'.local/project-delivery-state/config.json'),'utf8'));await fs.writeFile(path.join(fixture,'.local/project-delivery-state/config.json'),JSON.stringify(config));
+const service=createProjectDelivery({root:fixture}),first=await service.glossary();assert.ok(first.terms.some(t=>t[0]==='纹理资产前缀'&&t[1]==='T_'));assert.ok(first.terms.some(t=>t[0]==='场景组件成员命名'&&t[1].includes('不统一添加 AC_')));
+await service.glossary([...first.terms,['左手','LeftHand']]);const restarted=createProjectDelivery({root:fixture});assert.equal((await restarted.glossary()).terms.at(-1)[1],'LeftHand');
+await assert.rejects(restarted.glossary([['无效']]),/格式无效/);assert.equal((await restarted.glossary()).terms.at(-1)[1],'LeftHand');
+const otherProject=path.join(fixture,'Other');for(const folder of ['Content','Config'])await fs.mkdir(path.join(otherProject,folder),{recursive:true});await fs.writeFile(path.join(otherProject,'Other.uproject'),JSON.stringify({EngineAssociation:'5.3'}));await restarted.configure(otherProject);assert.ok(!(await restarted.glossary()).terms.some(t=>t[0]==='左手'));assert.ok((await restarted.glossary()).commonTerms.some(t=>t[0]==='蓝图'));
+console.log('Project glossary defaults, prefix distinction, persistence and project isolation passed.');

@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';import path from 'node:path';
+import {createUsbApkInstaller,primaryUsbArtifacts} from '../server/usb-apk-install.mjs';
+const root=path.resolve('.local/checks/usb-package-install-'+Date.now());await fs.mkdir(root,{recursive:true});
+let state='usb',calls=0,completed=false;const commands=[];
+const install=createUsbApkInstaller({adbPath:async()=>'/fixture/adb',runner:async(file,args)=>{commands.push(args);assert.deepEqual(args,['-d','get-serialno']);return state==='wireless'?{code:1,stdout:'',stderr:'no devices found'}:state==='multiple'?{code:1,stdout:'',stderr:'more than one device/emulator'}:{code:0,stdout:'usb-fixture\n',stderr:''};},devices:async()=>[{serial:'usb-fixture',model:'PICO 4 Pro',status:state==='unauthorized'?'unauthorized':'device'},{serial:'192.168.1.5:5555',model:'wireless',status:'device'}],installApk:async(id,body)=>{calls++;assert.equal(body.device,'usb-fixture');assert.equal(body.file,'fixture.apk');return {jobId:'install'};},job:()=>state==='failure'?{status:'failed',message:'安装包签名与旧版不一致'}:completed?{status:'complete'}:(completed=true,{status:'running'})});
+assert.equal((await install('project',['fixture.apk'])).status,'complete');assert.equal(calls,1);
+for(const mode of ['wireless','multiple','unauthorized']){state=mode;assert.equal((await install('project',['fixture.apk'])).status,'skipped');}assert.equal(calls,1);
+state='failure';await assert.rejects(install('project',['fixture.apk']),/签名与旧版不一致/);
+assert.equal((await install('project',['one.apk','two.apk'])).status,'skipped');
+state='usb';const artifacts=['AFS_fixture.apk','fixture.apk'],verification={items:artifacts.map(file=>({file,packageName:'com.xiaomeng.fixture',versionCode:5,certificateSha256:'fixture-certificate'}))};
+assert.deepEqual(primaryUsbArtifacts(artifacts,verification),['fixture.apk']);assert.equal((await install('project',artifacts,verification)).status,'complete');
+assert.equal(primaryUsbArtifacts(artifacts,{items:[verification.items[0],{...verification.items[1],packageName:'com.different.app'}]}).length,2);
+assert.equal(primaryUsbArtifacts(['AFS_standalone.apk','fixture.apk'],verification).length,2);assert.equal(primaryUsbArtifacts(artifacts).length,2);
+const beforeMismatch=calls;assert.equal((await install('project',['fixture.apk'],undefined,{target:'quest'})).status,'skipped');assert.equal(calls,beforeMismatch,'Quest build must not be installed onto PICO');assert.equal((await install('project',['fixture.apk'],undefined,{target:'pico'})).status,'complete');
+const report={passed:true,checks:['ADB USB-only transport selection; Wi-Fi devices never selected','One authorized USB device installs the exact generated artifact','Missing, unauthorized and multiple USB devices skip without guessing','Installation failure is reported without uninstalling or clearing data','Shipping AFS companion excluded only when filename, directory, package, version and certificate match the primary; primary is installed','Genuinely different APKs and unverified companions still require manual selection'],simulatedDevice:true,actualDeviceWrites:false};await fs.writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({root,...report}));

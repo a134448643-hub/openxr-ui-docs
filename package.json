@@ -1,7 +1,7 @@
 {
   "name": "local-doc-studio",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.137",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,9 +9,18 @@
     "build:published-app": "vite build --mode published --outDir site-dist",
     "build:site": "node scripts/build-site.mjs",
     "migrate": "node scripts/migrate-legacy.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "desktop:build": "node scripts/check-theme-contract.mjs && node scripts/build-desktop.mjs",
+    "check:theme": "node scripts/check-theme-contract.mjs && node scripts/check-theme-shell.mjs",
+    "desktop:dev": "npm run desktop:build && node scripts/run-desktop.mjs",
+    "desktop:package": "npm run desktop:build && node scripts/package-desktop.mjs"
   },
   "dependencies": {
+    "@tiptap/core": "3.32.0",
+    "@tiptap/extension-text-style": "3.32.0",
+    "@tiptap/pm": "3.32.0",
+    "@tiptap/react": "3.32.0",
+    "@tiptap/starter-kit": "3.32.0",
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.5.4",
     "lucide-react": "^1.37.0",
@@ -21,5 +30,9 @@
     "tailwindcss": "^3.4.19",
     "vite": "^8.2.2",
     "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "44.7.0"
   }
 }

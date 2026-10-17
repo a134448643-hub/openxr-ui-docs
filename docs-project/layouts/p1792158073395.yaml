@@ -1,0 +1,126 @@
+version: 1
+blockOrder:
+  - b1769110697908
+  - pmvb0o0zrhdmh1ri
+  - b1769110669099
+  - pmvb0p1a61ydj6uw
+  - b1769111406051
+  - b1769111480132
+  - pmvb0pp5w1j3mpgf
+blocks:
+  b1769110697908:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: true
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 修复节点
+      documentOrder:
+        zh: 0
+    attachments: []
+  pmvb0o0zrhdmh1ri:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 建议使用UE5.5及以上版本开发
+          - type: hardBreak
+          - type: text
+            text: 如果你使用低版本的项目5.3导入高版本例如5.5/5.7，BPC_OpenXR手势会报错，5.3的节点被启用
+      documentOrder:
+        zh: 1
+    attachments: []
+  b1769110669099:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+      documentOrder: 2
+      imageWidth: 86
+    attachments: []
+  pmvb0p1a61ydj6uw:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 我们使用GetHand TrackingState节点，重新连接修复报错的引脚
+      documentOrder:
+        zh: 3
+    attachments: []
+  b1769111406051:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+      documentOrder: 4
+    attachments: []
+  b1769111480132:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: true
+      headingLevel: 2
+      richText:
+        zh: []
+      documentOrder:
+        zh: 5
+    attachments: []
+  pmvb0pp5w1j3mpgf:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 6
+    attachments: []

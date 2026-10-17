@@ -1,0 +1,138 @@
+version: 1
+blockOrder:
+  - p-component-widget-interaction-ray-category-0
+  - p-component-widget-interaction-ray-parameters-0
+  - pmvb0tv6x69uso4n
+  - pmvb13zl9mw177ql
+blocks:
+  p-component-widget-interaction-ray-category-0:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: true
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: paragraph
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: 设置控件交互组件
+        en: []
+      documentOrder:
+        zh: 0
+    attachments: []
+  p-component-widget-interaction-ray-parameters-0:
+    type: text
+    isFloating: false
+    style:
+      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 显示调试
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 开启后显示控件交互的调试信息，方便检查射线检测与命中位置。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 插值缓动速度
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置射线跟随手部或控制器移动时的平滑速度，数值越大跟随缓动越大。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 命中 UI圆初始缩放
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置射线命中 UI 时UMG圆的基础缩放大小。
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 18px
+                  color: null
+              - type: bold
+            text: 射线有效距离
+          - type: hardBreak
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 16px
+                  color: null
+            text: 设置射线响应 UI 的有效距离范围。(最短距离，最远距离）
+          - type: hardBreak
+          - type: text
+            text: 手柄角色注意，需要绑定一个输入，用于触发鼠标左键按压，布尔控制按下左键和松开左键
+        en: []
+      documentOrder:
+        zh: 1
+    attachments: []
+  pmvb0tv6x69uso4n:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 35
+      documentOrder: 2
+    attachments: []
+  pmvb13zl9mw177ql:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 3
+    attachments: []

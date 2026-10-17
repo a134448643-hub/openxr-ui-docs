@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { readProjectLink, projectApiUrl } from './project-links.js';
+import { RichDocumentEditor } from './rich-document-editor.jsx';
+import { DocumentSettings } from './document-settings.jsx';
 import { 
   BookOpen, Image as ImageIcon, ChevronRight, ChevronLeft, Plus, 
   Trash2, Edit3, GripVertical, Type as TypeIcon, Move, 
@@ -22,10 +25,11 @@ const UI_TEXT = {
   shareUnavailable: { zh: '当前项目还没有分享链接', en: 'This project has no share link yet' },
   projectHome: { zh: '项目主页', en: 'Projects' },
   publicDocs: { zh: '使用文档', en: 'Documentation' },
-  development: { zh: '开发记录', en: 'Development' },
+  development: { zh: '项目资料', en: 'Project Records' },
+  commonRules: { zh: '通用规则', en: 'Common Rules' },
   localOnly: { zh: '仅本机可见', en: 'Local only' },
-  devSaved: { zh: '开发记录已保存', en: 'Development record saved' },
-  devSaving: { zh: '开发记录保存中...', en: 'Saving development record...' },
+  devSaved: { zh: '项目资料已保存', en: 'Project records saved' },
+  devSaving: { zh: '项目资料保存中...', en: 'Saving project records...' },
   createProject: { zh: '新建项目', en: 'New Project' },
   openProject: { zh: '打开项目', en: 'Open Project' },
   publish: { zh: '发布', en: 'Publish' },
@@ -61,7 +65,7 @@ const UI_TEXT = {
   enLabel: { zh: '英文', en: 'EN' },
   insertText: { zh: '插入文本', en: 'Insert Text' },
   insertImage: { zh: '插入图片', en: 'Insert Image' },
-  anchorHere: { zh: '锚定到此块', en: 'Anchor Here' },
+  anchorHere: { zh: '在此处添加', en: 'Insert here' },
   pasteFloat: { zh: '粘贴悬浮', en: 'Paste Float' },
   addFollowNote: { zh: '添加悬浮框文本', en: 'Add Float Text' },
   addFollowLayer: { zh: '添加悬浮框图片', en: 'Add Float Image' },
@@ -69,6 +73,7 @@ const UI_TEXT = {
 };
 
 const IS_PUBLISHED = import.meta.env.MODE === 'published';
+const IS_DESKTOP_EMBEDDED = !IS_PUBLISHED && new URLSearchParams(window.location.search).get('embedded') === '1';
 
 const getUi = (key, lang) => {
   const uiLang = lang === 'en' ? 'en' : 'zh';
@@ -121,6 +126,45 @@ const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
   </div>
 );
 
+const NewRecordModal = ({ onConfirm, onCancel }) => {
+  const [collection, setCollection] = useState('decisions');
+  const [title, setTitle] = useState('');
+  const [busy, setBusy] = useState(false);
+  const labels = { decisions: '决策记录', issues: '异常与解决', changes: '变更记录' };
+
+  const submit = async (event) => {
+    event.preventDefault();
+    if (!title.trim()) return;
+    setBusy(true);
+    try {
+      await onConfirm({ collection, title: title.trim() });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[10000] bg-black/50 flex items-center justify-center p-4 print:hidden">
+      <form onSubmit={submit} className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+        <h3 className="text-lg font-bold text-gray-900">新建独立记录</h3>
+        <p className="text-sm text-gray-500 mt-1">一个决定、异常或阶段变更对应一个文件。</p>
+        <label className="block text-sm font-bold text-gray-700 mt-5">记录类型</label>
+        <div className="grid grid-cols-3 gap-2 mt-2">
+          {Object.entries(labels).map(([value, label]) => (
+            <button key={value} type="button" onClick={() => setCollection(value)} className={`px-3 py-2 rounded-lg border text-xs font-bold ${collection === value ? 'bg-blue-600 border-blue-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>{label}</button>
+          ))}
+        </div>
+        <label className="block text-sm font-bold text-gray-700 mt-5">标题</label>
+        <input autoFocus value={title} onChange={(event) => setTitle(event.target.value)} className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" placeholder="例如：旋转插槽磁吸后缩放异常" />
+        <div className="flex justify-end gap-3 mt-6">
+          <button type="button" onClick={onCancel} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-bold">取消</button>
+          <button disabled={busy || !title.trim()} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-lg text-sm font-bold">{busy ? '创建中...' : '创建记录'}</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 const ImagePreviewModal = ({ src, onClose }) => {
   if (!src) return null;
   return (
@@ -133,120 +177,26 @@ const ImagePreviewModal = ({ src, onClose }) => {
   );
 };
 
-const AutoResizeTextarea = ({ className, style, value, onChange, placeholder, readOnly, onClick }) => {
-  const textareaRef = useRef(null);
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-    }
-  }, [value, style]); 
-  return <textarea ref={textareaRef} className={className} style={style} rows={1} value={value || ''} onChange={onChange} onClick={onClick} placeholder={placeholder} readOnly={readOnly}/>;
-};
-
-// --- 3. Functional UI Components ---
-
-const UnifiedStyleMenu = ({ style, onUpdate, isFloating }) => {
-  const sizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl'];
-  const textColors = ['#374151', '#9ca3af', '#dc2626', '#2563eb', '#d97706', '#16a34a', '#ffffff'];
-  const bgColors = ['#fffbeb', '#eff6ff', '#f0fdf4', '#fef2f2', '#f3f4f6', '#ffffff', '#1f2937'];
-  
-  const safeStyle = style || {};
-
-  const changeSize = (delta) => {
-    const currentIdx = sizes.indexOf(safeStyle.size || 'text-base');
-    const newIdx = Math.max(0, Math.min(sizes.length - 1, currentIdx + delta));
-    onUpdate({ ...safeStyle, size: sizes[newIdx] });
-  };
-
-  return (
-    <div className="absolute top-full left-0 mt-1 bg-white shadow-xl border border-gray-200 rounded-lg p-2 z-[70] flex flex-col gap-2 min-w-[180px] animate-in fade-in zoom-in-95 duration-150 cursor-default" onClick={e => e.stopPropagation()}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center bg-gray-50 rounded border border-gray-100 p-0.5">
-           <button onClick={() => changeSize(-1)} className="p-1 hover:bg-white rounded text-gray-500 hover:shadow-sm transition-all"><TypeIcon size={10}/><span className="text-[8px] ml-0.5">-</span></button>
-           <div className="w-px h-3 bg-gray-200 mx-1"></div>
-           <button onClick={() => changeSize(1)} className="p-1 hover:bg-white rounded text-gray-500 hover:shadow-sm transition-all"><TypeIcon size={10}/><span className="text-[8px] ml-0.5">+</span></button>
-        </div>
-        <div className="flex items-center gap-1">
-           <button onClick={() => onUpdate({ ...safeStyle, weight: safeStyle.weight === 'font-bold' ? 'font-normal' : 'font-bold' })} className={`w-6 h-6 flex items-center justify-center rounded ${safeStyle.weight === 'font-bold' ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100 text-gray-600'}`}><Bold size={13}/></button>
-           <button onClick={() => onUpdate({ ...safeStyle, decoration: safeStyle.decoration === 'underline' ? 'none' : 'underline' })} className={`w-6 h-6 flex items-center justify-center rounded ${safeStyle.decoration === 'underline' ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100 text-gray-600'}`}><Underline size={13}/></button>
-           {!isFloating && (
-             <button onClick={() => onUpdate({ ...safeStyle, isSectionHeader: !safeStyle.isSectionHeader, size: !safeStyle.isSectionHeader ? 'text-2xl' : 'text-base', weight: !safeStyle.isSectionHeader ? 'font-bold' : 'font-normal' })} className={`w-6 h-6 flex items-center justify-center rounded ${safeStyle.isSectionHeader ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100 text-gray-600'}`} title="标题"><Heading size={13}/></button>
-           )}
-        </div>
-      </div>
-
-      <div className="space-y-1.5 pt-1 border-t border-gray-100">
-        <div className="flex items-center justify-between gap-2">
-           <div className="flex gap-1 flex-wrap">
-             {textColors.map(c => (
-                 <button key={c} onClick={() => onUpdate({ ...safeStyle, color: c })} className={`w-3.5 h-3.5 rounded-full border border-gray-300 hover:scale-125 transition-transform ${safeStyle.color === c ? 'ring-1 ring-offset-1 ring-blue-400' : ''}`} style={{ backgroundColor: c }} title="文字颜色"/>
-             ))}
-           </div>
-           {isFloating && <Palette size={12} className="text-gray-300 shrink-0"/>}
-        </div>
-        
-        {isFloating && (
-           <div className="flex gap-1 flex-wrap justify-end">
-             {bgColors.map(c => (
-                <button key={c} onClick={() => onUpdate({ ...safeStyle, bgColor: c })} className={`w-3.5 h-3.5 rounded-sm border border-gray-300 hover:scale-125 transition-transform ${safeStyle.bgColor === c ? 'ring-1 ring-offset-1 ring-blue-400' : ''}`} style={{ backgroundColor: c }} title="背景颜色"/>
-             ))}
-           </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const UnifiedToolbar = ({ type, isFloating, style, onUpdateStyle, onTranslate, isTranslating, onCopy, onDelete, isMenuOpen, onToggleMenu, dragHandleProps }) => {
-  const btnClass = "w-7 h-7 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors relative pointer-events-auto"; 
-  return (
-    <div 
-      className={`flex items-center gap-0.5 bg-white border border-gray-200 shadow-lg rounded-lg p-0.5 z-[60] select-none ${isFloating ? 'absolute -top-10 right-0' : 'absolute -top-9 left-0'} animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto`} 
-      onMouseDown={e => e.stopPropagation()} 
-      onClick={e => e.stopPropagation()} 
-    >
-      <div className="absolute top-full left-0 w-full h-4 bg-transparent pointer-events-auto"></div>
-
-      {dragHandleProps && <div {...dragHandleProps} className="p-1.5 text-gray-400 hover:text-gray-700 cursor-grab active:cursor-grabbing border-r border-gray-100 mr-1"><GripVertical size={14}/></div>}
-      {style && (
-        <div className="relative">
-          <button className={`${btnClass} ${isMenuOpen ? 'bg-blue-50 text-blue-600' : ''}`} onClick={(e) => { e.stopPropagation(); onToggleMenu && onToggleMenu(); }}><Palette size={14}/></button>
-          {isMenuOpen && <UnifiedStyleMenu style={style} onUpdate={onUpdateStyle} isFloating={isFloating} />}
-        </div>
-      )}
-      <div className="h-4 w-px bg-gray-200 mx-0.5"></div>
-      {type === 'text' && <button onClick={(e) => { e.stopPropagation(); onTranslate && onTranslate(); }} className={`${btnClass} ${isTranslating ? 'animate-spin text-blue-500' : ''}`} disabled={isTranslating}>{isTranslating ? <Loader2 size={14}/> : <Languages size={14}/>}</button>}
-      <button onClick={(e) => { e.stopPropagation(); onCopy && onCopy(); }} className={btnClass}><Copy size={14}/></button>
-      <button onClick={(e) => { e.stopPropagation(); onDelete && onDelete(); }} className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"><Trash2 size={14}/></button>
-    </div>
-  );
-};
-
-const RightToolbar = ({ isEditMode, onAdd, lang }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  if (!isEditMode) return null;
-  return (
-    <div className={`fixed right-0 top-1/2 -translate-y-1/2 z-40 transition-all duration-300 flex items-start gap-0 print:hidden ${isCollapsed ? 'translate-x-[calc(100%-20px)]' : 'translate-x-0'}`}>
-      <button onClick={() => setIsCollapsed(!isCollapsed)} className="mt-8 bg-white border border-r-0 border-gray-200 p-1 rounded-l-md shadow-sm text-gray-500 hover:text-blue-600 z-10">{isCollapsed ? <ChevronLeft size={16}/> : <ChevronRight size={16}/>}</button>
-      <div className="bg-white border border-gray-200 shadow-xl rounded-l-2xl p-3 flex flex-col gap-4 w-16 items-center">
-        <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{getUi('body', lang)}</div>
-        <button onClick={() => onAdd('text', false)} className="group flex flex-col items-center gap-1 w-full"><div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm"><FileText size={20}/></div></button>
-        <button onClick={() => onAdd('image', false)} className="group flex flex-col items-center gap-1 w-full"><div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm"><ImageIcon size={20}/></div></button>
-      </div>
-    </div>
-  );
-};
-
 const ContextMenu = ({ x, y, onClose, onAdd, targetBlockId, clipboard, onPaste, lang }) => {
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const menu = menuRef.current;
+    if (!menu) return;
+    const rect = menu.getBoundingClientRect();
+    menu.style.left = `${Math.max(8, Math.min(x, innerWidth - rect.width - 8))}px`;
+    menu.style.top = `${Math.max(8, Math.min(y, innerHeight - rect.height - 8))}px`;
+    menu.querySelector('button')?.focus();
+  }, [x, y]);
   return (
-    <div className="fixed z-[9999] bg-white rounded-lg shadow-xl border border-gray-100 py-2 w-48 animate-in fade-in zoom-in-95 duration-100" style={{ left: x, top: y }} onClick={(e) => e.stopPropagation()}>
+    <div ref={menuRef} role="menu" aria-label="文档右键菜单" className="doc-context-menu" style={{ left: x, top: y }} onClick={(e) => e.stopPropagation()} onKeyDown={(event) => {
+      if (event.key === 'Escape') { event.preventDefault(); onClose(); }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); const items = [...event.currentTarget.querySelectorAll('button')]; const index = items.indexOf(document.activeElement); items[(index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.focus(); }
+    }}>
       {targetBlockId ? (
         <>
           <div className="px-3 py-1 text-xs font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1"><Anchor size={12}/> {getUi('anchorHere', lang)}</div>
-          {clipboard && <button onClick={() => { onPaste(targetBlockId); onClose(); }} className="w-full text-left px-4 py-2 hover:bg-green-50 text-sm text-green-700 flex items-center gap-2 border-b border-gray-100 font-bold"><ClipboardCopy size={16}/> {getUi('pasteFloat', lang)}</button>}
+          {clipboard?.type === 'text' && <button onClick={() => { onPaste(targetBlockId); onClose(); }} className="w-full text-left px-4 py-2 hover:bg-green-50 text-sm text-green-700 flex items-center gap-2 border-b border-gray-100 font-bold"><ClipboardCopy size={16}/> {getUi('pasteFloat', lang)}</button>}
           <button onClick={() => { onAdd('text', true, null, targetBlockId); onClose(); }} className="w-full text-left px-4 py-2 hover:bg-blue-50 text-sm text-gray-700 flex items-center gap-2"><Sticker size={16} className="text-blue-600"/> {getUi('addFollowNote', lang)}</button>
-          <button onClick={() => { onAdd('image', true, null, targetBlockId); onClose(); }} className="w-full text-left px-4 py-2 hover:bg-blue-50 text-sm text-gray-700 flex items-center gap-2"><MousePointer2 size={16} className="text-blue-600"/> {getUi('addFollowLayer', lang)}</button>
         </>
       ) : (
         <>
@@ -259,286 +209,7 @@ const ContextMenu = ({ x, y, onClose, onAdd, targetBlockId, clipboard, onPaste, 
   );
 };
 
-const InsertZone = ({ onInsert, lang, isOverlay, hidden }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  if (hidden) return null;
-
-  if (isOverlay) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none"
-           onMouseEnter={() => setIsHovered(true)} 
-           onMouseLeave={() => setIsHovered(false)}
-      >
-         <div className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 border-t-2 border-dashed border-blue-300 transition-opacity pointer-events-auto ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
-         <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-2 w-full pointer-events-auto opacity-0" onMouseEnter={() => setIsHovered(true)}></div>
-         <div className={`relative z-10 flex items-center gap-2 transition-all transform pointer-events-auto ${isHovered ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}>
-            <button onClick={() => onInsert('text')} className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-xs rounded-full shadow-lg hover:bg-blue-700 whitespace-nowrap"><FileText size={12}/> {getUi('insertText', lang)}</button>
-            <button onClick={() => onInsert('image')} className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white text-xs rounded-full shadow-lg hover:bg-purple-700 whitespace-nowrap"><ImageIcon size={12}/> {getUi('insertImage', lang)}</button>
-         </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className={`relative py-1 -my-2 z-10 group/insert transition-all print:hidden ${isHovered ? 'h-8' : 'h-4'} pointer-events-none`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <div className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 border-t-2 border-dashed border-blue-300 transition-opacity pointer-events-auto ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
-      <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 transition-all transform pointer-events-auto ${isHovered ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}>
-        <button onClick={() => onInsert('text')} className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-xs rounded-full shadow-lg hover:bg-blue-700"><FileText size={12}/> {getUi('insertText', lang)}</button>
-        <button onClick={() => onInsert('image')} className="flex items-center gap-1 px-3 py-1 bg-purple-600 text-white text-xs rounded-full shadow-lg hover:bg-purple-700"><ImageIcon size={12}/> {getUi('insertImage', lang)}</button>
-      </div>
-    </div>
-  );
-};
-
-const DraggableBlock = ({ children, layout, onUpdate, isEditMode, onDelete, isSelected, onSelect, hideControls, forceAutoHeight, onHoverChange, setAnyFloatHovered }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
-  const startPos = useRef({ x: 0, y: 0, lx: 0, ly: 0, lw: 0, lh: 0 });
-
-  const handleMouseDown = (e, type) => {
-    if (!isEditMode) return;
-    e.stopPropagation(); e.preventDefault();
-    if (onSelect) onSelect();
-    startPos.current = { x: e.clientX, y: e.clientY, lx: layout.x || 0, ly: layout.y || 0, lw: layout.width || 200, lh: layout.height || 100 };
-    if (type === 'move') setIsDragging(true);
-    if (type === 'resize') setIsResizing(true);
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (isDragging) onUpdate({ x: startPos.current.lx + (e.clientX - startPos.current.x), y: startPos.current.ly + (e.clientY - startPos.current.y) });
-      if (isResizing) onUpdate({ width: Math.max(50, startPos.current.lw + (e.clientX - startPos.current.x)), height: Math.max(30, startPos.current.lh + (e.clientY - startPos.current.y)) });
-    };
-    const handleMouseUp = () => { setIsDragging(false); setIsResizing(false); document.body.style.userSelect = ''; document.body.style.cursor = ''; };
-    if (isDragging || isResizing) { document.body.style.userSelect = 'none'; document.body.style.cursor = isDragging ? 'grabbing' : 'nwse-resize'; window.addEventListener('mousemove', handleMouseMove); window.addEventListener('mouseup', handleMouseUp); }
-    return () => { window.removeEventListener('mousemove', handleMouseMove); window.removeEventListener('mouseup', handleMouseUp); };
-  }, [isDragging, isResizing]);
-
-  return (
-    <div 
-      style={{ 
-        position: 'absolute', 
-        left: layout.x || 0, 
-        top: layout.y || 0, 
-        width: layout.width || 200, 
-        height: forceAutoHeight ? 'auto' : (layout.height || 100), 
-        zIndex: isDragging ? 100 : (isSelected ? 90 : 60) 
-      }} 
-      // [FIX] Removed visual ring from container, added global hover handlers
-      className={`group flex flex-col rounded-md transition-shadow pointer-events-auto`} 
-      onMouseDown={(e) => { if(isEditMode) { e.stopPropagation(); if (onSelect) onSelect(); } }}
-      onClick={(e) => e.stopPropagation()}
-      onMouseEnter={() => { onHoverChange && onHoverChange(true); setAnyFloatHovered && setAnyFloatHovered(true); }}
-      onMouseLeave={() => { onHoverChange && onHoverChange(false); setAnyFloatHovered && setAnyFloatHovered(false); }}
-    >
-      <div className="flex-1 w-full h-full relative">{children}</div>
-      {isEditMode && (
-        <>
-          <div onMouseDown={(e) => handleMouseDown(e, 'move')} className="absolute -bottom-3 -left-3 w-6 h-6 bg-white border border-gray-200 text-purple-600 rounded-full shadow-sm flex items-center justify-center cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 z-50 hover:bg-purple-50 print:hidden transition-opacity pointer-events-auto"><Move size={12}/></div>
-          <div onMouseDown={(e) => handleMouseDown(e, 'resize')} className="absolute -bottom-1 -right-1 w-4 h-4 bg-purple-500 cursor-nwse-resize opacity-0 group-hover:opacity-100 rounded-tl-md z-50 print:hidden pointer-events-auto"/>
-        </>
-      )}
-    </div>
-  );
-};
-
-const ContentRenderer = ({ block, isEditMode, lang, onUpdateData, onActivate, onPreviewImage, imgClassName }) => {
-  const [isDragActive, setIsDragActive] = useState(false); 
-  if (!block) return null;
-  const style = block.style || {}; 
-  const data = block.data || {};
-  
-  const showZh = lang === 'zh' || lang === 'bilingual';
-  const showEn = lang === 'en' || lang === 'bilingual';
-  
-  const commonStyle = `${style.size || 'text-base'} ${style.weight || 'font-normal'} ${style.decoration === 'underline' ? 'underline' : ''}`;
-
-  if (block.type === 'text') {
-    const headerStyle = style.isSectionHeader ? 'border-b-2 border-gray-200 pb-2 mb-2 font-bold text-2xl' : '';
-    return (
-      <div className={`flex-1 flex flex-col gap-1 overflow-auto no-scrollbar ${headerStyle} pointer-events-auto`}>
-         {isEditMode ? (
-            <>
-              {showZh && <AutoResizeTextarea className={`w-full bg-transparent border-none outline-none resize-none text-gray-800 min-h-[24px] ${commonStyle}`} style={{ color: style.color }} value={data.zh || ''} onChange={e => onUpdateData('zh', e.target.value)} onClick={e => { e.stopPropagation(); onActivate && onActivate(); }} placeholder={getUi('zhLabel', lang)}/>}
-              {showEn && <AutoResizeTextarea className={`w-full bg-transparent border-none outline-none resize-none text-gray-500 min-h-[24px] ${commonStyle}`} style={{ color: style.color }} value={data.en || ''} onChange={e => onUpdateData('en', e.target.value)} onClick={e => { e.stopPropagation(); onActivate && onActivate(); }} placeholder={getUi('enLabel', lang)}/>}
-            </>
-         ) : (
-            <div className="flex flex-col h-full">
-               {showZh && <div className={`whitespace-pre-wrap ${commonStyle}`} style={{ color: style.color }}>{data.zh || ''}</div>}
-               {showEn && data.en && <div className={`whitespace-pre-wrap mt-1 ${commonStyle}`} style={{ color: style.color }}>{data.en}</div>}
-            </div>
-         )}
-      </div>
-    );
-  }
-  if (block.type === 'image') {
-    return (
-      <div className="w-full h-full relative group/img-att min-h-[50px] pointer-events-auto flex items-center justify-center">
-         {data.src ? (
-             <img 
-               src={data.src} 
-               // [FIX] Accept custom imgClassName for cleaner selection borders
-               className={imgClassName || `w-full h-full object-contain ${!isEditMode ? 'cursor-zoom-in pointer-events-auto' : ''}`} 
-               onClick={(e) => {
-                 if (!isEditMode && onPreviewImage) {
-                   e.stopPropagation();
-                   onPreviewImage(data.src);
-                 }
-               }}
-             />
-         ) : (
-             <div 
-                className={`w-full h-full bg-purple-50/50 border border-dashed ${isDragActive ? 'border-purple-500 bg-purple-100' : 'border-purple-300'} flex flex-col items-center justify-center text-[10px] text-purple-400 p-4 text-center select-none print:hidden transition-colors`}
-                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragActive(true); }}
-                onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setIsDragActive(false); }}
-                onDrop={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation(); 
-                    setIsDragActive(false);
-                    if(e.dataTransfer.files?.[0]) {
-                        const r = new FileReader();
-                        r.onload = (ev) => onUpdateData('src', ev.target.result);
-                        r.readAsDataURL(e.dataTransfer.files[0]);
-                    }
-                }}
-             >
-               <UploadCloud size={16} className="mb-2"/>
-               <span className="text-xs">{getUi('clickToUpload', lang)}</span>
-               <input 
-                 type="file" 
-                 className="absolute inset-0 opacity-0 cursor-pointer pointer-events-auto z-10" 
-                 onChange={e => { if(e.target.files?.[0]) { const r = new FileReader(); r.onload = (ev) => onUpdateData('src', ev.target.result); r.readAsDataURL(e.target.files[0]); } }}
-                 onClick={e => { e.stopPropagation(); onActivate && onActivate(); }} 
-               />
-             </div>
-         )}
-      </div>
-    );
-  }
-  return null;
-};
-
-const FloatBlockInner = ({ block, isEditMode, isViewOnly, lang, onUpdateData, onUpdateStyle, onUpdateLayout, onTranslate, isTranslating, isSelected, onDelete, onCopy, isMenuOpen, onToggleMenu, onActivate, onPreviewImage }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  if (!block) return null;
-  const style = block.style || {}; 
-  const data = block.data || {};
-
-  const isImage = block.type === 'image';
-  const bgColor = isImage ? 'transparent' : (style.bgColor || '#fffbeb');
-  
-  // [FIX] Layout and border logic separation
-  const containerClass = isImage 
-    ? `w-full h-full flex items-center justify-center relative group/float` // Center images, no default border
-    : `w-full h-full px-4 py-3 border shadow-sm rounded flex flex-col transition-colors relative group/float ${isEditMode && !isViewOnly && isSelected ? 'ring-2 ring-purple-500 shadow-lg' : ''}`; // Border/Ring on Text Container
-
-  // [FIX] Apply ring directly to image element so it hugs the image content
-  const imgClasses = isImage && isEditMode && !isViewOnly && isSelected 
-      ? `max-w-full max-h-full w-auto h-auto object-contain ring-2 ring-purple-500 shadow-lg cursor-pointer` 
-      : `w-full h-full object-contain ${!isEditMode ? 'cursor-zoom-in pointer-events-auto' : ''}`;
-
-  return (
-    <div 
-      className={containerClass} 
-      style={{ backgroundColor: bgColor, borderColor: isEditMode && !isViewOnly && !isImage ? (isSelected ? '#a78bfa' : '#e5e7eb') : 'transparent' }} 
-      onMouseEnter={() => setIsHovered(true)} 
-      onMouseLeave={() => setIsHovered(false)} 
-      onClick={(e) => { e.stopPropagation(); onActivate(); }}
-    >
-      {isEditMode && !isViewOnly && (isSelected || isHovered || isMenuOpen) && (
-        <>
-            {block.type === 'text' && (
-                <UnifiedToolbar type={block.type} isFloating={true} style={block.style} onUpdateStyle={onUpdateStyle} onTranslate={onTranslate} isTranslating={isTranslating} onCopy={onCopy} onDelete={onDelete} isMenuOpen={isMenuOpen} onToggleMenu={onToggleMenu}/>
-            )}
-            {block.type === 'image' && (
-                <div 
-                   className="absolute -top-9 right-0 flex items-center gap-1 bg-white border border-gray-200 shadow-sm p-1 rounded-md z-50 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto"
-                   onClick={(e) => e.stopPropagation()}
-                >
-                   <div className="absolute top-full right-0 w-full h-4 bg-transparent"></div>
-                   <button onClick={(e) => { e.stopPropagation(); onCopy(); }} className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"><Copy size={14}/></button>
-                   <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"><Trash2 size={14}/></button>
-                </div>
-            )}
-        </>
-      )}
-      <ContentRenderer block={block} isEditMode={!isViewOnly && isEditMode} lang={lang} onUpdateData={onUpdateData} onActivate={onActivate} onPreviewImage={onPreviewImage} imgClassName={imgClasses} />
-    </div>
-  );
-};
-
-const FlowBlock = ({ children, isEditMode, onDelete, onUpdateStyle, style, index, onDragStart, onDragOver, onDrop, onContextMenu, id, attachments, onUpdateAttachment, onDeleteAttachment, onPreviewImage, onCopyAttachment, lang, type, onTranslate, isTranslating, isMenuOpen, onToggleMenu, isActive, onActivate, activeMenuId, setActiveMenuId, updateBlockData, blockData, anyFloatHovered, setAnyFloatHovered }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [isFloatHovered, setIsFloatHovered] = useState(false); 
-
-  return (
-    <div 
-      className={`group relative transition-all ${isEditMode ? 'rounded-lg border-2' : ''} ${isDragOver && isEditMode ? 'border-blue-400 bg-blue-50' : 'border-transparent'} ${isEditMode ? 'hover:border-gray-200' : ''} ${isFloatHovered ? 'z-[100]' : (isHovered || isMenuOpen || isActive ? 'z-30' : 'z-10')}`}
-      onMouseEnter={() => { setIsHovered(true); }}
-      onMouseLeave={() => { setIsHovered(false); }}
-      onDragOver={(e) => { if (!isEditMode) return; e.preventDefault(); onDragOver(e, index); setIsDragOver(true); }}
-      onDragLeave={() => setIsDragOver(false)}
-      onDrop={(e) => { if (!isEditMode) return; e.preventDefault(); setIsDragOver(false); onDrop(e, index); }}
-      onContextMenu={(e) => onContextMenu(e, id)} 
-      onClick={(e) => { if(isEditMode) { e.stopPropagation(); onActivate && onActivate(); } }}
-    >
-      {isEditMode && (isHovered || isMenuOpen || isActive) && type === 'text' && (
-        <UnifiedToolbar type={type} isFloating={false} style={style} onUpdateStyle={onUpdateStyle} onTranslate={onTranslate} isTranslating={isTranslating} onCopy={() => onCopyAttachment(type, { zh: '...', en: '...' })} onDelete={onDelete} dragHandleProps={{ draggable: true, onDragStart: (e) => onDragStart(e, index) }} isMenuOpen={isMenuOpen} onToggleMenu={onToggleMenu}/>
-      )}
-      {isEditMode && (isHovered || isActive) && type === 'image' && (
-         <div className="absolute -top-3 -right-3 flex gap-1 z-50 pointer-events-auto">
-            <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="bg-red-500 text-white p-1 rounded-full shadow-md hover:scale-110 transition-transform"><Trash2 size={12}/></button>
-         </div>
-      )}
-
-      <div className={isEditMode ? "p-3 relative" : "relative"}>
-        {/* [FIX] Disable pointer events on text content when a float is being hovered to prevent stealing focus */}
-        <div style={{ pointerEvents: anyFloatHovered ? 'none' : 'auto' }}>
-            <ContentRenderer block={{ type, data: blockData, style }} isEditMode={isEditMode} lang={lang} onUpdateData={(field, val) => updateBlockData(field, val)} onActivate={onActivate} onPreviewImage={onPreviewImage} />
-        </div>
-        
-        {attachments?.map(att => {
-            const safeAtt = {
-                ...att,
-                style: att.style || { size: 'text-xs', bgColor: '#fffbeb', color: '#374151' }
-            };
-            return (
-                <DraggableBlock 
-                   key={att.id} 
-                   layout={att.layout} 
-                   isEditMode={isEditMode} 
-                   isSelected={isActive === att.id} 
-                   onSelect={() => onActivate(att.id)} 
-                   onUpdate={(newLayout) => onUpdateAttachment(id, att.id, { layout: newLayout })} 
-                   onDelete={() => onDeleteAttachment(id, att.id)} 
-                   hideControls={true}
-                   forceAutoHeight={lang === 'zh' && att.type === 'text'}
-                   onHoverChange={setIsFloatHovered}
-                   setAnyFloatHovered={setAnyFloatHovered} // Pass global hover setter
-                >
-                   <FloatBlockInner 
-                      block={safeAtt} isEditMode={isEditMode} isViewOnly={false} lang={lang} 
-                      onUpdateData={(field, val) => onUpdateAttachment(id, att.id, { data: { ...att.data, [field]: val } })} 
-                      onUpdateStyle={(newStyle) => onUpdateAttachment(id, att.id, { style: newStyle })} 
-                      onUpdateLayout={(newLayout) => onUpdateAttachment(id, att.id, { layout: newLayout })} 
-                      onTranslate={() => onTranslate(att.id)} isTranslating={isTranslating === att.id} isSelected={isActive === att.id} 
-                      onDelete={() => onDeleteAttachment(id, att.id)} onCopy={() => onCopyAttachment(att.type, att.data)} 
-                      isMenuOpen={activeMenuId === att.id} onToggleMenu={() => setActiveMenuId(activeMenuId === att.id ? null : att.id)} 
-                      onActivate={() => onActivate(att.id)}
-                      onPreviewImage={onPreviewImage}
-                   />
-                </DraggableBlock>
-            );
-        })}
-      </div>
-    </div>
-  );
-};
-
-const ProjectHub = ({ workspace, onOpen, onCreate }) => {
+const ProjectHub = ({ workspace, onOpen, onCreate, loadError }) => {
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName] = useState('');
   const [id, setId] = useState('');
@@ -564,11 +235,12 @@ const ProjectHub = ({ workspace, onOpen, onCreate }) => {
           <div>
             <div className="inline-flex items-center gap-2 text-blue-300 text-sm font-bold mb-3"><BookOpen size={18}/> Local Documentation Studio</div>
             <h1 className="text-4xl font-black tracking-tight">项目文档工作区</h1>
-            <p className="text-slate-400 mt-3 max-w-2xl">公开使用文档可以发布到 GitHub Pages；开发记录只保存在本机，用于进度、异常、解决方法和 AI 交接。</p>
+            <p className="text-slate-400 mt-3 max-w-2xl">公开使用文档可以发布到 GitHub Pages；项目规则、当前快照、独立记录和 AI 交接只保存在本机，并由工具控制分层与归档。</p>
           </div>
           <button onClick={() => setShowCreate(!showCreate)} className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold shadow-lg shadow-blue-900/30"><FolderPlus size={18}/> 新建项目</button>
         </div>
 
+        {loadError && <div role="alert" className="mb-6 rounded-xl border border-red-700 bg-red-950/50 p-4 text-red-200">{loadError}</div>}
         {showCreate && (
           <form onSubmit={submit} className="mb-8 bg-slate-900 border border-slate-700 rounded-2xl p-6 grid md:grid-cols-[1fr_1fr_auto] gap-4 items-end">
             <label className="text-sm text-slate-300">项目名称<input autoFocus value={name} onChange={(event) => setName(event.target.value)} className="mt-2 w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2.5 outline-none focus:border-blue-500" placeholder="例如：VR Grab Plugin"/></label>
@@ -602,14 +274,16 @@ const ProjectHub = ({ workspace, onOpen, onCreate }) => {
 const App = () => {
   const [isEditMode, setIsEditMode] = useState(!IS_PUBLISHED);
   const [isViewOnly] = useState(IS_PUBLISHED);
-  const [lang, setLang] = useState('bilingual'); 
+  const [lang, setLanguageState] = useState(() => { try { return sessionStorage.getItem('doc-studio-language') || 'bilingual'; } catch { return 'bilingual'; } });
+  const setLang = (value) => { try { sessionStorage.setItem('doc-studio-language', value); } catch {} setLanguageState(value); };
   const [activePageId, setActivePageId] = useState('p1');
   const [isTranslating, setIsTranslating] = useState(false); 
   const [translatingBlockId, setTranslatingBlockId] = useState(null); 
-  const [docData, setDocData] = useState(INITIAL_DATA);
+  const [docData, setDocDataState] = useState(INITIAL_DATA);
   const [activeBlockId, setActiveBlockId] = useState(null); 
   const [activeMenuId, setActiveMenuId] = useState(null); 
   const [contextMenu, setContextMenu] = useState(null); 
+  const [showDocumentSettings, setShowDocumentSettings] = useState(false);
   const [editingPageId, setEditingPageId] = useState(null); 
   const [tempPageTitle, setTempPageTitle] = useState("");
   const [tempPageTitleEn, setTempPageTitleEn] = useState(""); 
@@ -622,24 +296,61 @@ const App = () => {
   const [confirmModal, setConfirmModal] = useState(null);
   const [anyFloatHovered, setAnyFloatHovered] = useState(false); // [FIX] Global state for float hovering
   const [workspace, setWorkspace] = useState(null);
+  const [projectLoadError, setProjectLoadError] = useState('');
+  const projectIdRef = useRef(null);
   const [showProjectHub, setShowProjectHub] = useState(!IS_PUBLISHED);
   const [activeSection, setActiveSection] = useState('docs');
-  const [developmentRecord, setDevelopmentRecord] = useState('');
-  const [developmentPath, setDevelopmentPath] = useState('');
-  const [developmentLoaded, setDevelopmentLoaded] = useState(false);
-  const [developmentSaveState, setDevelopmentSaveState] = useState('saved');
+  const [knowledgeWorkspace, setKnowledgeWorkspace] = useState(null);
+  const [activeKnowledgeItemId, setActiveKnowledgeItemId] = useState('project:current-state');
+  const [knowledgeDraft, setKnowledgeDraft] = useState('');
+  const [knowledgeLoaded, setKnowledgeLoaded] = useState(false);
+  const [knowledgeSaveState, setKnowledgeSaveState] = useState('saved');
+  const [showNewRecordModal, setShowNewRecordModal] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [saveState, setSaveState] = useState(IS_PUBLISHED ? 'saved' : 'loading');
   const [isPublishing, setIsPublishing] = useState(false);
   const [githubStatus, setGithubStatus] = useState(null);
   const [isGithubConnecting, setIsGithubConnecting] = useState(false);
   const saveTimerRef = useRef(null);
-  const developmentTimerRef = useRef(null);
+  const documentWriteRef = useRef(Promise.resolve());
+  const documentPendingRef = useRef(0);
+  const knowledgeTimerRef = useRef(null);
   const lastPersistedRef = useRef('');
-  const lastDevelopmentRef = useRef('');
+  const lastKnowledgeRef = useRef('');
+  const activeKnowledgeIdRef = useRef('project:current-state');
   const latestDocumentRef = useRef(INITIAL_DATA);
+  // Update the flush snapshot synchronously with editor transactions. A quick
+  // theme/tab switch can request a flush before React's passive effects run.
+  const setDocData = (value) => {
+    const next = typeof value === 'function' ? value(latestDocumentRef.current) : value;
+    latestDocumentRef.current = next;
+    setDocDataState(next);
+  };
   const canvasRef = useRef(null); 
   const apiKey = ""; 
+
+  // Serialize snapshots, including explicit flushes. An older response must
+  // never mark newer edits saved or write after the close-time snapshot.
+  const persistDocument = (serialized, savingProjectId) => {
+    documentPendingRef.current += 1;
+    const pending = documentWriteRef.current.catch(() => {}).then(async () => {
+      if (projectIdRef.current === savingProjectId && serialized === lastPersistedRef.current) return;
+      const response = await fetch(projectApiUrl('/api/document', savingProjectId), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: serialized });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.error || `Save failed (${response.status})`);
+      }
+      if (projectIdRef.current !== savingProjectId) return;
+      lastPersistedRef.current = serialized;
+      setSaveState(JSON.stringify(latestDocumentRef.current) === serialized ? 'saved' : 'saving');
+      setToast((current) => current?.source === 'document-save' ? null : current);
+    }).catch((error) => {
+      if (projectIdRef.current === savingProjectId) setSaveState('error');
+      throw error;
+    }).finally(() => { documentPendingRef.current -= 1; });
+    documentWriteRef.current = pending;
+    return pending;
+  };
 
   const applyLoadedDocument = (document) => {
     const serialized = JSON.stringify(document);
@@ -651,23 +362,31 @@ const App = () => {
     setIsLoaded(true);
   };
 
-  const loadLocalProject = async (nextWorkspace) => {
+  const loadLocalProject = async (nextWorkspace, { section = 'docs', record = '' } = {}) => {
     setIsLoaded(false);
-    setDevelopmentLoaded(false);
-    const [documentResponse, developmentResponse] = await Promise.all([
-      fetch('/api/document', { cache: 'no-store' }),
-      fetch('/api/development', { cache: 'no-store' }),
+    setKnowledgeLoaded(false);
+    const projectId = nextWorkspace.activeProjectId;
+    if (!nextWorkspace.projects.some((project) => project.id === projectId)) throw new Error(`未找到绑定的文档项目：${projectId}`);
+    const [documentResponse, knowledgeResponse] = await Promise.all([
+      fetch(projectApiUrl('/api/document', projectId), { cache: 'no-store' }),
+      fetch(projectApiUrl('/api/knowledge', projectId), { cache: 'no-store' }),
     ]);
     if (!documentResponse.ok) throw new Error(`Document load failed (${documentResponse.status})`);
-    if (!developmentResponse.ok) throw new Error(`Development record load failed (${developmentResponse.status})`);
-    const [document, development] = await Promise.all([documentResponse.json(), developmentResponse.json()]);
+    if (!knowledgeResponse.ok) throw new Error(`Project records load failed (${knowledgeResponse.status})`);
+    const [document, knowledge] = await Promise.all([documentResponse.json(), knowledgeResponse.json()]);
+    projectIdRef.current = projectId;
+    setProjectLoadError('');
     setWorkspace(nextWorkspace);
     applyLoadedDocument(document);
-    setDevelopmentRecord(development.content || '');
-    setDevelopmentPath(development.path || '');
-    lastDevelopmentRef.current = development.content || '';
-    setDevelopmentSaveState('saved');
-    setDevelopmentLoaded(true);
+    const initialItem = knowledge.items?.find((item) => item.id === record) || knowledge.items?.find((item) => item.id === 'project:current-state') || knowledge.items?.[0];
+    setActiveSection(section);
+    setKnowledgeWorkspace(knowledge);
+    setActiveKnowledgeItemId(initialItem?.id || '');
+    activeKnowledgeIdRef.current = initialItem?.id || '';
+    setKnowledgeDraft(initialItem?.content || '');
+    lastKnowledgeRef.current = initialItem?.content || '';
+    setKnowledgeSaveState('saved');
+    setKnowledgeLoaded(true);
   };
 
   useEffect(() => {
@@ -684,12 +403,19 @@ const App = () => {
         const workspaceResponse = await fetch('/api/workspace', { cache: 'no-store' });
         if (!workspaceResponse.ok) throw new Error(`Workspace load failed (${workspaceResponse.status})`);
         const nextWorkspace = await workspaceResponse.json();
-        if (!cancelled) await loadLocalProject(nextWorkspace);
+        if (!cancelled) {
+          setWorkspace(nextWorkspace);
+          const link = readProjectLink(window.location.search);
+          await loadLocalProject(link.projectId ? { ...nextWorkspace, activeProjectId: link.projectId } : nextWorkspace, link);
+          if (link.projectId) setShowProjectHub(false);
+        }
       } catch (error) {
         console.error(error);
         if (!cancelled) {
           setSaveState('error');
-          setIsLoaded(true);
+          setIsLoaded(false);
+          setProjectLoadError(error.message);
+          setShowProjectHub(true);
         }
       }
     };
@@ -726,79 +452,178 @@ const App = () => {
   }, [isGithubConnecting]);
 
   useEffect(() => {
-    latestDocumentRef.current = docData;
     if (!isLoaded || IS_PUBLISHED) return undefined;
     const serialized = JSON.stringify(docData);
-    if (serialized === lastPersistedRef.current) return undefined;
+    const savingProjectId = projectIdRef.current;
+    if (serialized === lastPersistedRef.current && !documentPendingRef.current) return undefined;
     setSaveState('saving');
     window.clearTimeout(saveTimerRef.current);
     saveTimerRef.current = window.setTimeout(async () => {
       try {
-        const response = await fetch('/api/document', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: serialized,
-        });
-        if (!response.ok) {
-          const result = await response.json().catch(() => ({}));
-          throw new Error(result.error || `Save failed (${response.status})`);
-        }
-        lastPersistedRef.current = serialized;
-        setSaveState('saved');
+        await persistDocument(serialized, savingProjectId);
       } catch (error) {
         console.error(error);
-        setSaveState('error');
       }
-    }, 700);
+    }, 1100);
     return () => window.clearTimeout(saveTimerRef.current);
   }, [docData, isLoaded]);
 
   useEffect(() => {
-    if (!developmentLoaded || IS_PUBLISHED) return undefined;
-    if (developmentRecord === lastDevelopmentRef.current) return undefined;
-    setDevelopmentSaveState('saving');
-    window.clearTimeout(developmentTimerRef.current);
-    developmentTimerRef.current = window.setTimeout(async () => {
+    if (!knowledgeLoaded || IS_PUBLISHED) return undefined;
+    const activeItem = knowledgeWorkspace?.items?.find((item) => item.id === activeKnowledgeItemId);
+    if (!activeItem || activeItem.readOnly || knowledgeDraft === lastKnowledgeRef.current) return undefined;
+    setKnowledgeSaveState('saving');
+    window.clearTimeout(knowledgeTimerRef.current);
+    const itemId = activeKnowledgeItemId;
+    const savingProjectId = projectIdRef.current;
+    knowledgeTimerRef.current = window.setTimeout(async () => {
       try {
-        const response = await fetch('/api/development', {
+        const response = await fetch(projectApiUrl('/api/knowledge/item', savingProjectId), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: developmentRecord }),
+          body: JSON.stringify({ id: itemId, content: knowledgeDraft }),
         });
-        if (!response.ok) {
-          const result = await response.json().catch(() => ({}));
-          throw new Error(result.error || `Development save failed (${response.status})`);
-        }
-        lastDevelopmentRef.current = developmentRecord;
-        setDevelopmentSaveState('saved');
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || `Project record save failed (${response.status})`);
+        if (projectIdRef.current !== savingProjectId) return;
+        if (activeKnowledgeIdRef.current === itemId) lastKnowledgeRef.current = knowledgeDraft;
+        setKnowledgeWorkspace((current) => current ? {
+          ...current,
+          items: current.items.map((item) => item.id === itemId ? { ...item, content: knowledgeDraft, health: result.health, updatedAt: result.savedAt } : item),
+        } : current);
+        setKnowledgeSaveState('saved');
       } catch (error) {
         console.error(error);
-        setDevelopmentSaveState('error');
+        setKnowledgeSaveState('error');
       }
     }, 700);
-    return () => window.clearTimeout(developmentTimerRef.current);
-  }, [developmentRecord, developmentLoaded]);
+    return () => window.clearTimeout(knowledgeTimerRef.current);
+  }, [knowledgeDraft, activeKnowledgeItemId, knowledgeLoaded]);
 
   const showToast = (message, type = 'info') => setToast({ message, type });
+  useEffect(() => {
+    if (isLoaded && saveState === 'error') setToast({ message: '文档保存失败，修改仍保留在编辑器中。请重试保存，成功前不要退出。', type: 'error', source: 'document-save' });
+  }, [saveState, isLoaded]);
 
-  const saveImmediately = async () => {
-    if (IS_PUBLISHED) return;
-    window.clearTimeout(saveTimerRef.current);
-    const document = latestDocumentRef.current;
-    const serialized = JSON.stringify(document);
-    if (serialized === lastPersistedRef.current) return;
-    setSaveState('saving');
-    const response = await fetch('/api/document', {
+  const saveKnowledgeImmediately = async () => {
+    if (IS_PUBLISHED || !knowledgeLoaded) return;
+    window.clearTimeout(knowledgeTimerRef.current);
+    const itemId = activeKnowledgeIdRef.current;
+    const activeItem = knowledgeWorkspace?.items?.find((item) => item.id === itemId);
+    if (!activeItem || activeItem.readOnly || knowledgeDraft === lastKnowledgeRef.current) return;
+    setKnowledgeSaveState('saving');
+    const response = await fetch(projectApiUrl('/api/knowledge/item', projectIdRef.current), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: serialized,
+      body: JSON.stringify({ id: itemId, content: knowledgeDraft }),
     });
+    const result = await response.json().catch(() => ({}));
     if (!response.ok) {
-      const result = await response.json().catch(() => ({}));
-      throw new Error(result.error || `Save failed (${response.status})`);
+      setKnowledgeSaveState('error');
+      throw new Error(result.error || `Project record save failed (${response.status})`);
     }
-    lastPersistedRef.current = serialized;
-    setSaveState('saved');
+    lastKnowledgeRef.current = knowledgeDraft;
+    setKnowledgeWorkspace((current) => current ? {
+      ...current,
+      items: current.items.map((item) => item.id === itemId ? { ...item, content: knowledgeDraft, health: result.health, updatedAt: result.savedAt } : item),
+    } : current);
+    setKnowledgeSaveState('saved');
+  };
+
+  const selectKnowledgeItem = async (itemId) => {
+    if (!itemId || itemId === activeKnowledgeIdRef.current) return;
+    try {
+      await saveKnowledgeImmediately();
+      const item = knowledgeWorkspace?.items?.find((entry) => entry.id === itemId);
+      if (!item) return;
+      setActiveKnowledgeItemId(itemId);
+      activeKnowledgeIdRef.current = itemId;
+      setKnowledgeDraft(item.content || '');
+      lastKnowledgeRef.current = item.content || '';
+      setKnowledgeSaveState('saved');
+    } catch (error) {
+      console.error(error);
+      showToast(`切换记录失败：${error.message}`, 'error');
+    }
+  };
+
+  const openKnowledgeSection = async (section) => {
+    setActiveSection(section);
+    const preferredId = section === 'common' ? 'common:general-rules' : 'project:current-state';
+    const activeItem = knowledgeWorkspace?.items?.find((item) => item.id === activeKnowledgeIdRef.current);
+    const belongsToSection = section === 'common' ? activeItem?.group === 'common' : activeItem?.group !== 'common';
+    if (!belongsToSection) await selectKnowledgeItem(preferredId);
+  };
+
+  const createKnowledgeRecord = async ({ collection, title }) => {
+    await saveKnowledgeImmediately();
+    const response = await fetch(projectApiUrl('/api/knowledge/entries', projectIdRef.current), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ collection, title }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || `Create record failed (${response.status})`);
+    setKnowledgeWorkspace(result.workspace);
+    const item = result.workspace.items.find((entry) => entry.id === result.itemId);
+    setActiveKnowledgeItemId(result.itemId);
+    activeKnowledgeIdRef.current = result.itemId;
+    setKnowledgeDraft(item?.content || '');
+    lastKnowledgeRef.current = item?.content || '';
+    setKnowledgeSaveState('saved');
+    setShowNewRecordModal(false);
+    setActiveSection('development');
+    showToast('独立记录已创建', 'success');
+  };
+
+  const archiveHandoff = async () => {
+    if (!window.confirm('将当前交接完整归档，并创建一份干净的新交接模板。是否继续？')) return;
+    try {
+      await saveKnowledgeImmediately();
+      const response = await fetch(projectApiUrl('/api/knowledge/handoff/archive', projectIdRef.current), { method: 'POST' });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || `Archive handoff failed (${response.status})`);
+      setKnowledgeWorkspace(result.workspace);
+      const item = result.workspace.items.find((entry) => entry.id === 'project:handoff');
+      setActiveKnowledgeItemId('project:handoff');
+      activeKnowledgeIdRef.current = 'project:handoff';
+      setKnowledgeDraft(item?.content || '');
+      lastKnowledgeRef.current = item?.content || '';
+      setKnowledgeSaveState('saved');
+      showToast('本轮交接已归档，已创建新模板', 'success');
+    } catch (error) {
+      console.error(error);
+      showToast(`归档失败：${error.message}`, 'error');
+    }
+  };
+
+  const copyAiInstruction = async (includeCommonRules = false) => {
+    const text = includeCommonRules ? knowledgeWorkspace?.aiInstructionWithCommon : knowledgeWorkspace?.aiInstruction;
+    if (!text) return showToast('AI 对接入口尚未生成', 'error');
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    }
+    showToast(includeCommonRules ? '含通用规则的 AI 指令已复制' : '项目 AI 读取指令已复制', 'success');
+  };
+
+  const saveImmediately = async () => {
+    if (IS_PUBLISHED || !isLoaded) return;
+    window.clearTimeout(saveTimerRef.current);
+    const savingProjectId = projectIdRef.current;
+    setSaveState('saving');
+    do {
+      await persistDocument(JSON.stringify(latestDocumentRef.current), savingProjectId);
+    } while (projectIdRef.current === savingProjectId && JSON.stringify(latestDocumentRef.current) !== lastPersistedRef.current);
+    if (projectIdRef.current === savingProjectId) setSaveState('saved');
   };
 
   const publishDocument = async () => {
@@ -806,7 +631,7 @@ const App = () => {
     setIsPublishing(true);
     try {
       await saveImmediately();
-      const response = await fetch('/api/publish', { method: 'POST' });
+      const response = await fetch(projectApiUrl('/api/publish', projectIdRef.current), { method: 'POST' });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || `Publish failed (${response.status})`);
       showToast(result.message, result.pushed ? 'success' : 'info');
@@ -835,14 +660,11 @@ const App = () => {
   const openWorkspaceProject = async (projectId) => {
     try {
       await saveImmediately();
-      const response = await fetch('/api/projects/open', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: projectId }),
-      });
+      await saveKnowledgeImmediately();
+      const response = await fetch('/api/workspace', { cache: 'no-store' });
       const nextWorkspace = await response.json();
       if (!response.ok) throw new Error(nextWorkspace.error || `Open project failed (${response.status})`);
-      await loadLocalProject(nextWorkspace);
+      await loadLocalProject({ ...nextWorkspace, activeProjectId: projectId });
       await refreshGithubStatus();
       setActiveSection('docs');
       setShowProjectHub(false);
@@ -855,6 +677,7 @@ const App = () => {
 
   const createWorkspaceProject = async ({ name, id }) => {
     await saveImmediately();
+    await saveKnowledgeImmediately();
     const response = await fetch('/api/projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -911,14 +734,20 @@ const App = () => {
   const deleteAttachment = (pId, aId) => updateContent(blocks => blocks.map(b => b.id !== pId ? b : { ...b, attachments: b.attachments.filter(a => a.id !== aId) }));
 
   const addBlock = (type, isFloating, index = null, targetBlockId = null) => {
-    if (targetBlockId) { 
-        const newAtt = { id: `a${Date.now()}`, type, isFloating: true, layout: { x: contextMenu?.relativeX ?? 20, y: contextMenu?.relativeY ?? -20, width: 150, height: 100 }, data: JSON.parse(JSON.stringify(clipboard ? clipboard.data : (type === 'text' ? { zh: '...', en: '' } : { src: '' }))), style: { size: 'text-xs', bgColor: '#fffbeb' } };
+    if (targetBlockId) {
+        if (type !== 'text') return;
+        const width = contextMenu?.blockWidth || 642;
+        const rx = (contextMenu?.relativeX ?? 24) / width;
+        const ry = (contextMenu?.relativeY ?? 8) / width;
+        const rw = Math.min(0.46, 220 / width);
+        const rh = 72 / width;
+        const newAtt = { id: `a${Date.now()}`, type: 'text', isFloating: true, layout: { x: rx * 642, y: ry * 642, width: rw * 642, height: rh * 642, rx, ry, rw, rh }, data: { zh: '', en: '' }, style: { size: 'text-sm', weight: 'font-normal', decoration: 'none' } };
         updateContent(blocks => blocks.map(b => b.id === targetBlockId ? { ...b, attachments: [...(b.attachments || []), newAtt] } : b));
         return;
     }
     const layout = undefined;
     const newBlock = { id: `b${Date.now()}`, type, isFloating: false, style: { size: 'text-base', weight: 'font-normal', color: '#374151', decoration: 'none', isSectionHeader: false }, layout, data: type === 'text' ? { zh: '点此输入...', en: '...' } : { src: '' }, attachments: [] };
-    updateContent(blocks => { const flow = blocks.filter(b => !b.isFloating); if (index !== null) flow.splice(index, 0, newBlock); else flow.push(newBlock); return flow; });
+    updateContent(blocks => { const flow = blocks.filter(b => !b.isFloating); const floating = blocks.filter(b => b.isFloating); if (index !== null) flow.splice(index, 0, newBlock); else flow.push(newBlock); return [...flow, ...floating]; });
   };
 
   const handleFlowDrop = (e, dropIndex) => { e.preventDefault(); if (draggedIndex === null || draggedIndex === dropIndex) return; updateContent(blocks => { const flow = blocks.filter(b => !b.isFloating); const [moved] = flow.splice(draggedIndex, 1); flow.splice(dropIndex, 0, moved); return flow; }); setDraggedIndex(null); };
@@ -1042,6 +871,27 @@ const root = document.getElementById('root');
 const showZh = EXPORT_LANG === 'zh' || EXPORT_LANG === 'bilingual';
 const showEn = EXPORT_LANG === 'en' || EXPORT_LANG === 'bilingual';
 
+function appendLocalizedImages(container, item, contained) {
+  const source = item.data || {};
+  const fields = (showZh ? ['zh'] : []).concat(showEn ? ['en'] : []);
+  fields.forEach(function(field) {
+    const src = field === 'zh' || source.shareWithEnglish ? source.src : source.srcEn;
+    const width = contained ? '100%' : ((item.style && item.style.imageWidth) || 100) + '%';
+    if (src) {
+      const image = document.createElement('img'); image.src = src; image.className = 'rounded';
+      image.style.width = width; image.style.height = 'auto'; container.appendChild(image);
+    } else if (field === 'en') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = '待补英文图片';
+      Object.assign(placeholder.style, { width: width, aspectRatio: '16 / 9', display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box', border: '1px dashed currentColor' });
+      container.appendChild(placeholder);
+      if (source.src) {
+        const measure = new Image(); measure.onload = function() { if (measure.naturalWidth && measure.naturalHeight) placeholder.style.aspectRatio = measure.naturalWidth + ' / ' + measure.naturalHeight; }; measure.src = source.src;
+      }
+    }
+  });
+}
+
 data.pages.forEach((p, i) => {
   const pageWrapper = document.createElement('div');
   pageWrapper.style.position = 'relative'; 
@@ -1076,12 +926,25 @@ data.pages.forEach((p, i) => {
       const commonStyle = (style.size || 'text-base') + ' ' + (style.weight || 'font-normal') + ' ' + (style.decoration === 'underline' ? 'underline' : '');
       const headerStyle = style.isSectionHeader ? 'border-b-2 border-gray-200 pb-2 mb-4 font-bold text-2xl' : '';
 
+      const applyTypography = (element) => {
+        const settings = data.typography;
+        if (!settings) return;
+        element.style.lineHeight = settings.lineHeight;
+        if (!style.customTypography) {
+          element.style.fontSize = (style.isSectionHeader ? settings.headingSize : settings.bodySize) + 'px';
+          if (style.isSectionHeader) element.style.fontWeight = settings.headingWeight;
+        }
+        if (style.isSectionHeader && !settings.headingDivider) element.style.borderBottom = 'none';
+      };
+      if (data.typography) bDiv.style.marginBottom = data.typography.paragraphGap + 'px';
+
       if (b.type === 'text') {
         if (showZh) {
             const divZh = document.createElement('div');
             divZh.className = 'text-content ' + commonStyle + ' ' + headerStyle;
             divZh.style.color = style.color;
             divZh.textContent = b.data.zh || '';
+            applyTypography(divZh);
             bDiv.appendChild(divZh);
         }
 
@@ -1091,15 +954,11 @@ data.pages.forEach((p, i) => {
           divEn.className = 'text-content mt-1 ' + commonStyle + ' ' + (style.isSectionHeader ? 'font-bold text-2xl' : '');
           divEn.style.color = style.color;
           divEn.textContent = b.data.en;
+          applyTypography(divEn);
           bDiv.appendChild(divEn);
         }
       } else if (b.type === 'image') {
-        if (b.data.src) {
-            const img = document.createElement('img');
-            img.src = b.data.src;
-            img.className = 'rounded';
-            bDiv.appendChild(img);
-        }
+        appendLocalizedImages(bDiv, b, false);
       }
 
       // 渲染悬浮框 (Attachments)
@@ -1137,10 +996,7 @@ data.pages.forEach((p, i) => {
             }
             
           } else {
-            const aImg = document.createElement('img');
-            aImg.src = a.data.src;
-            aImg.className = 'w-full h-full object-contain';
-            ad.appendChild(aImg);
+            appendLocalizedImages(ad, a, true);
           }
           bDiv.appendChild(ad);
         });
@@ -1182,15 +1038,45 @@ data.pages.forEach((p, i) => {
   const translateAllText = async () => { setIsTranslating(true); try { const page = docData.content[activePageId]; if (!page) return; const updated = [...page.blocks]; for (let i = 0; i < updated.length; i++) { const b = updated[i]; if (b.type !== 'text' || !b.data.zh) continue; try { const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Translate to English (Unreal Engine context), only output text: "${b.data.zh}"` }] }] }) }); const json = await res.json(); const text = json.candidates?.[0]?.content?.parts?.[0]?.text; if (text) updated[i] = { ...b, data: { ...b.data, en: text.trim() } }; } catch (e) { console.warn(e); } } setDocData(prev => ({ ...prev, content: { ...prev.content, [activePageId]: { ...page, blocks: updated } } })); } catch (err) { showToast("Error", "error"); } finally { setIsTranslating(false); } };
   const translateBlock = async (id) => { setTranslatingBlockId(id); try { const page = docData.content[activePageId]; let textToTranslate = ""; let found = false; const mainBlock = page.blocks.find(b => b.id === id); if (mainBlock) { textToTranslate = mainBlock.data.zh; found = true; } if (!found) { for (const b of page.blocks) { if (b.attachments) { const att = b.attachments.find(a => a.id === id); if (att) { textToTranslate = att.data.zh; found = true; break; } } } } if (!textToTranslate) return; const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Translate to English (Unreal Engine context), only output text: "${textToTranslate}"` }] }] }) }); const json = await res.json(); const text = json.candidates?.[0]?.content?.parts?.[0]?.text; if (text) { updateContent(blocks => blocks.map(b => { if (b.id === id) return { ...b, data: { ...b.data, en: text.trim() } }; if (b.attachments) { return { ...b, attachments: b.attachments.map(a => a.id === id ? { ...a, data: { ...a.data, en: text.trim() } } : a) }; } return b; })); showToast(getUi('translateSuccess', lang), "success"); } } catch (e) { console.warn(e); showToast("翻译失败", "error"); } finally { setTranslatingBlockId(null); } };
 
+  useEffect(() => {
+    if (IS_PUBLISHED || showProjectHub || !isLoaded || !workspace?.activeProjectId) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('project', workspace.activeProjectId);
+    url.searchParams.set('section', activeSection === 'docs' ? 'docs' : 'development');
+    if (activeSection === 'development') url.searchParams.set('record', activeKnowledgeItemId);
+    else url.searchParams.delete('record');
+    window.history.replaceState(null, '', url);
+  }, [workspace?.activeProjectId, showProjectHub, isLoaded, activeSection, activeKnowledgeItemId]);
+
+  useEffect(() => {
+    if (!IS_DESKTOP_EMBEDDED) return undefined;
+    const flush = async (event) => {
+      if (event.origin !== window.location.origin || event.source !== window.parent || event.data?.type !== 'ue-desktop:flush') return;
+      let error = '';
+      try { await saveImmediately(); await saveKnowledgeImmediately(); } catch (e) { error = e.message; }
+      window.parent.postMessage({ type: 'ue-desktop:flushed', id: event.data.id, error }, window.location.origin);
+    };
+    window.addEventListener('message', flush);
+    return () => window.removeEventListener('message', flush);
+  });
+
   const activeProject = workspace?.projects?.find((project) => project.id === workspace.activeProjectId) || null;
+  const activeKnowledgeItem = knowledgeWorkspace?.items?.find((item) => item.id === activeKnowledgeItemId) || null;
+  const visibleKnowledgeGroups = (knowledgeWorkspace?.groups || []).filter((group) => activeSection === 'common' ? group.id === 'common' : group.id !== 'common');
+  const knowledgeHealthClass = activeKnowledgeItem?.health?.status === 'over'
+    ? 'bg-red-100 text-red-700 border-red-200'
+    : activeKnowledgeItem?.health?.status === 'warning'
+      ? 'bg-amber-100 text-amber-700 border-amber-200'
+      : 'bg-emerald-100 text-emerald-700 border-emerald-200';
 
   if (!IS_PUBLISHED && showProjectHub) {
     if (!workspace) {
-      return <div className="h-screen bg-slate-950 text-white flex items-center justify-center gap-3"><Loader2 className="animate-spin"/> 正在载入项目...</div>;
+      return <div className="h-screen bg-slate-950 text-white flex items-center justify-center gap-3"><Loader2 className="animate-spin"/> {projectLoadError || '正在载入项目...'}</div>;
     }
     return (
       <ProjectHub
         workspace={workspace}
+        loadError={projectLoadError}
         onOpen={openWorkspaceProject}
         onCreate={createWorkspaceProject}
       />
@@ -1198,31 +1084,36 @@ data.pages.forEach((p, i) => {
   }
 
   const blocks = docData.content[activePageId]?.blocks || [];
-  const flowBlocks = blocks.filter(b => !b.isFloating);
 
   return (
     <div className="flex h-screen bg-[#f9fafb] font-sans text-gray-900 overflow-hidden app-root" onClick={() => { setContextMenu(null); setActiveBlockId(null); setActiveMenuId(null); }}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       {confirmModal && <ConfirmModal {...confirmModal} />}
+      {showNewRecordModal && <NewRecordModal onConfirm={createKnowledgeRecord} onCancel={() => setShowNewRecordModal(false)} />}
       {previewImage && <ImagePreviewModal src={previewImage} onClose={() => setPreviewImage(null)} />}
 
       <nav className="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm shrink-0 z-40 print:hidden">
          <div className="p-5 flex items-center gap-3 border-b border-gray-100">
-             {!isViewOnly && <button onClick={() => setShowProjectHub(true)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500" title={getUi('projectHome', lang)}><Home size={17}/></button>}
+             {!isViewOnly && !IS_DESKTOP_EMBEDDED && <button onClick={() => setShowProjectHub(true)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500" title={getUi('projectHome', lang)}><Home size={17}/></button>}
              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0"><BookOpen size={18}/></div>
-             {!isViewOnly && isEditMode && activeSection === 'docs' ? <input className="font-bold text-gray-800 bg-transparent outline-none w-full min-w-0" value={docData.sidebarTitle} onChange={(e) => setDocData({...docData, sidebarTitle: e.target.value})}/> : <div className="font-bold truncate">{activeSection === 'development' ? activeProject?.name : docData.sidebarTitle}</div>}
-         </div>
-         {!isViewOnly && <div className="p-2 grid grid-cols-2 gap-1 border-b border-gray-100 bg-gray-50"><button onClick={() => setActiveSection('docs')} className={`px-2 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 ${activeSection === 'docs' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><BookOpen size={14}/> {getUi('publicDocs', lang)}</button><button onClick={() => setActiveSection('development')} className={`px-2 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 ${activeSection === 'development' ? 'bg-amber-100 text-amber-800 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><LockKeyhole size={14}/> {getUi('development', lang)}</button></div>}
+             {!isViewOnly && isEditMode && activeSection === 'docs' ? <input className="font-bold text-gray-800 bg-transparent outline-none w-full min-w-0" value={docData.sidebarTitle} onChange={(e) => setDocData({...docData, sidebarTitle: e.target.value})}/> : <div className="font-bold truncate">{activeSection === 'docs' ? docData.sidebarTitle : activeSection === 'common' ? '通用规则' : activeProject?.name}</div>}
+          </div>
+         {!isViewOnly && activeProject && <div className="px-5 py-2 border-b border-gray-100 text-[10px] text-gray-500">所属项目：<strong className="text-gray-700">{activeProject.name}</strong> · {activeProject.id}</div>}
+         {!isViewOnly && <div className="p-2 grid grid-cols-3 gap-1 border-b border-gray-100 bg-gray-50">
+           <button onClick={() => setActiveSection('docs')} className={`px-1 py-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 ${activeSection === 'docs' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><BookOpen size={13}/> 文档</button>
+           <button onClick={() => openKnowledgeSection('development')} className={`px-1 py-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 ${activeSection === 'development' ? 'bg-amber-100 text-amber-800 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><LockKeyhole size={13}/> 项目资料</button>
+           <button onClick={() => openKnowledgeSection('common')} className={`px-1 py-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 ${activeSection === 'common' ? 'bg-violet-100 text-violet-800 shadow-sm' : 'text-gray-500 hover:bg-white'}`}><FileText size={13}/> 通用规则</button>
+         </div>}
          <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             {activeSection === 'docs' ? <>{docData.pages.map(p => (
-              <div key={p.id} onClick={() => setActivePageId(p.id)} draggable={!isViewOnly && isEditMode} onDragStart={(e) => { setDraggedPageId(p.id); e.dataTransfer.effectAllowed = "move"; }} onDrop={(e) => { e.preventDefault(); if(!draggedPageId || draggedPageId === p.id) return; const ps = [...docData.pages]; const f = ps.findIndex(x=>x.id===draggedPageId); const t = ps.findIndex(x=>x.id===p.id); const [m] = ps.splice(f,1); ps.splice(t,0,m); setDocData(d=>({...d, pages: ps})); setDraggedPageId(null); }} onDragOver={(e) => e.preventDefault()} className={`group flex items-center justify-between w-full px-3 py-2.5 rounded-lg cursor-pointer transition-all ${activePageId === p.id ? 'bg-blue-50 text-blue-700 shadow-sm' : 'hover:bg-gray-100 text-gray-600'}`}>
+              <div key={p.id} data-document-page-id={p.id} onClick={() => setActivePageId(p.id)} draggable={!isViewOnly && isEditMode && !editingPageId} onDragStart={(e) => { if (editingPageId || e.target.closest('input, textarea, [contenteditable="true"]')) { e.preventDefault(); return; } setDraggedPageId(p.id); e.dataTransfer.effectAllowed = "move"; }} onDragEnd={() => setDraggedPageId(null)} onDrop={(e) => { e.preventDefault(); if(editingPageId || !draggedPageId || draggedPageId === p.id) return; const ps = [...docData.pages]; const f = ps.findIndex(x=>x.id===draggedPageId); const t = ps.findIndex(x=>x.id===p.id); if(f < 0 || t < 0) return; const [m] = ps.splice(f,1); ps.splice(t,0,m); setDocData(d=>({...d, pages: ps})); setDraggedPageId(null); }} onDragOver={(e) => e.preventDefault()} className={`group flex items-center justify-between w-full px-3 py-2.5 rounded-lg cursor-pointer transition-all ${activePageId === p.id ? 'bg-blue-50 text-blue-700 shadow-sm' : 'hover:bg-gray-100 text-gray-600'}`}>
                 <div className="flex items-center gap-3 overflow-hidden w-full relative">
                    <div className="flex items-center gap-3 overflow-hidden w-full">
                        {activePageId === p.id ? <div className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0"/> : <div className="w-1.5 h-1.5 rounded-full bg-gray-300 shrink-0 group-hover:bg-gray-400"/>}
                        
                        {/* [UPDATE] New Sidebar Page Edit Logic: 2 Inputs + Translate */}
                        {!isViewOnly && isEditMode && editingPageId === p.id ? (
-                           <div className="flex flex-col gap-1 w-full" onClick={e => e.stopPropagation()} 
+                           <div data-page-title-editor className="flex flex-col gap-1 w-full" onClick={e => e.stopPropagation()} onDragStart={e => { e.preventDefault(); e.stopPropagation(); }}
                                 onBlur={(e) => {
                                     if (!e.currentTarget.contains(e.relatedTarget)) {
                                         if(editingPageId) { 
@@ -1233,9 +1124,9 @@ data.pages.forEach((p, i) => {
                                 }} 
                                 tabIndex={-1}
                            >
-                               <input autoFocus className="bg-white border border-blue-300 rounded px-1.5 py-1 text-sm w-full" value={tempPageTitle} onChange={e => setTempPageTitle(e.target.value)} placeholder="中文标题" />
+                               <input autoFocus aria-label="页面中文标题" className="bg-white border border-blue-300 rounded px-1.5 py-1 text-sm w-full" value={tempPageTitle} onChange={e => setTempPageTitle(e.target.value)} placeholder="中文标题" />
                                <div className="flex gap-1">
-                                   <input className="bg-white border border-gray-200 rounded px-1.5 py-1 text-xs w-full text-gray-600" value={tempPageTitleEn} onChange={e => setTempPageTitleEn(e.target.value)} placeholder="English Title" />
+                                   <input aria-label="页面英文标题" className="bg-white border border-gray-200 rounded px-1.5 py-1 text-xs w-full text-gray-600" value={tempPageTitleEn} onChange={e => setTempPageTitleEn(e.target.value)} placeholder="English Title" />
                                    <button 
                                       onClick={() => translatePageTitle(tempPageTitle)} 
                                       className="p-1 bg-indigo-50 text-indigo-600 rounded hover:bg-indigo-100 flex items-center justify-center" 
@@ -1246,7 +1137,7 @@ data.pages.forEach((p, i) => {
                                    </button>
                                </div>
                                <div className="flex justify-end mt-1">
-                                    <button className="px-2 py-0.5 bg-blue-600 text-white text-[10px] rounded hover:bg-blue-700" onClick={() => {
+                                    <button aria-label="保存页面标题" className="px-2 py-0.5 bg-blue-600 text-white text-[10px] rounded hover:bg-blue-700" onClick={() => {
                                          setDocData(d => ({...d, pages: d.pages.map(px => px.id === editingPageId ? { ...px, title: { zh: tempPageTitle, en: tempPageTitleEn } } : px) })); 
                                          setEditingPageId(null);
                                     }}><Check size={12}/></button>
@@ -1267,31 +1158,55 @@ data.pages.forEach((p, i) => {
                        )}
                    </div>
                 </div>
-                {!isViewOnly && isEditMode && activePageId === p.id && !editingPageId && <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"><button onClick={(e) => { e.stopPropagation(); setEditingPageId(p.id); setTempPageTitle(p.title.zh); setTempPageTitleEn(p.title.en || ""); }} className="p-1 hover:bg-blue-200 rounded text-blue-600"><Pencil size={12}/></button><button onClick={(e) => deletePage(p.id, e)} className="p-1 hover:bg-red-200 rounded text-red-500"><Trash2 size={12}/></button></div>}
+                {!isViewOnly && isEditMode && activePageId === p.id && !editingPageId && <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"><button aria-label="编辑页面标题" onClick={(e) => { e.stopPropagation(); setDraggedPageId(null); setEditingPageId(p.id); setTempPageTitle(p.title.zh); setTempPageTitleEn(p.title.en || ""); }} className="p-1 hover:bg-blue-200 rounded text-blue-600"><Pencil size={12}/></button><button onClick={(e) => deletePage(p.id, e)} className="p-1 hover:bg-red-200 rounded text-red-500"><Trash2 size={12}/></button></div>}
               </div>
             ))}</> : (
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
-                <div className="flex items-center gap-2 font-bold text-sm"><LockKeyhole size={16}/> {getUi('localOnly', lang)}</div>
-                <p className="text-xs leading-relaxed mt-2 text-amber-800">开发进度、异常原因、解决方法、项目存储规则和 AI 交接信息只保存在本机。</p>
-                <p className="text-[10px] break-all mt-3 text-amber-700">{developmentPath}</p>
+              <div className="space-y-5">
+                {visibleKnowledgeGroups.map((group) => {
+                  const groupItems = (knowledgeWorkspace?.items || []).filter((item) => item.group === group.id);
+                  return (
+                    <section key={group.id}>
+                      <div className="px-2 mb-2">
+                        <div className="text-[11px] font-black tracking-wider text-gray-500 uppercase">{group.title}</div>
+                        <div className="text-[10px] text-gray-400 mt-0.5">{group.description}</div>
+                      </div>
+                      <div className="space-y-1">
+                        {groupItems.map((item) => (
+                          <button key={item.id} onClick={() => selectKnowledgeItem(item.id)} className={`w-full text-left px-3 py-2.5 rounded-xl border transition-all ${activeKnowledgeItemId === item.id ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white border-transparent text-gray-600 hover:border-gray-200 hover:bg-gray-50'}`}>
+                            <div className="flex items-start gap-2">
+                              <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${item.health?.status === 'over' ? 'bg-red-500' : item.health?.status === 'warning' ? 'bg-amber-400' : item.readOnly ? 'bg-gray-400' : 'bg-emerald-500'}`}></span>
+                              <span className="min-w-0">
+                                <span className="block text-xs font-bold truncate">{item.title}</span>
+                                {item.collection && <span className={`block text-[9px] mt-1 ${activeKnowledgeItemId === item.id ? 'text-slate-400' : 'text-gray-400'}`}>{item.collection === 'decisions' ? '决策' : item.collection === 'issues' ? '异常' : item.collection === 'changes' ? '变更' : '归档'}</span>}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                        {groupItems.length === 0 && <div className="px-3 py-3 text-[11px] text-gray-400 border border-dashed border-gray-200 rounded-xl">暂无记录</div>}
+                      </div>
+                    </section>
+                  );
+                })}
               </div>
             )}
          </div>
          <div className="p-4 border-t border-gray-100 bg-gray-50/50 space-y-3">
              {!isViewOnly && isEditMode && activeSection === 'docs' && <button onClick={addPage} className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 text-sm hover:border-blue-400 hover:text-blue-600 hover:bg-white transition-all flex items-center justify-center gap-2"><Plus size={14}/> {getUi('newPage', lang)}</button>}
-             {activeSection === 'docs' && <div>
+              {activeSection === 'docs' && <div>
                 {/* [UPDATE] Added Language Label */}
                 <div className="text-xs font-bold text-gray-500 text-center mb-2">{getUi('langLabel', lang)}</div>
                 <div className="flex bg-white p-1 rounded-lg border shadow-sm">{['zh', 'en', 'bilingual'].map(l => (<button key={l} onClick={() => setLang(l)} className={`flex-1 py-1.5 text-[10px] rounded font-medium uppercase transition-colors ${lang === l ? 'bg-gray-800 text-white shadow' : 'text-gray-400 hover:text-gray-600'}`}>{l}</button>))}</div>
-             </div>}
-         </div>
+              </div>}
+              {activeSection === 'development' && <button onClick={() => setShowNewRecordModal(true)} className="w-full py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-2"><Plus size={14}/> 新建决策 / 异常 / 变更</button>}
+              {activeSection !== 'docs' && <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] leading-relaxed text-amber-800"><LockKeyhole size={11} className="inline mr-1"/>全部项目资料和通用规则只保存在本机，不会发布到分享页面。</div>}
+          </div>
       </nav>
 
       <main className="flex-1 flex flex-col min-w-0 relative h-full">
         {/* Header */}
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 z-30 transition-all print:hidden">
           <div className="flex-1 mr-8">
-             {activeSection === 'development' ? <div><h2 className="text-xl font-bold text-gray-800">{getUi('development', lang)} · {activeProject?.name}</h2><p className="text-xs text-amber-700 mt-0.5 flex items-center gap-1"><LockKeyhole size={11}/> {getUi('localOnly', lang)}</p></div> : !isViewOnly && isEditMode ? <input className="text-xl font-bold text-gray-800 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none w-full py-1" value={docData.docTitle} onChange={e => setDocData({...docData, docTitle: e.target.value})} placeholder={getUi('docTitlePlaceholder', lang)}/> : <h2 className="text-xl font-bold text-gray-800">{docData.docTitle}</h2>}
+             {activeSection !== 'docs' ? <div><h2 className="text-xl font-bold text-gray-800">{activeKnowledgeItem?.title || (activeSection === 'common' ? '通用规则' : getUi('development', lang))}</h2><p className="text-xs text-amber-700 mt-0.5 flex items-center gap-1"><LockKeyhole size={11}/> {getUi('localOnly', lang)} · {activeKnowledgeItem?.readOnly ? '工具自动生成' : 'Markdown 文件'}</p></div> : !isViewOnly && isEditMode ? <input className="text-xl font-bold text-gray-800 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none w-full py-1" value={docData.docTitle} onChange={e => setDocData({...docData, docTitle: e.target.value})} placeholder={getUi('docTitlePlaceholder', lang)}/> : <h2 className="text-xl font-bold text-gray-800">{docData.docTitle}</h2>}
           </div>
           <div className="flex items-center gap-4 shrink-0">
              {!isViewOnly && (activeSection === 'docs' ? (
@@ -1299,10 +1214,10 @@ data.pages.forEach((p, i) => {
                  <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0"><button onClick={() => setIsEditMode(false)} className={`px-2 py-1.5 text-xs font-bold rounded-md flex gap-1 items-center ${!isEditMode ? 'bg-white shadow-sm' : 'text-gray-400'}`}><Eye size={14}/> {getUi('previewMode', lang)}</button><button onClick={() => setIsEditMode(true)} className={`px-2 py-1.5 text-xs font-bold rounded-md flex gap-1 items-center ${isEditMode ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}><Edit3 size={14}/> {getUi('editMode', lang)}</button></div>
                  <div className="h-6 w-px bg-gray-200 shrink-0"></div>
                   {isEditMode && <button onClick={translateAllText} disabled={isTranslating} className={`flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border transition-all whitespace-nowrap ${isTranslating ? 'bg-gray-100' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'}`}>{isTranslating ? <Loader2 size={12} className="animate-spin"/> : <Languages size={14}/>} {isTranslating ? '...' : getUi('aiTranslate', lang)}</button>}
-                  <div className={`flex items-center gap-1.5 text-xs font-medium ${saveState === 'error' ? 'text-red-600' : saveState === 'saving' || saveState === 'loading' ? 'text-amber-600' : 'text-emerald-600'}`} title={saveState === 'error' ? getUi('saveError', lang) : getUi(saveState, lang)}>
-                    {saveState === 'saving' || saveState === 'loading' ? <Loader2 size={14} className="animate-spin"/> : saveState === 'error' ? <AlertTriangle size={14}/> : <Save size={14}/>} 
-                    <span className="hidden xl:inline">{saveState === 'error' ? getUi('saveError', lang) : getUi(saveState, lang)}</span>
-                  </div>
+                  <button className="doc-settings-trigger" onClick={() => setShowDocumentSettings(true)}><Palette size={14}/> 全局排版</button>
+                  {saveState !== 'saved' && <div className={`doc-save-status ${saveState === 'error' ? 'is-error' : ''}`} role={saveState === 'error' ? 'alert' : 'status'}>
+                    {saveState === 'error' ? <><AlertTriangle size={14}/><span>保存失败，修改尚未写入</span><button onClick={() => { void saveImmediately().catch(() => {}); }}>重试保存</button></> : <><Loader2 size={14} className="animate-spin"/><span>{getUi(saveState, lang)}</span></>}
+                  </div>}
                   <button onClick={connectGitHub} disabled={isGithubConnecting || githubStatus?.available === false} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-bold transition-all whitespace-nowrap ${githubStatus?.authenticated ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100' : 'bg-gray-900 text-white border-gray-900 hover:bg-gray-700'} disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200`} title={githubStatus?.authenticated ? `${getUi('githubConnected', lang)}：${githubStatus.accounts.join(', ')}（点击重新登录或切换账号）` : getUi('githubLogin', lang)}>
                     {isGithubConnecting ? <Loader2 size={15} className="animate-spin"/> : <LogIn size={15}/>}
                     <span>{isGithubConnecting ? getUi('githubConnecting', lang) : githubStatus?.authenticated ? githubStatus.accounts[0] : getUi('githubLogin', lang)}</span>
@@ -1315,96 +1230,69 @@ data.pages.forEach((p, i) => {
                   </button>
                </>
              ) : (
-               <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold ${developmentSaveState === 'error' ? 'bg-red-50 text-red-700' : developmentSaveState === 'saving' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
-                 {developmentSaveState === 'saving' ? <Loader2 size={15} className="animate-spin"/> : developmentSaveState === 'error' ? <AlertTriangle size={15}/> : <Save size={15}/>} {developmentSaveState === 'saving' ? getUi('devSaving', lang) : developmentSaveState === 'error' ? getUi('saveError', lang) : getUi('devSaved', lang)}
-               </div>
+               <>
+                 <button onClick={() => copyAiInstruction(false)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold"><ClipboardCopy size={15}/> 复制项目读取指令</button>
+                 <button onClick={() => copyAiInstruction(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-bold"><FileText size={15}/> 项目＋通用规则</button>
+                 {activeKnowledgeItemId === 'project:handoff' && <button onClick={archiveHandoff} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold"><FolderOpen size={15}/> 归档本轮交接</button>}
+                 <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold ${knowledgeSaveState === 'error' ? 'bg-red-50 text-red-700' : knowledgeSaveState === 'saving' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                   {knowledgeSaveState === 'saving' ? <Loader2 size={15} className="animate-spin"/> : knowledgeSaveState === 'error' ? <AlertTriangle size={15}/> : <Save size={15}/>} {knowledgeSaveState === 'saving' ? getUi('devSaving', lang) : knowledgeSaveState === 'error' ? getUi('saveError', lang) : getUi('devSaved', lang)}
+                 </div>
+               </>
              ))}
           </div>
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto bg-[#f3f4f6] relative print:bg-white print:overflow-visible" onContextMenu={(e) => { if(activeSection === 'docs' && isEditMode) { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, targetBlockId: null }); } }}>
-          {activeSection === 'development' && !isViewOnly ? (
-            <div className="max-w-5xl min-h-full mx-auto px-8 py-10 flex flex-col">
-              <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-950 shadow-sm">
-                <div className="flex items-center gap-2 font-bold"><LockKeyhole size={18}/> 私有开发记录</div>
-                <p className="mt-2 text-sm leading-relaxed text-amber-800">这里用于记录开发进度、异常现象、原因、最近解决方法、项目存储规则和 AI 交接内容。文件只保存在本机，不会进入 GitHub 或分享页面。</p>
-                <p className="mt-3 text-xs break-all text-amber-700">本地文件：{developmentPath}</p>
+        {activeSection !== 'docs' && !isViewOnly ? (
+        <div className="flex-1 overflow-auto bg-[#f3f4f6] relative print:bg-white print:overflow-visible">
+            <div className="max-w-5xl min-h-full mx-auto px-8 py-8 flex flex-col">
+              <div className="mb-5 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 font-bold text-slate-900"><FileText size={18}/>{activeKnowledgeItem?.title}</div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{activeKnowledgeItem?.description}</p>
+                  </div>
+                  {activeKnowledgeItem?.health && <div className={`px-3 py-1.5 rounded-full border text-xs font-bold ${knowledgeHealthClass}`}>{activeKnowledgeItem.health.lines} 行{activeKnowledgeItem.health.recommendedLines ? ` / 建议 ${activeKnowledgeItem.health.recommendedLines} 行内` : ''}</div>}
+                </div>
+                {activeKnowledgeItem?.health?.status === 'over' && <div className="mt-3 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-xs text-red-700">当前文件已超过建议长度。请把历史推导拆为独立记录或归档，只保留当前有效结论。</div>}
+                <p className="mt-3 text-[11px] break-all text-slate-400">本地文件：{activeKnowledgeItem?.path}</p>
               </div>
               <textarea
-                value={developmentRecord}
-                onChange={(event) => setDevelopmentRecord(event.target.value)}
+                value={knowledgeDraft}
+                onChange={(event) => setKnowledgeDraft(event.target.value)}
+                readOnly={activeKnowledgeItem?.readOnly}
                 spellCheck={false}
-                aria-label="开发记录"
-                className="flex-1 min-h-[720px] w-full resize-none rounded-2xl border border-slate-300 bg-white px-8 py-7 font-mono text-[15px] leading-7 text-slate-800 shadow-sm outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
-                placeholder={"# 开发记录\n\n在这里记录当前进度、异常原因和 AI 交接信息……"}
+                aria-label={activeKnowledgeItem?.title || '项目资料'}
+                className={`flex-1 min-h-[700px] w-full resize-none rounded-2xl border bg-white px-8 py-7 font-mono text-[15px] leading-7 text-slate-800 shadow-sm outline-none transition ${activeKnowledgeItem?.readOnly ? 'border-slate-200 bg-slate-50 text-slate-600' : 'border-slate-300 focus:border-amber-400 focus:ring-4 focus:ring-amber-100'}`}
+                placeholder="# 在这里填写结构化项目资料"
               />
             </div>
-          ) : (
-          /* FIX: Locked width to A4 (794px) to match export layout */
-          <div ref={canvasRef} className="w-[794px] mx-auto my-12 bg-white min-h-[1000px] shadow-sm border border-gray-200 px-16 py-16 relative print:shadow-none print:border-none print:m-0 print:w-full print:max-w-none">
-            <div className="relative z-10 space-y-4">
-              {/* FIX: InsertZone top - also receives hidden prop */}
-              {!isViewOnly && isEditMode && <InsertZone onInsert={(type) => addBlock(type, false, 0)} lang={lang} hidden={activeMenuId !== null} />}
-              
-              {flowBlocks.map((block, index) => (
-                // [FIX] REMOVED z-0 to fix stacking context issues allowing floats to be above other text blocks
-                <div key={block.id} className="relative pointer-events-none">
-                  <FlowBlock 
-                    id={block.id} index={index} 
-                    isEditMode={!isViewOnly && isEditMode} 
-                    onDelete={() => deleteBlock(block.id)} 
-                    style={block.style} 
-                    onUpdateStyle={(s) => updateBlockStyle(block.id, s)} 
-                    onDragStart={(e) => { setDraggedIndex(index); e.dataTransfer.effectAllowed = "move"; }} 
-                    onDragOver={(e) => e.preventDefault()} 
-                    onDrop={handleFlowDrop} 
-                    onContextMenu={(e) => { if(!isEditMode) return; e.preventDefault(); e.stopPropagation(); setContextMenu({ x: e.clientX, y: e.clientY, relativeX: e.clientX - e.currentTarget.getBoundingClientRect().left, relativeY: e.clientY - e.currentTarget.getBoundingClientRect().top, targetBlockId: block.id }); }} 
-                    attachments={block.attachments} 
-                    onUpdateAttachment={updateAttachment} 
-                    onDeleteAttachment={deleteAttachment} 
-                    onPreviewImage={setPreviewImage} 
-                    onCopyAttachment={(type, data) => { setClipboard({type, data}); showToast(getUi('copySuccess', lang), 'success'); }} 
-                    lang={lang}
-                    type={block.type}
-                    // FIX: Pass arguments to translation function
-                    onTranslate={(targetId) => translateBlock(targetId || block.id)}
-                    isTranslating={translatingBlockId === block.id}
-                    isActive={activeBlockId === block.id}
-                    onActivate={(id) => { const targetId = id || block.id; if (activeBlockId !== targetId) setActiveBlockId(targetId); }} 
-                    activeMenuId={activeMenuId}
-                    setActiveMenuId={setActiveMenuId}
-                    updateBlockData={(field, val) => updateBlockData(block.id, field, val)}
-                    blockData={block.data}
-                    // FIX: Missing Props added
-                    isMenuOpen={activeMenuId === block.id} 
-                    onToggleMenu={() => setActiveMenuId(activeMenuId === block.id ? null : block.id)}
-                    anyFloatHovered={anyFloatHovered}
-                    setAnyFloatHovered={setAnyFloatHovered}
-                  />
-                  {!isViewOnly && isEditMode && (
-                     // FIX: Use absolute positioning to place InsertZone exactly in the gap
-                     // FIX: z-0 ensures it is below the text content (which is z-10 or z-30)
-                     <div className="absolute left-0 right-0 top-full h-4 z-0 pointer-events-none">
-                        {/* FIX: Pass hidden prop to prevent interference */}
-                        <InsertZone onInsert={(type) => addBlock(type, false, index + 1)} lang={lang} isOverlay={true} hidden={activeMenuId !== null} />
-                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-          )}
         </div>
-
-        <RightToolbar isEditMode={activeSection === 'docs' && !isViewOnly && isEditMode} onAdd={addBlock} lang={lang} />
+        ) : (
+          <RichDocumentEditor
+            key={`${workspace?.activeProjectId || 'published'}:${activePageId}`}
+            blocks={blocks}
+            typography={docData.typography}
+            editable={!isViewOnly && isEditMode}
+            lang={lang}
+            translatingId={translatingBlockId}
+            onChange={(next) => updateContent(() => next)}
+            onTranslate={translateBlock}
+            onPreview={setPreviewImage}
+            onContextMenu={(event, blockId) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              setContextMenu({ x: event.clientX, y: event.clientY, relativeX: event.clientX - rect.left, relativeY: event.clientY - rect.top, blockWidth: rect.width, targetBlockId: blockId });
+            }}
+          />
+        )}
         {activeSection === 'docs' && contextMenu && !isViewOnly && (
           <>
-            <div className="fixed inset-0 z-[9998]" onClick={() => setContextMenu(null)} />
+            <div className="doc-context-dismiss" onMouseDown={(event) => { if (event.button === 0) setContextMenu(null); }} onContextMenu={(event) => { event.preventDefault(); setContextMenu(null); }} />
             <ContextMenu x={contextMenu.x} y={contextMenu.y} onClose={() => setContextMenu(null)} onAdd={addBlock} targetBlockId={contextMenu.targetBlockId} clipboard={clipboard} onPaste={(tid) => { if(!clipboard) return; const newAtt = { id: `a${Date.now()}`, type: clipboard.type, isFloating: true, layout: { x: contextMenu.relativeX, y: contextMenu.relativeY, width: 150, height: 100 }, data: JSON.parse(JSON.stringify(clipboard.data)), style: { size: 'text-xs', bgColor: '#fffbeb' } }; updateContent(blocks => blocks.map(b => b.id !== tid ? b : { ...b, attachments: [...(b.attachments || []), newAtt] })); }} lang={lang} />
           </>
         )}
       </main>
+      {showDocumentSettings && <DocumentSettings value={docData.typography} onClose={() => setShowDocumentSettings(false)} onChange={(typography) => setDocData((current) => ({ ...current, typography, content: Object.fromEntries(Object.entries(current.content).map(([id, page]) => [id, { ...page, blocks: page.blocks.map((block) => ({ ...block, style: { ...block.style, customTypography: false } })) }])) }))}/>}
     </div>
   );
 };

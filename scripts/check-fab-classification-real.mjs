@@ -1,0 +1,25 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';import {createFabClassification} from '../server/fab-classification.mjs';import {runProcess} from '../server/ue-windows.mjs';
+const root=process.cwd(),fixture=path.join(root,'.local/checks/fab-real-'+Date.now()),source=path.join(fixture,'Source'),descriptor=path.join(source,'FabCheck.uproject'),editor='C:/Program Files/Epic Games/UE_5.3/Engine/Binaries/Win64/UnrealEditor-Cmd.exe';for(const name of ['Content','Config','Plugins'])await fs.mkdir(path.join(source,name),{recursive:true});const build=(await fs.readFile('.local/delivery-bridge-build-path.txt','utf8')).trim();await fs.cp(path.join(build,'Plugins/DeliveryVerification'),path.join(source,'Plugins/DeliveryVerification'),{recursive:true});await fs.writeFile(descriptor,JSON.stringify({FileVersion:3,EngineAssociation:'5.3',Plugins:[{Name:'PythonScriptPlugin',Enabled:true},{Name:'EditorScriptingUtilities',Enabled:true},{Name:'DeliveryVerification',Enabled:true}]}));
+const script=path.join(fixture,'create.py'),out=path.join(fixture,'created.json');await fs.writeFile(script,`import unreal,json,traceback
+r={"success":False}
+try:
+ t=unreal.AssetToolsHelpers.get_asset_tools()
+ tex=t.create_asset("T_Check","/Game/FeatureA",unreal.Texture2D,unreal.Texture2DFactoryNew())
+ mat=t.create_asset("M_Check","/Game/FeatureA/One",unreal.Material,unreal.MaterialFactoryNew())
+ other=t.create_asset("M_Check","/Game/FeatureA/Two",unreal.Material,unreal.MaterialFactoryNew())
+ expression=unreal.MaterialEditingLibrary.create_material_expression(mat,unreal.MaterialExpressionTextureSample,0,0)
+ expression.set_editor_property('texture',tex)
+ bp=unreal.DeliveryVerificationLibrary.create_widget_fixture()
+ component_factory=unreal.BlueprintFactory()
+ component_factory.set_editor_property('parent_class',unreal.ActorComponent)
+ component=t.create_asset('BP_Any','/Game/FeatureA',unreal.Blueprint,component_factory)
+ world=t.create_asset('DemoMap','/Game/FeatureA',unreal.World,unreal.WorldFactory())
+ assert world
+ assert unreal.EditorAssetLibrary.save_loaded_assets([tex,mat,other,bp,component],False)
+ assert unreal.EditorLoadingAndSavingUtils.save_map(world,'/Game/FeatureA/DemoMap')
+ r['success']=True
+except Exception as e:r.update(error=str(e),traceback=traceback.format_exc())
+with open(${JSON.stringify(out)},'w') as f:json.dump(r,f)
+`);const created=await runProcess(editor,[descriptor,'-run=pythonscript','-script='+script,'-unattended','-nop4','-NoSound','-NullRHI','-abslog='+path.join(fixture,'create.log')],{cwd:source,timeout:120000});assert.equal(created.code,0);const r=JSON.parse(await fs.readFile(out));assert.equal(r.success,true,r.traceback);await fs.writeFile(path.join(source,'Config/DefaultEngine.ini'),'[/Script/EngineSettings.GameMapsSettings]\nEditorStartupMap=/Game/FeatureA/DemoMap.DemoMap\nGameDefaultMap=/Game/FeatureA/DemoMap\n[/Script/EngineSettings.GeneralProjectSettings]\nProjectName=Classification fixture\n');const before=await fs.readFile(descriptor),matBefore=await fs.readFile(path.join(source,'Content/FeatureA/One/M_Check.uasset'));
+const service=createFabClassification({root:fixture,runner:runProcess,engines:async()=>({items:[{version:'5.3',installed:true,editor}]}),resourceRoot:path.join(root,'desktop/resources/delivery'),launcher:async()=>({started:true})});async function wait(id){let last='';for(;;){const j=service.job(id);if(j.phase!==last){last=j.phase;console.log(JSON.stringify({phase:last,progress:j.progress}));}if(j.status!=='running')return j;await new Promise(r=>setTimeout(r,300));}}
+const preview=await service.beginPreview({path:descriptor,mode:'feature',modules:{FeatureA:'Gestures',Checks:'UI'}}),plan=await wait(preview.jobId);assert.equal(plan.status,'completed',plan.error);assert.ok(plan.plan.moves.some(m=>m.category==='Widgets'));assert.ok(plan.plan.moves.some(m=>m.category==='Components'));assert.ok(plan.plan.moves.some(m=>m.category==='Maps'));assert.equal(plan.plan.collisions,1);const outputs=path.join(fixture,'.local/checks/Outputs');await fs.mkdir(outputs,{recursive:true});const applied=await service.apply({planId:plan.plan.planId,outputRoot:outputs,name:'FabResult'}),done=await wait(applied.jobId);assert.equal(done.status,'completed',done.error);assert.equal(done.sourceUnchanged,true);assert.equal((await fs.readFile(descriptor)).equals(before),true);assert.equal((await fs.readFile(path.join(source,'Content/FeatureA/One/M_Check.uasset'))).equals(matBefore),true);const config=await fs.readFile(path.join(done.target,'Config/DefaultEngine.ini'),'utf8');assert.match(config,/\/Game\/FabCheck\/Gestures\/Maps\/DemoMap.DemoMap/);assert.ok(done.compiler.compiled>=2);assert.equal(done.verification.reopened,true);assert.equal(done.moved,6);await assert.rejects(service.apply({planId:plan.plan.planId,outputRoot:outputs,name:'FabResult'}));await fs.writeFile(path.join(root,'.local/last-fab-real-check.txt'),fixture);console.log(JSON.stringify({success:true,fixture,moved:done.moved,compiler:done.compiler,sourceUnchanged:true,actualTypes:true,dependencyVerification:true}));

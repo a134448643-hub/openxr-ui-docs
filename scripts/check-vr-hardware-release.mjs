@@ -1,0 +1,24 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';import {DesktopStateStore} from '../desktop/state-store.mjs';
+const root=path.resolve(import.meta.dirname,'..'),version=JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).version;
+const fixture=path.join(root,'.local/checks/vr-hardware-release-'+version+'-'+Date.now());await fs.mkdir(path.join(fixture,'tmp'),{recursive:true});await fs.mkdir(path.join(fixture,'.local/ue-manager'),{recursive:true});
+await fs.copyFile(path.join(root,'.local/ue-manager/device-names.json'),path.join(fixture,'.local/ue-manager/device-names.json'));
+const store=new DesktopStateStore(path.join(fixture,'.local/desktop-data'));await store.load();await store.set('ue-pm-theme','epic-launcher');await store.set('ue-nexus-prototype-v1',JSON.stringify({theme:'epic-launcher',catalog:[],order:[]}));
+const require=createRequire(import.meta.url),{_electron}=require('C:/Users/10728/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');let app,page;const errors=[],operations=[];
+const executable=path.join(root,'.local/desktop-build/release',version,'PersonalDevPlatform-win32-x64/PersonalDevPlatform.exe');
+async function tab(id){await page.locator('#vr-tool-tab-'+id).click();await page.locator('#vr-tool-tab-'+id+'[aria-selected="true"]').waitFor();}
+try{
+ app=await _electron.launch({executablePath:executable,args:[],cwd:root,env:{...process.env,UE_DESKTOP_WORKSPACE:fixture,UE_DESKTOP_SMOKE:'1',TEMP:path.join(fixture,'tmp'),TMP:path.join(fixture,'tmp')},timeout:60000});page=await app.firstWindow();page.setDefaultTimeout(20000);page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(request.url().includes('/api/ue/vr/'))operations.push(new URL(request.url()).pathname.split('/').at(-1));});await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].webContents.setBackgroundThrottling(false));
+ await page.route('**/api/ue/pick',route=>route.fulfill({json:{path:fixture}}));
+ await page.locator('[data-nav="vr-install"]').click();await page.locator('[data-action="vr-refresh-devices"]:enabled').waitFor();
+ const count=Number(await page.locator('.vr-device-bar').getAttribute('data-device-count'));assert.ok(count>0,'Headset disconnected during release verification');assert.match(await page.locator('.vr-device-summary').innerText(),/PICO 4 Pro/);assert.match(await page.locator('.vr-device-summary').getAttribute('title'),/A8110/);
+ await page.locator('.vr-device-app-rows .vr-data-row').first().waitFor();const apps=await page.locator('.vr-device-app-rows .vr-data-row').count();
+ await page.locator('.vr-device-app-rows .vr-data-row').first().click();await page.locator('[data-action="vr-service-launch"]:enabled').waitFor();
+ await tab('files');await page.locator('[data-action="vr-file-location"][data-id="downloads"]').click();await page.locator('.vr-file-rows .vr-data-row').first().waitFor();const files=await page.locator('.vr-file-rows .vr-data-row').count();assert.doesNotMatch(await page.locator('.vr-storage-overview').innerText(),/—/);
+ await tab('logs');await page.locator('[data-action="vr-service-logs"]').click();await page.locator('.vr-device-log-lines').waitFor();const logCharacters=(await page.locator('.vr-device-log-lines').innerText()).length;await page.locator('[data-action="vr-service-logs"]').click();
+ await tab('cast');await page.locator('[data-action="vr-service-screenshot"]').click();await page.locator('.vr-device-screenshot').waitFor();const image=await page.locator('.vr-device-screenshot').evaluate(img=>({width:img.naturalWidth,height:img.naturalHeight}));assert.ok(image.width>0&&image.height>0);
+ const drag=await page.locator('.brand-title').evaluate(el=>getComputedStyle(el).getPropertyValue('-webkit-app-region'));assert.equal(drag,'drag');assert.equal(await page.locator('.brand-mark').evaluate(el=>getComputedStyle(el).getPropertyValue('-webkit-app-region')),'no-drag');
+ await page.locator('.brand-mark').click();await page.waitForFunction(()=>document.querySelector('.desktop-workspace-tab.active')?.textContent==='我的工作区');
+ assert.deepEqual(errors,[]);assert.deepEqual(operations.filter(op=>!['apps','app-info','memory','files','storage','logs','screenshot'].includes(op)),[]);
+ await page.evaluate(()=>window.ueDesktopFlush());const closed=app.waitForEvent('close',{timeout:20000});await page.locator('[data-window-action="close"]').click();await closed;app=null;
+ const report={version,fixture,apps,files,logCharacters,image,dragRegion:drag,actualDeviceReadTests:true,actualScreenshot:true,actualDeviceWrites:false,operations,errors};await fs.writeFile(path.join(fixture,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+}catch(error){console.error(fixture,error);throw error;}finally{if(app)await app.close().catch(()=>{});}

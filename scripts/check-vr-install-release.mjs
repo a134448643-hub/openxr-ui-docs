@@ -1,0 +1,44 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const root=path.resolve(import.meta.dirname,'..'),version=JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).version;
+const sourceMode=process.env.UE_VR_SOURCE_SMOKE==='1';
+const fixture=path.join(root,'.local/checks/vr-install-'+(sourceMode?'source':'release')+'-'+version+'-'+Date.now());
+await fs.mkdir(path.join(fixture,'tmp'),{recursive:true});
+const apk=path.resolve(process.argv[2]||'');assert.equal(path.extname(apk).toLowerCase(),'.apk');const stat=await fs.stat(apk);
+const require=createRequire(import.meta.url),{_electron}=require('C:/Users/10728/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const executable=sourceMode?path.join(root,'node_modules/electron/dist/electron.exe'):path.join(root,'.local/desktop-build/release',version,'PersonalDevPlatform-win32-x64/PersonalDevPlatform.exe');
+let app;const errors=[],installs=[];
+try{
+  app=await _electron.launch({executablePath:executable,args:sourceMode?[path.join(root,'desktop/main.mjs')]:[],cwd:root,env:{...process.env,UE_DESKTOP_WORKSPACE:fixture,UE_DESKTOP_SMOKE:'1',TEMP:path.join(fixture,'tmp'),TMP:path.join(fixture,'tmp')},timeout:60000});
+  const page=await app.firstWindow();page.on('pageerror',e=>errors.push(e.message));page.on('request',request=>{if(request.url().endsWith('/api/ue/install-apk'))installs.push(request.url());});
+  await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].webContents.setBackgroundThrottling(false));
+  assert.equal(await page.evaluate(()=>window.ueDesktop.getVersion()),version);
+  await page.locator('[data-nav="vr-install"]').click();
+  await page.locator('[data-action="vr-refresh-devices"]:enabled').waitFor();
+  assert.equal(await page.locator('.vr-install-error').count(),0);
+  await page.evaluate(()=>{const input=document.createElement('input');input.id='fixture-file';input.type='file';input.hidden=true;document.body.append(input);});
+  await page.locator('#fixture-file').setInputFiles(apk);
+  await page.evaluate(()=>{const transfer=new DataTransfer();transfer.items.add(document.getElementById('fixture-file').files[0]);document.getElementById('vr-dropzone').dispatchEvent(new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:transfer}));});
+  await page.locator('.vr-apk-path').waitFor();assert.equal(await page.locator('.vr-apk-path').innerText(),apk);assert.match(await page.locator('.vr-apk-size').innerText(),new RegExp((stat.size/1024/1024).toFixed(1).replace('.','\\.')));
+  assert.equal(await page.locator('.desktop-workspace-tab.active').innerText(),'VR开发者工具');
+  const deviceCount=Number(await page.locator('.vr-device-bar').getAttribute('data-device-count'));
+  if(deviceCount<2)assert.equal(await page.locator('#vr-device-select').count(),0);
+  assert.deepEqual(await page.locator('.vr-tool-tabs [role="tab"]').allTextContents(),['应用','文件与空间','性能','投屏','日志与闪退']);
+  for(const id of ['files','performance','cast','logs','apps']){await page.locator('#vr-tool-tab-'+id).click();await page.locator('#vr-tool-tab-'+id+'[aria-selected="true"]').waitFor();}
+  if(!deviceCount)assert.equal(await page.locator('[data-action="vr-start-install"]').isDisabled(),true);
+  await app.evaluate(async({BrowserWindow})=>{await BrowserWindow.getAllWindows()[0].webContents.capturePage(undefined,{stayHidden:true,stayAwake:true});});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const screenshot=await app.evaluate(async({BrowserWindow})=>(await BrowserWindow.getAllWindows()[0].webContents.capturePage(undefined,{stayHidden:true,stayAwake:true})).toPNG().toString('base64'));
+  await fs.writeFile(path.join(fixture,'packaged-vr-install.png'),Buffer.from(screenshot,'base64'));
+  await page.route('**/api/ue/devices',route=>route.fulfill({json:{items:[{serial:'fixture-primary',model:'PICO_4',status:'device'},{serial:'fixture-secondary',model:'Quest_3',status:'device'}]}}));
+  await page.locator('[data-action="vr-refresh-devices"]').click();await page.locator('#vr-device-select').waitFor();
+  await page.locator('#vr-device-select').selectOption('fixture-secondary');await page.locator('.vr-device-bar[data-device-serial="fixture-secondary"]').waitFor();
+  await page.locator('#vr-device-select').selectOption('');await page.locator('.vr-device-bar[data-device-serial=""]').waitFor();assert.equal(await page.locator('[data-action="vr-start-install"]').isDisabled(),true);
+  await page.unroute('**/api/ue/devices');await page.locator('[data-action="vr-refresh-devices"]').click();await page.locator('[data-action="vr-refresh-devices"]:enabled').waitFor();
+  assert.deepEqual(errors,[]);assert.deepEqual(installs,[]);
+  const closed=app.waitForEvent('close',{timeout:20000});await page.locator('[data-window-action="close"]').click();await closed;app=null;
+  const report={version,mode:sourceMode?'source':'packaged',executable,fixture,apk,bytes:stat.size,deviceCount,actualDeviceDetection:true,actualApkMetadata:true,simulatedMultipleDevices:true,clearingTargetBlocksInstall:true,actualDeviceInstallation:false,installRequests:installs,errors};
+  await fs.writeFile(path.join(fixture,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+}finally{if(app)await app.close().catch(()=>{});}

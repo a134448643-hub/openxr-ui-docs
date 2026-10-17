@@ -1,0 +1,236 @@
+version: 1
+blockOrder:
+  - pmvb0364sisrtwii
+  - pmvb0364suge2f1x
+  - b1791987675801
+  - pmvavvm8pn0o2qsw
+  - pmvb04lsd3vo0fz1
+  - pmvbnn04ad3hdi63
+  - pmvbnou2ht8de4vc
+  - pmvbnoo80qphjb0d
+  - pmvbnn04bmvof3b3
+  - pmvb0tv6x69uso4n
+  - pmvb0d7j111gxu2l
+  - pmvb0d370o409oj8
+  - pmvb0gwgs1282nbp
+  - pmvb197u0t7ac6m4
+blocks:
+  pmvb0364sisrtwii:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 1
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: true
+      headingLevel: 1
+      richText:
+        zh:
+          - type: text
+            text: BPC_OpenXR手势配置
+      documentOrder:
+        zh: 0
+    attachments: []
+  pmvb0364suge2f1x:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 极致简化手势配置流程
+          - type: hardBreak
+          - type: text
+            text: 现在只需要添加一个手势组件，设置数据资产即可正常运行。
+      documentOrder:
+        zh: 1
+    attachments: []
+  b1791987675801:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+      documentOrder: 2
+      imageWidth: 60
+    attachments: []
+  pmvavvm8pn0o2qsw:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 1
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: true
+      headingLevel: 1
+      richText:
+        zh:
+          - type: text
+            text: BPC_控件交互组件/射线配置
+      documentOrder:
+        zh: 3
+    attachments: []
+  pmvb04lsd3vo0fz1:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 手势角色：添加到BPC_OpenXR手势组件下，无需绑定输入
+          - type: hardBreak
+          - type: text
+            text: 手柄角色：添加到角色手部骨骼网格体的食指骨骼上
+      documentOrder:
+        zh: 4
+    attachments: []
+  pmvbnn04ad3hdi63:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 46
+      documentOrder: 5
+    attachments: []
+  pmvbnou2ht8de4vc:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 依然可以在构造脚本，通过编辑器调试节点，在蓝图视口预览组件情况，记得组件细节面板开启调试
+      documentOrder:
+        zh: 6
+    attachments: []
+  pmvbnoo80qphjb0d:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 46
+      documentOrder: 7
+    attachments: []
+  pmvbnn04bmvof3b3:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: hardBreak
+          - type: text
+            text: BPC_控件交互组件_射线需要绑定一个输入，用于触发鼠标左键按压，布尔控制按下左键和松开左键
+      documentOrder:
+        zh: 8
+    attachments: []
+  pmvb0tv6x69uso4n:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 35
+      documentOrder: 9
+    attachments: []
+  pmvb0d7j111gxu2l:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 1
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: true
+      headingLevel: 1
+      richText:
+        zh:
+          - type: text
+            text: BPC_UI显示组件
+      documentOrder:
+        zh: 10
+    attachments: []
+  pmvb0d370o409oj8:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh:
+          - type: text
+            text: 添加你的需要显示UI Actor
+          - type: hardBreak
+          - type: text
+            text: 在构造脚本，拖出BPC_UI显示组件，连接编辑器调试节点，可在编辑器里观察设置位置（手势模式不太好定位，需要运行时预览效果）
+          - type: hardBreak
+          - type: text
+            text: 设置箭头位置，箭头是触发器，看向箭头才会触发UI,一般箭头位置在掌心
+      documentOrder:
+        zh: 11
+    attachments: []
+  pmvb0gwgs1282nbp:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 39
+      documentOrder: 12
+    attachments: []
+  pmvb197u0t7ac6m4:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+          level: 2
+      isSectionHeader: false
+      richText:
+        zh: []
+      documentOrder:
+        zh: 13
+    attachments: []
