@@ -1,5 +1,6 @@
 version: 1
 blockOrder:
+  - page-title-p-component-ui-button
   - review-104
   - review-105
   - review-106
@@ -11,6 +12,43 @@ blockOrder:
   - review-image-p-component-ui-button-pmvb20o5rvok4qgs
   - pmvcirpmab83c037
 blocks:
+  page-title-p-component-ui-button:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: BPC_UI按钮
+        en:
+          - type: text
+            text: AC_UIButton
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-104:
     type: text
     isFloating: false
@@ -35,8 +73,8 @@ blocks:
           - type: text
             text: Widget Settings
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-105:
     type: text
@@ -73,8 +111,8 @@ blocks:
           - type: text
             text: Sets the text displayed on the button.
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-106:
     type: text
@@ -111,8 +149,8 @@ blocks:
           - type: text
             text: Sets the image texture displayed on the button.
       documentOrder:
-        zh: 4
-        en: 5
+        zh: 6
+        en: 7
     attachments: []
   review-107:
     type: text
@@ -150,8 +188,8 @@ blocks:
             text: Sets the distance threshold along the component's local X axis required to
               trigger a press, allowing you to adjust the activation depth.
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []
   review-111:
     type: text
@@ -177,8 +215,8 @@ blocks:
           - type: text
             text: Setting the Button Style
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-112:
     type: text
@@ -207,15 +245,15 @@ blocks:
               the Blueprint viewport, call the same node in the Construction
               Script.
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   review-image-p-component-ui-button-pmvb1zzofl302xb3:
     type: image
     isFloating: false
     style:
       imageWidth: 63
-      documentOrder: 12
+      documentOrder: 14
     imageTranslation:
       srcEn: assets/0d0c6ab55a10e585fcdb.png
       shareWithEnglish: false
@@ -238,15 +276,15 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        zh: 13
-        en: 14
+        zh: 15
+        en: 16
     attachments: []
   review-image-p-component-ui-button-pmvb20o5rvok4qgs:
     type: image
     isFloating: true
     style:
       imageWidth: 20
-      documentOrder: 15
+      documentOrder: 17
     layout:
       x: 369.6598756906077
       y: 11.350276243093923
@@ -256,6 +294,12 @@ blocks:
       ry: 0.017679558011049725
       rw: 0.1850828729281768
       rh: 0.13646408839779006
+      referenceImage:
+        id: review-image-p-component-ui-button-pmvb1zzofl302xb3
+        x: 0.9139656171527912
+        y: -1.5095631946239338
+        width: 0.2937608653660421
+        height: 0.3623029206513311
     imageTranslation:
       srcEn: assets/52aafd219a95748a390e.png
       shareWithEnglish: false
@@ -278,6 +322,6 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        zh: 16
-        en: 17
+        zh: 18
+        en: 19
     attachments: []

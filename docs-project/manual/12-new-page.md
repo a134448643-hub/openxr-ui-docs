@@ -5,6 +5,13 @@ title:
   en: Basic Hand-Gesture Controls
 ---
 
+<!-- DOCBLOCK id="page-title-p1792160531812" type="text" -->
+<!-- ZH -->
+手势角色基础操作
+<!-- EN -->
+Basic Hand-Gesture Controls
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="review-49" type="text" -->
 <!-- ZH -->
 旋转

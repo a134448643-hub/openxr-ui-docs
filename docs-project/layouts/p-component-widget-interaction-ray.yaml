@@ -1,5 +1,6 @@
 version: 1
 blockOrder:
+  - page-title-p-component-widget-interaction-ray
   - review-86
   - review-87
   - review-88
@@ -7,6 +8,7 @@ blockOrder:
   - review-90
   - review-91
   - pmvcm8uuul7m9ynw
+  - pmvcnegzr0elkpr7
   - review-92
   - pmvcm8w1451zj0ly
   - pmvcm7kysbnxyps2
@@ -14,6 +16,43 @@ blockOrder:
   - review-image-p1792150504802-pmvb0tv6x69uso4n
   - pmvcm0551j2wvoyd
 blocks:
+  page-title-p-component-widget-interaction-ray:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: BPC_控件交互组件_射线
+        en:
+          - type: text
+            text: AC_WidgetInteraction_Ray
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-86:
     type: text
     isFloating: false
@@ -38,8 +77,8 @@ blocks:
           - type: text
             text: Widget Interaction Settings
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-87:
     type: text
@@ -77,8 +116,8 @@ blocks:
             text: Shows ray interaction debug information to help inspect detection results
               and hit locations.
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-88:
     type: text
@@ -115,8 +154,8 @@ blocks:
           - type: text
             text: Sets the maximum distance used for widget interaction detection.
       documentOrder:
-        zh: 4
-        en: 5
+        zh: 6
+        en: 7
     attachments: []
   review-89:
     type: text
@@ -144,19 +183,19 @@ blocks:
             text: 调整射线跟随手部或控制器时的插值响应，数值增大对应更快跟随还是更明显延迟
         en:
           - type: text
+            text: InterpolationSpeed
             marks:
               - type: bold
-            text: InterpolationSpeed
           - type: text
             text: " (Float)"
           - type: hardBreak
           - type: text
-            text: Adjusts interpolation as the ray follows the hand or controller. The
-              source description leaves open whether increasing the value
-              produces faster following or a more noticeable delay.
+            text: Adjusts interpolation as the ray follows the hand or controller. Confirm
+              whether increasing the value produces faster following or a more
+              noticeable delay.
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []
   review-90:
     type: text
@@ -193,8 +232,8 @@ blocks:
           - type: text
             text: Sets the initial scale of the UMG circular indicator when the ray hits UI.
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-91:
     type: text
@@ -232,19 +271,38 @@ blocks:
             text: "Sets the minimum and maximum distances at which the ray responds to UI: X
               is the minimum distance, and Y is the maximum distance."
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   pmvcm8uuul7m9ynw:
     type: image
     isFloating: false
     style:
       imageWidth: 38
-      documentOrder: 12
+      documentOrder: 14
     imageTranslation:
       srcEn: assets/8eeec2794636531e8ace.png
       shareWithEnglish: false
       enAnnotations: []
+    attachments: []
+  pmvcnegzr0elkpr7:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh: []
+      documentOrder:
+        zh: 15
+        en: 16
     attachments: []
   review-92:
     type: text
@@ -270,8 +328,8 @@ blocks:
           - type: text
             text: Controller Input
       documentOrder:
-        zh: 13
-        en: 16
+        zh: 17
+        en: 20
     attachments: []
   pmvcm8w1451zj0ly:
     type: text
@@ -290,24 +348,30 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        zh: 14
-        en: 15
+        zh: 18
+        en: 19
     attachments: []
   pmvcm7kysbnxyps2:
     type: image
     isFloating: true
     style:
       imageWidth: 72
-      documentOrder: 17
+      documentOrder: 21
     layout:
-      x: 252.54364640883978
-      y: 143.29723756906077
-      width: 93.28508287292817
-      height: 135.84861878453037
-      rx: 0.39337016574585637
-      ry: 0.22320441988950276
-      rw: 0.1453038674033149
-      rh: 0.21160220994475137
+      x: 259.53125
+      y: 394.296875
+      width: 93.28125
+      height: 135.84375
+      rx: 0.4042542834890966
+      ry: 0.6141695872274143
+      rw: 0.14529789719626168
+      rh: 0.2115946261682243
+      referenceImage:
+        id: pmvcm8uuul7m9ynw
+        x: 1.0638570422084161
+        y: 0.06994290375203915
+        width: 0.3823736629731634
+        height: 0.8864192495921697
     imageTranslation:
       srcEn: assets/53be1455e82f666b3e98.png
       shareWithEnglish: false
@@ -336,15 +400,15 @@ blocks:
               button. Use a Boolean value to control pressing and releasing the
               button.
       documentOrder:
-        zh: 18
-        en: 19
+        zh: 22
+        en: 23
     attachments: []
   review-image-p1792150504802-pmvb0tv6x69uso4n:
     type: image
     isFloating: false
     style:
       imageWidth: 35
-      documentOrder: 20
+      documentOrder: 24
     imageTranslation:
       srcEn: assets/0c5dc71917696d90eeaf.png
       shareWithEnglish: false
@@ -367,6 +431,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 21
-        en: 22
+        zh: 25
+        en: 26
     attachments: []

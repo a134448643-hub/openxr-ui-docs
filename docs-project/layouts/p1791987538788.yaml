@@ -1,5 +1,6 @@
 version: 1
 blockOrder:
+  - page-title-p1791987538788
   - review-59
   - review-60
   - review-61
@@ -15,6 +16,43 @@ blockOrder:
   - review-image-p1791987538788-b1791987613677
   - pmvclwiwd14mxvrh
 blocks:
+  page-title-p1791987538788:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: BPC_OpenXR手势
+        en:
+          - type: text
+            text: AC_OpenXRGesture and PAD_GestureConfig
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-59:
     type: text
     isFloating: false
@@ -39,8 +77,8 @@ blocks:
           - type: text
             text: Component Settings
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-60:
     type: text
@@ -72,8 +110,8 @@ blocks:
             text: ": assigns the gesture data asset for the current hand. Configure the hand
               model, bone mapping, and related offsets in that data asset."
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-61:
     type: text
@@ -99,8 +137,8 @@ blocks:
           - type: text
             text: PAD_GestureConfig Parameters
       documentOrder:
-        zh: 4
-        en: 5
+        zh: 6
+        en: 7
     attachments: []
   review-62:
     type: text
@@ -138,8 +176,8 @@ blocks:
             text: Enables hand-tracking debug visualization to inspect the OpenXR hand joint
               reference points.
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []
   review-63:
     type: text
@@ -177,8 +215,8 @@ blocks:
             text: Selects the left or right hand. The data asset must match the hand that
               uses the component.
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-64:
     type: text
@@ -217,8 +255,8 @@ blocks:
               Follow the existing template and check for missing entries or
               inconsistent spelling.
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   review-65:
     type: text
@@ -255,8 +293,8 @@ blocks:
           - type: text
             text: Adjusts the overall relative position of the hand model.
       documentOrder:
-        zh: 12
-        en: 13
+        zh: 14
+        en: 15
     attachments: []
   review-66:
     type: text
@@ -293,8 +331,8 @@ blocks:
           - type: text
             text: Adjusts the overall relative rotation of the hand model.
       documentOrder:
-        zh: 14
-        en: 15
+        zh: 16
+        en: 17
     attachments: []
   review-67:
     type: text
@@ -332,8 +370,8 @@ blocks:
             text: Adjusts bone rotation calibration to align the custom model's bone axes
               with hand-tracking data.
       documentOrder:
-        zh: 16
-        en: 17
+        zh: 18
+        en: 19
     attachments: []
   review-68:
     type: text
@@ -371,8 +409,8 @@ blocks:
             text: Specifies the mesh used to visualize hand joint reference points for
               debugging.
       documentOrder:
-        zh: 18
-        en: 19
+        zh: 20
+        en: 21
     attachments: []
   review-69:
     type: text
@@ -409,8 +447,8 @@ blocks:
           - type: text
             text: Specifies the hand model displayed at runtime.
       documentOrder:
-        zh: 20
-        en: 21
+        zh: 22
+        en: 23
     attachments: []
   review-70:
     type: text
@@ -446,8 +484,8 @@ blocks:
             text: Sets the relative transform of the finger's widget interaction component,
               including location, rotation, and scale.
       documentOrder:
-        zh: 22
-        en: 23
+        zh: 24
+        en: 25
     attachments: []
   review-image-p1791987538788-b1791987613677:
     type: image
@@ -458,7 +496,7 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
-      documentOrder: 24
+      documentOrder: 26
     imageTranslation:
       srcEn: assets/95f6a65adabf166047d9.png
       shareWithEnglish: false
@@ -481,6 +519,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 25
-        en: 26
+        zh: 27
+        en: 28
     attachments: []

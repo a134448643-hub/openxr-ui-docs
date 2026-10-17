@@ -13,7 +13,8 @@ import { dropExistingImage } from './image-drag.mjs';
 import { ImageSurface, FloatObject } from './document-image-tools.jsx';
 import { documentFromRecords, recordsFromDocument, richId, TEXT_SIZE_PIXELS } from '../server/document-rich-text.mjs';
 import { normalizeTypography } from '../server/document-typography.mjs';
-import { DOCUMENT_CANVAS_WIDTH, canvasScale, elementScale, hasFloatingContent } from './document-canvas.mjs';
+import { DOCUMENT_CANVAS_WIDTH, elementScale } from './document-canvas.mjs';
+import { imageReferences, layoutFromBox, nearestReference, relativeBox } from './document-image-anchor.mjs';
 
 const INK_COLORS = ['#374151', '#9ca3af', '#dc2626', '#2563eb', '#d97706', '#16a34a'];
 
@@ -74,22 +75,46 @@ const ParagraphIdentity = Extension.create({
 });
 
 function useNodePlacement(editor, node) {
-  const [geometry, setGeometry] = useState({ width: 642, originY: 0 });
+  const [geometry, setGeometry] = useState({ width: DOCUMENT_CANVAS_WIDTH, originY: 0, references: [], reference: null });
+  const language = editor.storage.documentUI.language;
+  const referenceId = node.attrs.item?.layout?.referenceImage?.id;
   useEffect(() => {
     if (!editor?.view?.dom) return;
     const root = editor.view.dom;
     const measure = () => {
       const anchor = node.attrs.anchorId && root.querySelector(`[data-record-id="${CSS.escape(node.attrs.anchorId)}"]`);
-      const next = { width: root.clientWidth || DOCUMENT_CANVAS_WIDTH, originY: anchor ? (anchor.getBoundingClientRect().top - root.getBoundingClientRect().top) / elementScale(root) : 0 };
-      setGeometry(old => old.width === next.width && old.originY === next.originY ? old : next);
+      const references = imageReferences(root, language, node.attrs.item?.id);
+      const next = { width: root.clientWidth || DOCUMENT_CANVAS_WIDTH, originY: anchor ? (anchor.getBoundingClientRect().top - root.getBoundingClientRect().top) / elementScale(root) : 0, references, reference: references.find(image => image.id === referenceId) || null };
+      setGeometry(old => JSON.stringify(old) === JSON.stringify(next) ? old : next);
     };
     measure();
     const observer = new ResizeObserver(measure);
-    const observe = () => { observer.observe(root); for (const child of root.children) observer.observe(child); measure(); };
+    const observe = () => { observer.observe(root); for (const child of root.children) observer.observe(child); for (const frame of root.querySelectorAll('.doc-rich-image .doc-image-frame')) observer.observe(frame); measure(); };
+    // React commits image width/src changes after the editor update event.
+    // Observe the committed DOM too, including reorders and text above images.
+    const mutations = new MutationObserver(observe);
+    mutations.observe(root, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'src'] });
     observe(); editor.on('update', observe);
-    return () => { observer.disconnect(); editor.off('update', observe); };
-  }, [editor, node.attrs.anchorId]);
+    return () => { mutations.disconnect(); observer.disconnect(); editor.off('update', observe); };
+  }, [editor, node.attrs.anchorId, referenceId, language]);
   return geometry;
+}
+
+function ImageReferenceControl({ item, geometry, language, onChange }) {
+  const english = language === 'en', id = item.layout?.referenceImage?.id || '';
+  return <select className="doc-reference-select" aria-label={english ? 'Reference image' : '参照图片'} title={english ? 'Position and size follow this body image' : '位置和大小跟随这张正文图片'} value={id} onChange={event => onChange(event.target.value)}>
+    <option value="">{english ? 'No reference image' : '未绑定参照图片'}</option>
+    {id && !geometry.references.some(image => image.id === id) && <option value={id} disabled>{english ? 'Reference image removed' : '参照图片已删除'}</option>}
+    {geometry.references.map((image, index) => <option key={image.id} value={image.id}>{english ? `Body image ${index + 1}` : `正文图片 ${index + 1}`}</option>)}
+  </select>;
+}
+
+function bindReference(editor, item, geometry, id) {
+  const root = editor.view.dom;
+  const element = root.querySelector(`.doc-float[data-block-id="${CSS.escape(item.id)}"]`) || root.querySelector(`[data-image-id="${CSS.escape(item.id)}"] .doc-image-frame`);
+  if (!element) return item.layout;
+  const reference = geometry.references.find(image => image.id === id);
+  return layoutFromBox(relativeBox(element, root), geometry.width, geometry.originY, reference);
 }
 
 function DocumentImageView({ editor, node, updateAttributes, getPos, selected, deleteNode }) {
@@ -140,16 +165,21 @@ function DocumentImageView({ editor, node, updateAttributes, getPos, selected, d
     const surfaceItem = english ? { ...item, data: { ...item.data, src: shared ? item.data.src : item.data?.srcEn || '' }, annotations: shared ? item.annotations : item.data?.enAnnotations || [], style: { ...item.style, annotations: shared ? item.style?.annotations : [] } } : item;
     return <ImageSurface key={field} unifiedEditor imageLanguage={field} item={{ ...surfaceItem, isAttachment: Boolean(node.attrs.anchorId) }} editable={editable} selected={selected && activeImage === field} tool={activeImage === field ? tool : 'move'} columnWidth={geometry.width} lang={language}
     emptyLabel={english ? '待补英文图片 · 选中后 Ctrl+V 粘贴截图，或同步中文图片' : undefined} emptyAspectRatio={english ? aspectRatio : undefined}
-    toolbarContent={english ? <>
+    toolbarContent={<>{item.isFloating && <ImageReferenceControl item={item} geometry={geometry} language={language} onChange={id => { beginGesture(); patch({ layout: bindReference(editor, item, geometry, id) }); }}/>} {english ? <>
       <button type="button" className="doc-text-btn" aria-pressed={Boolean(shared)} disabled={!item.data?.src} onClick={() => { beginGesture(); patch({ data: { ...item.data, shareWithEnglish: !shared } }); }}>{shared ? '取消同步中文图片' : '同步中文图片'}</button>
       <button type="button" className="doc-text-btn" onClick={() => englishFile.current?.click()}>上传英文图片</button>
       {item.isFloating && language === 'bilingual' && <button type="button" className="doc-text-btn" onClick={() => { setActiveImage('zh'); setTool('move'); }}>显示中文图片</button>}
-    </> : item.isFloating && language === 'bilingual' ? <button type="button" className="doc-text-btn" onClick={() => { setActiveImage('en'); setTool('move'); }}>显示英文配图</button> : undefined}
+    </> : item.isFloating && language === 'bilingual' ? <button type="button" className="doc-text-btn" onClick={() => { setActiveImage('en'); setTool('move'); }}>显示英文配图</button> : null}</>}
     deleteLabel={english ? '清除英文图片' : '删除图片'}
     onSelect={() => { if (activeImage !== field) setTool('move'); setActiveImage(field); editor.storage.documentUI.imageLanguage = field; select(); }} onTool={setTool}
     onWidth={(_id, imageWidth) => patch({ style: { ...item.style, imageWidth } })}
     onAnnotations={(_id, annotations) => english && !shared ? patch({ data: { ...item.data, enAnnotations: annotations } }) : patch({ annotations, style: { ...item.style, annotations } })}
-    onToggleFloat={() => { beginGesture(); patch({ isFloating: !item.isFloating, layout: item.layout || { rx: .12, ry: .1, rw: .6, rh: .3 } }); updateAttributes({ anchorId: null }); }}
+    onToggleFloat={() => {
+      beginGesture();
+      const element = editor.view.dom.querySelector(`[data-image-id="${CSS.escape(item.id)}"] .doc-image-frame`);
+      const reference = element && nearestReference(relativeBox(element, editor.view.dom), geometry.references);
+      updateAttributes({ item: { ...item, isFloating: !item.isFloating, layout: item.isFloating ? undefined : bindReference(editor, item, geometry, reference?.id) }, anchorId: null });
+    }}
     onUndo={beginGesture} onPreview={src => editor.storage.documentUI.preview(src)} onDragStart={() => { editor.storage.documentUI.draggedImageId = item.id; }} onDelete={() => { beginGesture(); if (english) patch({ data: { ...item.data, srcEn: '', shareWithEnglish: false, enAnnotations: [] } }); else deleteNode(); editor.view.focus(); }}/>;
   };
   const picture = <>{item.isFloating && language === 'bilingual' ? renderPicture(activeImage) : <>{language !== 'en' && renderPicture('zh')}{language !== 'zh' && renderPicture('en')}</>}{editable && <input ref={englishFile} type="file" aria-label="选择英文图片" accept="image/*" hidden onChange={event => { void uploadEnglish(event.target.files?.[0]); event.target.value = ''; }}/>}</>;
@@ -165,7 +195,7 @@ function DocumentImageView({ editor, node, updateAttributes, getPos, selected, d
     onMouseDown={event => { if (event.button === 0 && !event.target.closest('.doc-image-wrap')) continueAfter(event, true); }}
     onKeyDownCapture={event => { if (['Enter', 'ArrowUp'].includes(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey && !event.target.closest('button,input,textarea,select,[data-field]')) continueAfter(event, event.key === 'ArrowUp', event.key === 'ArrowUp'); }}>
     {editable && !item.isFloating && <div className="doc-image-text-boundary" data-image-boundary="before" aria-label="在图片上方输入文字" onMouseDown={event => { if (event.button === 0) continueAfter(event, true, true); }}/>}
-    {item.isFloating ? <FloatObject item={item} editable={editable} selected={selected} columnWidth={geometry.width} originY={geometry.originY} canDrag={tool === 'move'} onSelect={select} onGestureStart={beginGesture} onLayout={(_id, layout) => patch({ layout })}>{picture}</FloatObject> : picture}
+    {item.isFloating ? <FloatObject item={item} editable={editable} selected={selected} columnWidth={geometry.width} originY={geometry.originY} reference={geometry.reference} canDrag={tool === 'move'} onSelect={select} onGestureStart={beginGesture} onLayout={(_id, layout) => patch({ layout })}>{picture}</FloatObject> : picture}
   </NodeViewWrapper>;
 }
 
@@ -173,7 +203,8 @@ function FloatingTextView({ editor, node, updateAttributes, getPos, selected, se
   const geometry = useNodePlacement(editor, node);
   const item = node.attrs.item;
   return <NodeViewWrapper className="doc-floating-anchor" data-note-id={item.id}>
-    <FloatObject item={item} editable={editor.isEditable} selected={selected || selectionInside} columnWidth={geometry.width} originY={geometry.originY} canDrag onSelect={() => {}} onGestureStart={() => editor.view.dispatch(closeHistory(editor.state.tr))} onLayout={(_id, layout) => updateAttributes({ item: { ...item, layout } })}>
+    <FloatObject item={item} editable={editor.isEditable} selected={selected || selectionInside} columnWidth={geometry.width} originY={geometry.originY} reference={geometry.reference} canDrag onSelect={() => {}} onGestureStart={() => editor.view.dispatch(closeHistory(editor.state.tr))} onLayout={(_id, layout) => updateAttributes({ item: { ...item, layout } })}>
+      {editor.isEditable && (selected || selectionInside) && <div className="doc-float-reference"><ImageReferenceControl item={item} geometry={geometry} language={editor.storage.documentUI.language} onChange={id => { editor.view.dispatch(closeHistory(editor.state.tr)); updateAttributes({ item: { ...item, layout: bindReference(editor, item, geometry, id) } }); }}/></div>}
       <NodeViewContent className="doc-float-text doc-floating-content" data-field="floating-text" style={item.style?.bgColor && item.style.bgColor !== '#fffbeb' ? { background: item.style.bgColor } : undefined}/>
     </FloatObject>
   </NodeViewWrapper>;
@@ -221,21 +252,6 @@ const ParagraphDecoration = Extension.create({
 });
 
 export function RichDocumentEditor({ blocks, typography, editable, lang, onChange, onPreview, onContextMenu }) {
-  const scrollRef = useRef(null);
-  const paperRef = useRef(null);
-  const fixedCanvas = hasFloatingContent(blocks);
-  const [canvas, setCanvas] = useState({ scale: 1, height: 0 });
-  useEffect(() => {
-    if (!fixedCanvas || !scrollRef.current) return;
-    const scroll = scrollRef.current;
-    const measure = () => {
-      const scale = canvasScale(scroll.clientWidth), height = paperRef.current.offsetHeight * scale;
-      setCanvas(old => old.scale === scale && old.height === height ? old : { scale, height });
-    };
-    const observer = new ResizeObserver(measure);
-    observer.observe(scroll); observer.observe(paperRef.current); measure();
-    return () => observer.disconnect();
-  }, [fixedCanvas]);
   const callbacks = useRef({ onChange, onPreview }); callbacks.current = { onChange, onPreview };
   const recordsRef = useRef(blocks);
   const emittedArrays = useRef(new WeakSet());
@@ -360,7 +376,7 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
   const surfaceStyle = { '--doc-body-size': `${global?.bodySize || 16}px`, '--doc-heading-size': `${global?.headingSize || 24}px`, '--doc-heading-weight': global?.headingWeight || 700, '--doc-line-height': global?.lineHeight || 1.75, '--doc-paragraph-gap': `${global?.paragraphGap ?? 6}px`, '--doc-heading-border': global?.headingDivider === false ? '0px' : '2px' };
   const fontSize = editor?.getAttributes('textStyle').fontSize || '';
   const command = callback => { if (editor) callback(editor.chain().focus()).run(); };
-  return <div ref={scrollRef} className="doc-scroll" data-editor-mode="continuous-text" data-document-language={lang} data-document-layout={fixedCanvas ? 'fixed-canvas' : 'flow'} data-format-painter={painterActive ? 'active' : undefined} data-global-typography={global ? 'true' : undefined} style={{...surfaceStyle, '--doc-canvas-width': `${DOCUMENT_CANVAS_WIDTH}px`, '--doc-canvas-scale': fixedCanvas ? canvas.scale : 1, '--doc-canvas-height': `${canvas.height}px`}} onKeyDownCapture={event => { if (event.key === 'Escape' && painter.current) { event.preventDefault(); event.stopPropagation(); cancelPainter(); } }}>
+  return <div className="doc-scroll" data-editor-mode="continuous-text" data-document-language={lang} data-format-painter={painterActive ? 'active' : undefined} data-global-typography={global ? 'true' : undefined} style={surfaceStyle} onKeyDownCapture={event => { if (event.key === 'Escape' && painter.current) { event.preventDefault(); event.stopPropagation(); cancelPainter(); } }}>
     {editable && <div className="doc-format-toolbar" role="toolbar" aria-label="文字格式">
       <button type="button" title="撤销" onMouseDown={event => event.preventDefault()} onClick={() => editor?.chain().focus().undo().run()} disabled={!editor?.can().undo()}><Undo2 size={16}/></button>
       <button type="button" title="重做" onMouseDown={event => event.preventDefault()} onClick={() => editor?.chain().focus().redo().run()} disabled={!editor?.can().redo()}><Redo2 size={16}/></button>
@@ -380,7 +396,7 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
       <button type="button" className="doc-toolbar-image" onMouseDown={event => event.preventDefault()} onClick={() => fileInput.current?.click()}><ImagePlus size={16}/> 插入图片</button>
       <input ref={fileInput} type="file" accept="image/*" multiple hidden onChange={event => { void insertImages(event.target.files); event.target.value = ''; }}/>
     </div>}
-    <div className="doc-page-frame"><div ref={paperRef} className="doc-paper" onMouseDown={event => {
+    <div className="doc-paper" onMouseDown={event => {
       if (!editable || !editor || event.button !== 0 || event.target !== event.currentTarget) return;
       const root = editor.view.dom, first = root.firstElementChild, rect = root.getBoundingClientRect();
       if (!first || event.clientY > first.getBoundingClientRect().top || event.clientX < rect.left || event.clientX > rect.right) return;
@@ -395,6 +411,6 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
       onContextMenu({ clientX: event.clientX, clientY: event.clientY, currentTarget: host }, host.dataset.recordId);
     }}>
       <EditorContent editor={editor}/>
-    </div></div>
+    </div>
   </div>;
 }

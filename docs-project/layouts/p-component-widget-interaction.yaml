@@ -1,5 +1,6 @@
 version: 1
 blockOrder:
+  - page-title-p-component-widget-interaction
   - review-75
   - review-76
   - review-77
@@ -12,6 +13,43 @@ blockOrder:
   - pmvcmf836i1zteu4
   - pmvcmf837xtk2kwv
 blocks:
+  page-title-p-component-widget-interaction:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: BPC_控件交互组件
+        en:
+          - type: text
+            text: AC_WidgetInteraction
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-75:
     type: text
     isFloating: false
@@ -36,8 +74,8 @@ blocks:
           - type: text
             text: Component Settings
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-76:
     type: text
@@ -75,8 +113,8 @@ blocks:
             text: Specifies the collision channel used to detect UI. The target UI's
               collision responses must match this channel.
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-77:
     type: text
@@ -114,8 +152,8 @@ blocks:
             text: Sets the effective detection distance for touching UI with a finger. This
               interaction does not trigger beyond that distance.
       documentOrder:
-        zh: 4
-        en: 5
+        zh: 6
+        en: 7
     attachments: []
   review-78:
     type: text
@@ -155,8 +193,8 @@ blocks:
               indices: it gathers all widget interaction components on the
               character and orders them automatically."
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []
   review-79:
     type: text
@@ -182,8 +220,8 @@ blocks:
           - type: text
             text: Debug Settings
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-80:
     type: text
@@ -221,8 +259,8 @@ blocks:
             text: Shows interaction debug information to help check the fingertip position
               and detection direction.
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   review-81:
     type: text
@@ -259,8 +297,8 @@ blocks:
           - type: text
             text: Sets the line thickness of the debug sphere.
       documentOrder:
-        zh: 12
-        en: 13
+        zh: 14
+        en: 15
     attachments: []
   review-82:
     type: text
@@ -297,24 +335,30 @@ blocks:
           - type: text
             text: Sets the line thickness of the interaction trace debug lines.
       documentOrder:
-        zh: 14
-        en: 15
+        zh: 16
+        en: 17
     attachments: []
   pmvcmeqgeap4j2a3:
     type: image
     isFloating: true
     style:
       imageWidth: 72
-      documentOrder: 16
+      documentOrder: 18
     layout:
-      x: 315.0366712707183
-      y: 205.72375690607737
-      width: 133.72044198895026
-      height: 125.56243093922652
-      rx: 0.49071132596685085
-      ry: 0.32044198895027626
-      rw: 0.20828729281767955
-      rh: 0.19558011049723756
+      x: 317.03125
+      y: 560.71875
+      width: 133.71875
+      height: 125.546875
+      rx: 0.4938181464174455
+      ry: 0.873393691588785
+      rw: 0.20828465732087229
+      rh: 0.1955558800623053
+      referenceImage:
+        id: pmvcmf836i1zteu4
+        x: 1.0506964942260888
+        y: 0.17063721045255956
+        width: 0.44316710683030397
+        height: 0.6623526502349353
     imageTranslation:
       srcEn: assets/3ae069c90b3f9824fdfb.png
       shareWithEnglish: false
@@ -325,7 +369,7 @@ blocks:
     isFloating: false
     style:
       imageWidth: 47
-      documentOrder: 17
+      documentOrder: 19
     imageTranslation:
       srcEn: assets/21f6e37fa0460b728ff5.png
       shareWithEnglish: false
@@ -348,6 +392,6 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        zh: 18
-        en: 19
+        zh: 20
+        en: 21
     attachments: []

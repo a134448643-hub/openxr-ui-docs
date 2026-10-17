@@ -7,9 +7,16 @@ title:
 
 <!-- DOCBLOCK id="review-12" type="text" -->
 <!-- ZH -->
+更新说明与项目须知
+<!-- EN -->
+Release Notes and Project Information
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvcnlqgugd8x7y2" type="text" -->
+<!-- ZH -->
 本次更新
 <!-- EN -->
-What's New
+This Update
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-13-original" type="text" -->
@@ -84,7 +91,7 @@ Prerequisites Video:
 <!-- ZH -->
 使用此项目前置条件视频（最新版本待更新）
 <!-- EN -->
-Video: Prerequisites for Using This Project
+Video: Prerequisites for Using This Project (updated video pending)
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-21" type="text" -->

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Move, MousePointer2, PenLine, Square, Trash2 } from 'lucide-react';
-import { DOCUMENT_CANVAS_WIDTH, elementScale, floatingBox } from './document-canvas.mjs';
+import { elementScale } from './document-canvas.mjs';
+import { layoutFromBox, placedBox } from './document-image-anchor.mjs';
 
 const COLORS = ['#374151', '#9ca3af', '#dc2626', '#2563eb', '#d97706', '#16a34a'];
-const REFERENCE_WIDTH = DOCUMENT_CANVAS_WIDTH;
 
 const textOf = (lang) => (lang === 'en' ? { primary: 'en', secondary: null } : lang === 'zh' ? { primary: 'zh', secondary: null } : { primary: 'zh', secondary: 'en' });
 
@@ -22,19 +22,6 @@ function caretOffset(root) {
 
 function newId(prefix) {
   return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
-}
-
-function pixelsToLayout(left, top, width, height, columnWidth) {
-  const safe = columnWidth || REFERENCE_WIDTH;
-  const rx = left / safe;
-  const ry = top / safe;
-  const rw = Math.max(0.08, width / safe);
-  const rh = Math.max(0.04, height / safe);
-  return { x: rx * REFERENCE_WIDTH, y: ry * REFERENCE_WIDTH, width: rw * REFERENCE_WIDTH, height: rh * REFERENCE_WIDTH, rx, ry, rw, rh };
-}
-
-function floatStyle(layout, columnWidth) {
-  return floatingBox(layout, columnWidth || REFERENCE_WIDTH);
 }
 
 function EditableText({ value, field, placeholder, className, color, typographyStyle, editable, onChange, onSplit, onMergeBack, onActivate }) {
@@ -325,9 +312,9 @@ function resizeImage(event, frame, columnWidth, onWidth) {
   window.addEventListener('mouseup', up);
 }
 
-export function FloatObject({ item, editable, selected, columnWidth, canDrag, children, onSelect, onLayout, onGestureStart, originY = 0 }) {
+export function FloatObject({ item, editable, selected, columnWidth, canDrag, children, onSelect, onLayout, onGestureStart, originY = 0, reference }) {
   const ref = useRef(null);
-  const box = floatStyle(item.layout, columnWidth);
+  const box = placedBox(item.layout, columnWidth, originY, reference);
   const startDrag = (event, mode) => {
     if (!editable || event.button !== 0) return;
     event.stopPropagation();
@@ -365,7 +352,7 @@ export function FloatObject({ item, editable, selected, columnWidth, canDrag, ch
       const top = mode === 'move' ? Math.max(minTop, start.top + dy) : start.top;
       const width = mode === 'resize' ? Math.min(Math.max(80, parentWidth - start.left), Math.max(80, start.width + dx)) : start.width;
       const height = mode === 'resize' ? Math.max(48, start.height + dy) : start.height;
-      onLayout(item.id, pixelsToLayout(left, top - originY, width, height, parentWidth));
+      onLayout(item.id, layoutFromBox({ left, top, width, height }, parentWidth, originY, reference));
     };
     document.addEventListener('pointermove', move, true);
     document.addEventListener('pointerup', end, true);
@@ -378,11 +365,13 @@ export function FloatObject({ item, editable, selected, columnWidth, canDrag, ch
       ref={ref}
       tabIndex={editable ? 0 : undefined}
       className={`doc-float ${selected ? 'is-selected' : ''} ${canDrag ? 'can-drag' : ''}`}
-      style={{ left: box.left, top: box.top + originY, width: box.width, height: item.type === 'text' ? 'auto' : box.height }}
+      style={{ left: box.left, top: box.top, width: box.width, height: item.type === 'text' ? 'auto' : box.height }}
       data-block-id={item.id}
+      data-reference-image={item.layout?.referenceImage?.id}
+      data-reference-missing={item.layout?.referenceImage?.id && !reference ? 'true' : undefined}
       onPointerDown={(event) => {
         if (!editable || !canDrag) return;
-        if (event.target.closest('.doc-image-toolbar, .doc-resize, .doc-anno-text, [data-field]')) return;
+        if (event.target.closest('.doc-image-toolbar, .doc-float-reference, .doc-resize, .doc-anno-text, [data-field]')) return;
         startDrag(event, 'move');
       }}
       onMouseDown={(event) => { event.stopPropagation(); onSelect(item.id); }}

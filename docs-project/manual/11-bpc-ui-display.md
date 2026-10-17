@@ -5,6 +5,13 @@ title:
   en: AC_UIDisplay
 ---
 
+<!-- DOCBLOCK id="page-title-p-component-ui-display" type="text" -->
+<!-- ZH -->
+BPC_UI显示组件
+<!-- EN -->
+AC_UIDisplay
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="review-96" type="text" -->
 <!-- ZH -->
 组件设置

@@ -5,6 +5,13 @@ title:
   en: AC_OpenXRGesture and PAD_GestureConfig
 ---
 
+<!-- DOCBLOCK id="page-title-p1791987538788" type="text" -->
+<!-- ZH -->
+BPC_OpenXR手势
+<!-- EN -->
+AC_OpenXRGesture and PAD_GestureConfig
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="review-59" type="text" -->
 <!-- ZH -->
 组件自身的设置

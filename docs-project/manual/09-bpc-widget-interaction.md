@@ -5,6 +5,13 @@ title:
   en: AC_WidgetInteraction
 ---
 
+<!-- DOCBLOCK id="page-title-p-component-widget-interaction" type="text" -->
+<!-- ZH -->
+BPC_控件交互组件
+<!-- EN -->
+AC_WidgetInteraction
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="review-75" type="text" -->
 <!-- ZH -->
 组件设置

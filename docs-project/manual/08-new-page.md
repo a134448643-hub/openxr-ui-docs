@@ -5,14 +5,14 @@ title:
   en: Setup
 ---
 
-<!-- DOCBLOCK id="review-38" type="text" -->
+<!-- DOCBLOCK id="page-title-p1792150504802" type="text" -->
 <!-- ZH -->
-
+配置流程
 <!-- EN -->
-Setting Up AC_OpenXRGesture
+Setup
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="review-39-original" type="text" -->
+<!-- DOCBLOCK id="pmvcndzzpbq9uasc" type="text" -->
 <!-- ZH -->
 极致简化手势配置流程
 现在只需要添加一个手势组件，设置对应左右手的数据资产即可正常运行。

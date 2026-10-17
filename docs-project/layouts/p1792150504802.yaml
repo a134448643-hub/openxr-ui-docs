@@ -1,7 +1,7 @@
 version: 1
 blockOrder:
-  - review-38
-  - review-39-original
+  - page-title-p1792150504802
+  - pmvcndzzpbq9uasc
   - review-40
   - review-image-p1792150504802-b1791987675801
   - pmvcjr6syn44kns0
@@ -20,31 +20,44 @@ blockOrder:
   - review-image-p1792150504802-pmvb0gwgs1282nbp
   - pmvcjr28x8j15koi
 blocks:
-  review-38:
+  page-title-p1792150504802:
     type: text
     isFloating: false
     style:
       isSectionHeader: true
-      headingLevel: 2
+      headingLevel: 3
       paragraphTypes:
         zh:
           type: heading
-          level: 2
+          level: 3
         en:
           type: heading
-          level: 2
+          level: 3
       paragraphPresence:
-        zh: false
+        zh: true
         en: true
       richText:
-        zh: []
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: 配置流程
         en:
           - type: text
-            text: Setting Up AC_OpenXRGesture
+            text: Setup
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
       documentOrder:
-        en: 0
+        zh: 0
+        en: 1
     attachments: []
-  review-39-original:
+  pmvcndzzpbq9uasc:
     type: text
     isFloating: false
     style:
@@ -73,13 +86,17 @@ blocks:
         en:
           - type: text
             text: Simplified hand-tracking setup
+            marks:
+              - type: bold
           - type: hardBreak
           - type: text
             text: Add a single gesture component and assign the data asset for the
               corresponding left or right hand to run the setup.
+            marks:
+              - type: bold
       documentOrder:
-        zh: 1
-        en: 2
+        zh: 2
+        en: 3
     attachments: []
   review-40:
     type: text
@@ -105,8 +122,8 @@ blocks:
           - type: text
             text: Setting Up AC_WidgetInteraction
       documentOrder:
-        zh: 3
-        en: 5
+        zh: 4
+        en: 6
     attachments: []
   review-image-p1792150504802-b1791987675801:
     type: image
@@ -118,7 +135,7 @@ blocks:
       decoration: none
       isSectionHeader: false
       imageWidth: 60
-      documentOrder: 4
+      documentOrder: 5
     imageTranslation:
       srcEn: assets/2677eb0d94933c9a52eb.png
       shareWithEnglish: false
@@ -141,8 +158,8 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 7
+        en: 8
     attachments: []
   review-41-original:
     type: text
@@ -171,15 +188,15 @@ blocks:
             text: "Controller character: attach the component to the index-finger bone of
               the character's hand Skeletal Mesh."
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 9
+        en: 10
     attachments: []
   review-image-p1792150504802-pmvbnn04ad3hdi63:
     type: image
     isFloating: false
     style:
       imageWidth: 56
-      documentOrder: 10
+      documentOrder: 11
     imageTranslation:
       srcEn: assets/1b49fdc7e6d65f8b1794.png
       shareWithEnglish: false
@@ -214,15 +231,15 @@ blocks:
               node in the Construction Script and enable the debug options in
               the Details panel.
       documentOrder:
-        zh: 11
-        en: 12
+        zh: 12
+        en: 13
     attachments: []
   review-image-p1792150504802-pmvbnoo80qphjb0d:
     type: image
     isFloating: false
     style:
       imageWidth: 51
-      documentOrder: 13
+      documentOrder: 14
     imageTranslation:
       srcEn: assets/39592055eebfe07946f0.png
       shareWithEnglish: false
@@ -245,8 +262,8 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 14
-        en: 15
+        zh: 15
+        en: 16
     attachments: []
   review-43:
     type: text
@@ -272,8 +289,8 @@ blocks:
           - type: text
             text: Setting Up AC_WidgetInteraction_Ray
       documentOrder:
-        zh: 16
-        en: 17
+        zh: 17
+        en: 18
     attachments: []
   review-44:
     type: text
@@ -315,8 +332,8 @@ blocks:
             text: "- Controller character: attach the component to the Motion Controller
               Component."
       documentOrder:
-        zh: 18
-        en: 19
+        zh: 19
+        en: 20
     attachments: []
   review-45-original:
     type: text
@@ -341,15 +358,15 @@ blocks:
               button. Use a Boolean value to control pressing and releasing the
               button.
       documentOrder:
-        zh: 20
-        en: 21
+        zh: 21
+        en: 22
     attachments: []
   review-image-p1792150504802-pmvb0tv6x69uso4n:
     type: image
     isFloating: false
     style:
       imageWidth: 35
-      documentOrder: 22
+      documentOrder: 23
     imageTranslation:
       srcEn: assets/0c5dc71917696d90eeaf.png
       shareWithEnglish: false
@@ -372,8 +389,8 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 23
-        en: 24
+        zh: 24
+        en: 25
     attachments: []
   review-46:
     type: text
@@ -399,8 +416,8 @@ blocks:
           - type: text
             text: Setting Up AC_UIDisplay
       documentOrder:
-        zh: 25
-        en: 26
+        zh: 26
+        en: 27
     attachments: []
   review-47-original:
     type: text
@@ -436,15 +453,15 @@ blocks:
             text: "Set ArrowLocation. The arrow acts as the trigger reference: looking
               toward it triggers the UI. It is usually placed at the palm."
       documentOrder:
-        zh: 27
-        en: 28
+        zh: 28
+        en: 29
     attachments: []
   review-image-p1792150504802-pmvb0gwgs1282nbp:
     type: image
     isFloating: false
     style:
       imageWidth: 39
-      documentOrder: 29
+      documentOrder: 30
     imageTranslation:
       srcEn: assets/37f674181498038da2e8.png
       shareWithEnglish: false
@@ -467,6 +484,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 30
-        en: 31
+        zh: 31
+        en: 32
     attachments: []

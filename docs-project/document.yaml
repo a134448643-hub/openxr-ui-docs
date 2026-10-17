@@ -70,7 +70,7 @@ pages:
     file: manual/10-new-page.md
     layout: layouts/p1792158073395.yaml
     title:
-      zh: 旧版本项目迁移与节点修复
+      zh: 旧版本迁移节点修复
       en: Migrating Older Projects and Fixing Nodes
 publication:
   provider: github-pages

@@ -1,5 +1,6 @@
 version: 1
 blockOrder:
+  - page-title-p-component-ui-display
   - review-96
   - review-97
   - review-98
@@ -11,6 +12,43 @@ blockOrder:
   - pmvcmcls2jvzrcqg
   - pmvcmcls4eod9vz4
 blocks:
+  page-title-p-component-ui-display:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: BPC_UI显示组件
+        en:
+          - type: text
+            text: AC_UIDisplay
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-96:
     type: text
     isFloating: false
@@ -35,8 +73,8 @@ blocks:
           - type: text
             text: Component Settings
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-97:
     type: text
@@ -74,8 +112,8 @@ blocks:
             text: Shows position and orientation debug information to help adjust the UI
               display position and detection direction.
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-98:
     type: text
@@ -113,8 +151,8 @@ blocks:
             text: Specifies the Actor Blueprint class containing the target UI. Select the
               Actor class rather than a UMG widget class directly.
       documentOrder:
-        zh: 4
-        en: 5
+        zh: 6
+        en: 7
     attachments: []
   review-99:
     type: text
@@ -153,8 +191,8 @@ blocks:
               detection. The arrow acts as the detection reference and is
               usually placed near the palm.
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []
   review-100:
     type: text
@@ -191,8 +229,8 @@ blocks:
           - type: text
             text: Sets the detection threshold for the camera facing the reference arrow.
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-101:
     type: text
@@ -229,15 +267,15 @@ blocks:
           - type: text
             text: Sets the detection threshold for the reference arrow facing the camera.
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   pmvcmbhvvvr8hd3q:
     type: image
     isFloating: false
     style:
       imageWidth: 48
-      documentOrder: 12
+      documentOrder: 14
       annotations: []
     annotations: []
     imageTranslation:
@@ -262,24 +300,30 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        zh: 13
-        en: 14
+        zh: 15
+        en: 16
     attachments: []
   pmvcmcls2jvzrcqg:
     type: image
     isFloating: true
     style:
       imageWidth: 72
-      documentOrder: 15
+      documentOrder: 17
     layout:
-      x: 333.48087016574584
-      y: 164.93370165745856
-      width: 97.89613259668509
+      x: 327.50645718232045
+      y: 188.84797997237567
+      width: 97.89059046961326
       height: 139.39558011049724
-      rx: 0.5194406077348066
-      ry: 0.2569060773480663
-      rw: 0.15248618784530388
+      rx: 0.5101346685082873
+      ry: 0.29415573204419887
+      rw: 0.15247755524861878
       rh: 0.21712707182320443
+      referenceImage:
+        id: pmvcmbhvvvr8hd3q
+        x: 1.0627843821376544
+        y: 0.15307320145429562
+        width: 0.3176627160405014
+        height: 0.7200480948154934
     imageTranslation:
       srcEn: assets/fc5edec1a9b31ac5d271.png
       shareWithEnglish: false
@@ -302,6 +346,6 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        zh: 16
-        en: 17
+        zh: 18
+        en: 19
     attachments: []

@@ -1,11 +1,49 @@
 version: 1
 blockOrder:
+  - page-title-p1792158073395
   - review-121-original
   - review-image-p1792158073395-b1769110669099
   - review-122
   - review-image-p1792158073395-b1769111406051
   - pmvcm53ctg80885t
 blocks:
+  page-title-p1792158073395:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: 旧版本迁移节点修复
+        en:
+          - type: text
+            text: Migrating Older Projects and Fixing Nodes
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-121-original:
     type: text
     isFloating: false
@@ -37,8 +75,8 @@ blocks:
               version such as 5.5 or 5.7, AC_OpenXRGesture may report errors
               involving nodes from 5.3.
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-image-p1792158073395-b1769110669099:
     type: image
@@ -50,7 +88,7 @@ blocks:
       decoration: none
       isSectionHeader: false
       imageWidth: 86
-      documentOrder: 2
+      documentOrder: 4
     imageTranslation:
       shareWithEnglish: true
     attachments: []
@@ -102,8 +140,8 @@ blocks:
             text: 3. Compile the Blueprint, run the project, and check left- and right-hand
               data, bone poses, and UI interaction.
       documentOrder:
-        zh: 3
-        en: 4
+        zh: 5
+        en: 6
     attachments: []
   review-image-p1792158073395-b1769111406051:
     type: image
@@ -114,7 +152,7 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
-      documentOrder: 5
+      documentOrder: 7
     imageTranslation:
       shareWithEnglish: true
     attachments: []
@@ -135,6 +173,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []

@@ -1,9 +1,16 @@
 ---
 id: p1792158073395
 title:
-  zh: 旧版本项目迁移与节点修复
+  zh: 旧版本迁移节点修复
   en: Migrating Older Projects and Fixing Nodes
 ---
+
+<!-- DOCBLOCK id="page-title-p1792158073395" type="text" -->
+<!-- ZH -->
+旧版本迁移节点修复
+<!-- EN -->
+Migrating Older Projects and Fixing Nodes
+<!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-121-original" type="text" -->
 <!-- ZH -->

@@ -1,5 +1,6 @@
 version: 1
 blockOrder:
+  - page-title-p1792160531812
   - review-49
   - review-50-original
   - review-image-p1792160531812-pmvb2p0lkwozoy99
@@ -11,6 +12,43 @@ blockOrder:
   - review-55
   - review-56-original
 blocks:
+  page-title-p1792160531812:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: 手势角色基础操作
+        en:
+          - type: text
+            text: Basic Hand-Gesture Controls
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
   review-49:
     type: text
     isFloating: false
@@ -35,8 +73,8 @@ blocks:
           - type: text
             text: Turning
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-50-original:
     type: text
@@ -75,15 +113,15 @@ blocks:
           - type: text
             text: The index-finger pinch is also used to grab objects.
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-image-p1792160531812-pmvb2p0lkwozoy99:
     type: image
     isFloating: false
     style:
       imageWidth: 30
-      documentOrder: 4
+      documentOrder: 6
     imageTranslation:
       srcEn: ""
       shareWithEnglish: true
@@ -116,15 +154,15 @@ blocks:
           - type: text
             text: The index-finger pinch is also used to grab objects.
       documentOrder:
-        zh: 5
-        en: 6
+        zh: 7
+        en: 8
     attachments: []
   review-image-p1792160531812-pmvb380018l3uf37:
     type: image
     isFloating: false
     style:
       imageWidth: 30
-      documentOrder: 7
+      documentOrder: 9
     imageTranslation:
       shareWithEnglish: true
     attachments: []
@@ -152,8 +190,8 @@ blocks:
           - type: text
             text: Teleportation
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-53-original:
     type: text
@@ -184,15 +222,15 @@ blocks:
               teleportation mode is active. Pinch the index finger and thumb to
               teleport.
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   review-image-p1792160531812-pmvb39wdku67m2nc:
     type: image
     isFloating: false
     style:
       imageWidth: 30
-      documentOrder: 12
+      documentOrder: 14
     imageTranslation:
       shareWithEnglish: true
     attachments: []
@@ -220,8 +258,8 @@ blocks:
           - type: text
             text: Grabbing
       documentOrder:
-        zh: 13
-        en: 14
+        zh: 15
+        en: 16
     attachments: []
   review-56-original:
     type: text
@@ -244,6 +282,6 @@ blocks:
           - type: text
             text: The index-finger pinch is also used to grab objects.
       documentOrder:
-        zh: 15
-        en: 16
+        zh: 17
+        en: 18
     attachments: []

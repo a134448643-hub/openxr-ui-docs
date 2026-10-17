@@ -5,6 +5,13 @@ title:
   en: AC_UIButton
 ---
 
+<!-- DOCBLOCK id="page-title-p-component-ui-button" type="text" -->
+<!-- ZH -->
+BPC_UI按钮
+<!-- EN -->
+AC_UIButton
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="review-104" type="text" -->
 <!-- ZH -->
 控件设置

@@ -5,6 +5,13 @@ title:
   en: AC_WidgetInteraction_Ray
 ---
 
+<!-- DOCBLOCK id="page-title-p-component-widget-interaction-ray" type="text" -->
+<!-- ZH -->
+BPC_控件交互组件_射线
+<!-- EN -->
+AC_WidgetInteraction_Ray
+<!-- /DOCBLOCK -->
+
 <!-- DOCBLOCK id="review-86" type="text" -->
 <!-- ZH -->
 设置控件交互组件
@@ -36,7 +43,7 @@ Sets the maximum distance used for widget interaction detection.
 调整射线跟随手部或控制器时的插值响应，数值增大对应更快跟随还是更明显延迟
 <!-- EN -->
 InterpolationSpeed (Float)
-Adjusts interpolation as the ray follows the hand or controller. The source description leaves open whether increasing the value produces faster following or a more noticeable delay.
+Adjusts interpolation as the ray follows the hand or controller. Confirm whether increasing the value produces faster following or a more noticeable delay.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-90" type="text" -->
@@ -59,6 +66,13 @@ Sets the minimum and maximum distances at which the ray responds to UI: X is the
 
 <!-- DOCBLOCK id="pmvcm8uuul7m9ynw" type="image" -->
 ![pmvcm8uuul7m9ynw](../assets/5f7cd2ecc367ba8de15d.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvcnegzr0elkpr7" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-92" type="text" -->

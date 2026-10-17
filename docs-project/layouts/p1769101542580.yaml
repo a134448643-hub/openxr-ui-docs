@@ -1,6 +1,7 @@
 version: 1
 blockOrder:
   - review-12
+  - pmvcnlqgugd8x7y2
   - review-13-original
   - review-14
   - review-15
@@ -33,6 +34,43 @@ blocks:
     isFloating: false
     style:
       isSectionHeader: true
+      headingLevel: 3
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 3
+        en:
+          type: heading
+          level: 3
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+            text: 更新说明与项目须知
+        en:
+          - type: text
+            text: Release Notes and Project Information
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: 30px
+                  color: null
+      documentOrder:
+        zh: 0
+        en: 1
+    attachments: []
+  pmvcnlqgugd8x7y2:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
       headingLevel: 2
       paragraphTypes:
         zh:
@@ -50,10 +88,10 @@ blocks:
             text: 本次更新
         en:
           - type: text
-            text: What's New
+            text: This Update
       documentOrder:
-        zh: 0
-        en: 1
+        zh: 2
+        en: 3
     attachments: []
   review-13-original:
     type: text
@@ -76,8 +114,8 @@ blocks:
           - type: text
             text: "Added:"
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 4
+        en: 5
     attachments: []
   review-14:
     type: text
@@ -126,8 +164,8 @@ blocks:
             text: "- Added AC_WidgetInteraction_Ray for distance-based UI interaction and
               pinch clicks."
       documentOrder:
-        zh: 4
-        en: 5
+        zh: 6
+        en: 7
     attachments: []
   review-15:
     type: text
@@ -150,8 +188,8 @@ blocks:
           - type: text
             text: "Updated:"
       documentOrder:
-        zh: 6
-        en: 7
+        zh: 8
+        en: 9
     attachments: []
   review-15-original:
     type: text
@@ -174,8 +212,8 @@ blocks:
           - type: text
             text: Improvements and Reworked Features
       documentOrder:
-        zh: 8
-        en: 9
+        zh: 10
+        en: 11
     attachments: []
   review-16:
     type: text
@@ -212,8 +250,8 @@ blocks:
             text: "- Reworked Scroll Box interaction to restore scrolling by simulating a
               right mouse button drag."
       documentOrder:
-        zh: 10
-        en: 11
+        zh: 12
+        en: 13
     attachments: []
   review-18:
     type: text
@@ -239,8 +277,8 @@ blocks:
           - type: text
             text: Before You Begin
       documentOrder:
-        zh: 12
-        en: 13
+        zh: 14
+        en: 15
     attachments: []
   review-19:
     type: text
@@ -287,8 +325,8 @@ blocks:
               capabilities. When troubleshooting recognition issues, first
               confirm that the device provides stable hand-tracking data.
       documentOrder:
-        zh: 14
-        en: 15
+        zh: 16
+        en: 17
     attachments: []
   review-20:
     type: text
@@ -311,8 +349,8 @@ blocks:
           - type: text
             text: "Prerequisites Video:"
       documentOrder:
-        zh: 16
-        en: 17
+        zh: 18
+        en: 19
     attachments: []
   review-20-original:
     type: text
@@ -338,10 +376,10 @@ blocks:
             text: 使用此项目前置条件视频（最新版本待更新）
         en:
           - type: text
-            text: "Video: Prerequisites for Using This Project"
+            text: "Video: Prerequisites for Using This Project (updated video pending)"
       documentOrder:
-        zh: 18
-        en: 19
+        zh: 20
+        en: 21
     attachments: []
   review-21:
     type: text
@@ -369,8 +407,8 @@ blocks:
           - type: text
             text: https://www.youtube.com/watch?v=pUs-mc1Vdtw
       documentOrder:
-        zh: 20
-        en: 21
+        zh: 22
+        en: 23
     attachments: []
   review-22:
     type: text
@@ -396,8 +434,8 @@ blocks:
           - type: text
             text: Changing the Hand Model
       documentOrder:
-        zh: 22
-        en: 23
+        zh: 24
+        en: 25
     attachments: []
   review-23:
     type: text
@@ -442,8 +480,8 @@ blocks:
               GestureRelativeOffset, GestureRelativeRotation, and
               GestureBoneRotationCalibration.
       documentOrder:
-        zh: 24
-        en: 25
+        zh: 26
+        en: 27
     attachments: []
   review-24:
     type: text
@@ -480,8 +518,8 @@ blocks:
               with Meta Horizon Link, SteamVR, and PICO Connect used for PC
               streaming.
       documentOrder:
-        zh: 26
-        en: 27
+        zh: 28
+        en: 29
     attachments: []
   review-25:
     type: text
@@ -507,8 +545,8 @@ blocks:
           - type: text
             text: Quest Notes
       documentOrder:
-        zh: 28
-        en: 29
+        zh: 30
+        en: 31
     attachments: []
   review-26:
     type: text
@@ -532,8 +570,8 @@ blocks:
             text: "Recorded behavior: hand tracking did not work in Quest Android builds
               made with UE versions earlier than 5.6."
       documentOrder:
-        zh: 30
-        en: 31
+        zh: 32
+        en: 33
     attachments: []
   review-27:
     type: text
@@ -570,15 +608,15 @@ blocks:
           - type: text
             text: https://drive.google.com/drive/folders/1sM8ENQs16vU-sUkuhrR8MW-gbacvxulv?usp=drive_link
       documentOrder:
-        zh: 32
-        en: 33
+        zh: 34
+        en: 35
     attachments: []
   review-image-p1769101542580-pmvcctrhp0jpzwo9:
     type: image
     isFloating: false
     style:
       imageWidth: 37
-      documentOrder: 34
+      documentOrder: 36
     imageTranslation:
       shareWithEnglish: true
     attachments: []
@@ -604,8 +642,8 @@ blocks:
             text: "Original workaround 2: enable MetaXR and check the following options in
               Project Settings:"
       documentOrder:
-        zh: 35
-        en: 36
+        zh: 37
+        en: 38
     attachments: []
   review-31:
     type: text
@@ -646,8 +684,8 @@ blocks:
           - type: text
             text: "2. Hand Tracking Support: Controllers and Hands."
       documentOrder:
-        zh: 37
-        en: 38
+        zh: 39
+        en: 40
     attachments: []
   review-32:
     type: text
@@ -670,8 +708,8 @@ blocks:
           - type: text
             text: "Download MetaXR:"
       documentOrder:
-        zh: 39
-        en: 40
+        zh: 41
+        en: 42
     attachments: []
   review-33:
     type: text
@@ -694,8 +732,8 @@ blocks:
           - type: text
             text: https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
       documentOrder:
-        zh: 41
-        en: 42
+        zh: 43
+        en: 44
     attachments: []
   review-image-p1769101542580-b1769773154230:
     type: image
@@ -706,7 +744,7 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
-      documentOrder: 43
+      documentOrder: 45
     imageTranslation:
       shareWithEnglish: true
     attachments: []
@@ -734,8 +772,8 @@ blocks:
           - type: text
             text: PICO Notes
       documentOrder:
-        zh: 44
-        en: 45
+        zh: 46
+        en: 47
     attachments: []
   review-36:
     type: text
@@ -772,8 +810,8 @@ blocks:
           - type: text
             text: 2. PICO Android packaging requires the PICO OpenXR or PICO XR plugin.
       documentOrder:
-        zh: 46
-        en: 47
+        zh: 48
+        en: 49
     attachments: []
   review-36-part-4:
     type: text
@@ -798,8 +836,8 @@ blocks:
               interaction in UE 5.5. No workaround was available at the time of
               writing."
       documentOrder:
-        zh: 48
-        en: 49
+        zh: 50
+        en: 51
     attachments: []
   review-36-part-6:
     type: text
@@ -823,6 +861,6 @@ blocks:
             text: 4. Replace the PICO input bindings with IMC_Default_PICO and
               IMC_Hands_PICO, as specified in the original documentation.
       documentOrder:
-        zh: 50
-        en: 51
+        zh: 52
+        en: 53
     attachments: []
