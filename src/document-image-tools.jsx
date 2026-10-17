@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Move, MousePointer2, PenLine, Square, Trash2 } from 'lucide-react';
+import { DOCUMENT_CANVAS_WIDTH, elementScale, floatingBox } from './document-canvas.mjs';
 
 const COLORS = ['#374151', '#9ca3af', '#dc2626', '#2563eb', '#d97706', '#16a34a'];
-const REFERENCE_WIDTH = 642;
+const REFERENCE_WIDTH = DOCUMENT_CANVAS_WIDTH;
 
 const textOf = (lang) => (lang === 'en' ? { primary: 'en', secondary: null } : lang === 'zh' ? { primary: 'zh', secondary: null } : { primary: 'zh', secondary: 'en' });
 
@@ -33,17 +34,7 @@ function pixelsToLayout(left, top, width, height, columnWidth) {
 }
 
 function floatStyle(layout, columnWidth) {
-  const width = columnWidth || REFERENCE_WIDTH;
-  const scale = width / REFERENCE_WIDTH;
-  if (layout?.rw != null) {
-    return { left: layout.rx * width, top: layout.ry * width, width: layout.rw * width, height: layout.rh * width };
-  }
-  return {
-    left: (layout?.x || 0) * scale,
-    top: (layout?.y || 0) * scale,
-    width: (layout?.width || 180) * scale,
-    height: (layout?.height || 100) * scale,
-  };
+  return floatingBox(layout, columnWidth || REFERENCE_WIDTH);
 }
 
 function EditableText({ value, field, placeholder, className, color, typographyStyle, editable, onChange, onSplit, onMergeBack, onActivate }) {
@@ -322,10 +313,11 @@ function resizeImage(event, frame, columnWidth, onWidth) {
   event.stopPropagation();
   const wrap = frame.parentElement;
   const startX = event.clientX;
-  const startWidth = wrap.getBoundingClientRect().width;
-  const limit = columnWidth || wrap.parentElement.getBoundingClientRect().width;
+  const scale = elementScale(wrap);
+  const startWidth = wrap.getBoundingClientRect().width / scale;
+  const limit = columnWidth || wrap.parentElement.clientWidth;
   const move = (ev) => {
-    const next = Math.min(limit, Math.max(limit * 0.16, startWidth + ev.clientX - startX));
+    const next = Math.min(limit, Math.max(limit * 0.16, startWidth + (ev.clientX - startX) / scale));
     onWidth(Math.round(next / limit * 100));
   };
   const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
@@ -345,8 +337,10 @@ export function FloatObject({ item, editable, selected, columnWidth, canDrag, ch
     ref.current?.focus({ preventScroll: true });
     const parentNode = ref.current.offsetParent || ref.current.parentElement;
     const parent = parentNode.getBoundingClientRect();
+    const scale = elementScale(parentNode);
+    const parentWidth = parentNode.clientWidth;
     const rect = ref.current.getBoundingClientRect();
-    const start = { x: event.clientX, y: event.clientY, left: rect.left - parent.left, top: rect.top - parent.top, width: rect.width, height: rect.height };
+    const start = { x: event.clientX, y: event.clientY, left: (rect.left - parent.left) / scale, top: (rect.top - parent.top) / scale, width: rect.width / scale, height: rect.height / scale };
     const pointerId = event.pointerId;
     let dragging = false;
     const end = () => {
@@ -364,13 +358,14 @@ export function FloatObject({ item, editable, selected, columnWidth, canDrag, ch
         dragging = true;
         onGestureStart?.();
       }
-      const left = mode === 'move' ? Math.max(0, Math.min(parent.width - start.width, start.left + ev.clientX - start.x)) : start.left;
+      const dx = (ev.clientX - start.x) / scale, dy = (ev.clientY - start.y) / scale;
+      const left = mode === 'move' ? Math.max(0, Math.min(parentWidth - start.width, start.left + dx)) : start.left;
       const column = ref.current.closest('.doc-column');
-      const minTop = (column?.getBoundingClientRect().top || parent.top) - parent.top;
-      const top = mode === 'move' ? Math.max(minTop, start.top + ev.clientY - start.y) : start.top;
-      const width = mode === 'resize' ? Math.min(Math.max(80, parent.width - start.left), Math.max(80, start.width + ev.clientX - start.x)) : start.width;
-      const height = mode === 'resize' ? Math.max(48, start.height + ev.clientY - start.y) : start.height;
-      onLayout(item.id, pixelsToLayout(left, top - originY, width, height, parent.width));
+      const minTop = ((column?.getBoundingClientRect().top ?? parent.top) - parent.top) / scale;
+      const top = mode === 'move' ? Math.max(minTop, start.top + dy) : start.top;
+      const width = mode === 'resize' ? Math.min(Math.max(80, parentWidth - start.left), Math.max(80, start.width + dx)) : start.width;
+      const height = mode === 'resize' ? Math.max(48, start.height + dy) : start.height;
+      onLayout(item.id, pixelsToLayout(left, top - originY, width, height, parentWidth));
     };
     document.addEventListener('pointermove', move, true);
     document.addEventListener('pointerup', end, true);

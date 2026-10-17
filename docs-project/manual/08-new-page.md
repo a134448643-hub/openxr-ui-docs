@@ -7,7 +7,7 @@ title:
 
 <!-- DOCBLOCK id="review-38" type="text" -->
 <!-- ZH -->
-配置 BPC_OpenXR手势
+
 <!-- EN -->
 Setting Up AC_OpenXRGesture
 <!-- /DOCBLOCK -->

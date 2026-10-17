@@ -13,6 +13,7 @@ import { dropExistingImage } from './image-drag.mjs';
 import { ImageSurface, FloatObject } from './document-image-tools.jsx';
 import { documentFromRecords, recordsFromDocument, richId, TEXT_SIZE_PIXELS } from '../server/document-rich-text.mjs';
 import { normalizeTypography } from '../server/document-typography.mjs';
+import { DOCUMENT_CANVAS_WIDTH, canvasScale, elementScale, hasFloatingContent } from './document-canvas.mjs';
 
 const INK_COLORS = ['#374151', '#9ca3af', '#dc2626', '#2563eb', '#d97706', '#16a34a'];
 
@@ -79,7 +80,7 @@ function useNodePlacement(editor, node) {
     const root = editor.view.dom;
     const measure = () => {
       const anchor = node.attrs.anchorId && root.querySelector(`[data-record-id="${CSS.escape(node.attrs.anchorId)}"]`);
-      const next = { width: root.clientWidth || 642, originY: anchor ? anchor.getBoundingClientRect().top - root.getBoundingClientRect().top : 0 };
+      const next = { width: root.clientWidth || DOCUMENT_CANVAS_WIDTH, originY: anchor ? (anchor.getBoundingClientRect().top - root.getBoundingClientRect().top) / elementScale(root) : 0 };
       setGeometry(old => old.width === next.width && old.originY === next.originY ? old : next);
     };
     measure();
@@ -220,6 +221,21 @@ const ParagraphDecoration = Extension.create({
 });
 
 export function RichDocumentEditor({ blocks, typography, editable, lang, onChange, onPreview, onContextMenu }) {
+  const scrollRef = useRef(null);
+  const paperRef = useRef(null);
+  const fixedCanvas = hasFloatingContent(blocks);
+  const [canvas, setCanvas] = useState({ scale: 1, height: 0 });
+  useEffect(() => {
+    if (!fixedCanvas || !scrollRef.current) return;
+    const scroll = scrollRef.current;
+    const measure = () => {
+      const scale = canvasScale(scroll.clientWidth), height = paperRef.current.offsetHeight * scale;
+      setCanvas(old => old.scale === scale && old.height === height ? old : { scale, height });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(scroll); observer.observe(paperRef.current); measure();
+    return () => observer.disconnect();
+  }, [fixedCanvas]);
   const callbacks = useRef({ onChange, onPreview }); callbacks.current = { onChange, onPreview };
   const recordsRef = useRef(blocks);
   const emittedArrays = useRef(new WeakSet());
@@ -344,7 +360,7 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
   const surfaceStyle = { '--doc-body-size': `${global?.bodySize || 16}px`, '--doc-heading-size': `${global?.headingSize || 24}px`, '--doc-heading-weight': global?.headingWeight || 700, '--doc-line-height': global?.lineHeight || 1.75, '--doc-paragraph-gap': `${global?.paragraphGap ?? 6}px`, '--doc-heading-border': global?.headingDivider === false ? '0px' : '2px' };
   const fontSize = editor?.getAttributes('textStyle').fontSize || '';
   const command = callback => { if (editor) callback(editor.chain().focus()).run(); };
-  return <div className="doc-scroll" data-editor-mode="continuous-text" data-document-language={lang} data-format-painter={painterActive ? 'active' : undefined} data-global-typography={global ? 'true' : undefined} style={surfaceStyle} onKeyDownCapture={event => { if (event.key === 'Escape' && painter.current) { event.preventDefault(); event.stopPropagation(); cancelPainter(); } }}>
+  return <div ref={scrollRef} className="doc-scroll" data-editor-mode="continuous-text" data-document-language={lang} data-document-layout={fixedCanvas ? 'fixed-canvas' : 'flow'} data-format-painter={painterActive ? 'active' : undefined} data-global-typography={global ? 'true' : undefined} style={{...surfaceStyle, '--doc-canvas-width': `${DOCUMENT_CANVAS_WIDTH}px`, '--doc-canvas-scale': fixedCanvas ? canvas.scale : 1, '--doc-canvas-height': `${canvas.height}px`}} onKeyDownCapture={event => { if (event.key === 'Escape' && painter.current) { event.preventDefault(); event.stopPropagation(); cancelPainter(); } }}>
     {editable && <div className="doc-format-toolbar" role="toolbar" aria-label="文字格式">
       <button type="button" title="撤销" onMouseDown={event => event.preventDefault()} onClick={() => editor?.chain().focus().undo().run()} disabled={!editor?.can().undo()}><Undo2 size={16}/></button>
       <button type="button" title="重做" onMouseDown={event => event.preventDefault()} onClick={() => editor?.chain().focus().redo().run()} disabled={!editor?.can().redo()}><Redo2 size={16}/></button>
@@ -364,7 +380,7 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
       <button type="button" className="doc-toolbar-image" onMouseDown={event => event.preventDefault()} onClick={() => fileInput.current?.click()}><ImagePlus size={16}/> 插入图片</button>
       <input ref={fileInput} type="file" accept="image/*" multiple hidden onChange={event => { void insertImages(event.target.files); event.target.value = ''; }}/>
     </div>}
-    <div className="doc-paper" onMouseDown={event => {
+    <div className="doc-page-frame"><div ref={paperRef} className="doc-paper" onMouseDown={event => {
       if (!editable || !editor || event.button !== 0 || event.target !== event.currentTarget) return;
       const root = editor.view.dom, first = root.firstElementChild, rect = root.getBoundingClientRect();
       if (!first || event.clientY > first.getBoundingClientRect().top || event.clientX < rect.left || event.clientX > rect.right) return;
@@ -379,6 +395,6 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
       onContextMenu({ clientX: event.clientX, clientY: event.clientY, currentTarget: host }, host.dataset.recordId);
     }}>
       <EditorContent editor={editor}/>
-    </div>
+    </div></div>
   </div>;
 }

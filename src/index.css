@@ -44,6 +44,30 @@ textarea {
   min-height: 70vh;
 }
 
+/* Text and floating objects share one logical canvas. Zoom the complete page
+   when space is limited, preserving line breaks and attachment anchors. */
+.doc-page-frame { display: contents; }
+.doc-scroll[data-document-layout="fixed-canvas"] .doc-page-frame {
+  display: block;
+  width: calc((var(--doc-canvas-width) + 98px) * var(--doc-canvas-scale, 1));
+  height: var(--doc-canvas-height);
+  margin: 14px auto;
+}
+.doc-scroll[data-document-layout="fixed-canvas"] .doc-paper {
+  box-sizing: content-box;
+  width: var(--doc-canvas-width);
+  min-width: var(--doc-canvas-width);
+  min-height: 0;
+  margin: 0;
+  padding: 36px 48px 28px;
+  transform: scale(var(--doc-canvas-scale, 1));
+  transform-origin: top left;
+}
+.doc-scroll[data-document-layout="fixed-canvas"] .doc-surface {
+  width: var(--doc-canvas-width);
+  min-width: var(--doc-canvas-width);
+}
+
 .doc-block {
   position: relative;
   margin: 0 0 0.35rem;
@@ -348,6 +372,8 @@ textarea {
 .doc-surface .doc-image-frame.is-drawing img { user-select: none; }
 
 @media print {
+  .doc-scroll[data-document-layout="fixed-canvas"] .doc-page-frame { width: auto; height: auto; margin: 0; }
+  .doc-scroll[data-document-layout="fixed-canvas"] .doc-paper { transform: none; }
   body, #root, .app-root, main, .doc-scroll { overflow: visible !important; height: auto !important; background: white !important; }
   .doc-paper { width: 100%; margin: 0; border: 0; box-shadow: none; }
   .doc-format-toolbar, .doc-selection-toolbar, .doc-image-toolbar, .doc-resize, .doc-float-move, .doc-paper-rest, .doc-settings-backdrop, .doc-context-menu, .doc-context-dismiss { display: none !important; }

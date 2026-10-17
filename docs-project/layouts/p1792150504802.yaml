@@ -34,18 +34,15 @@ blocks:
           type: heading
           level: 2
       paragraphPresence:
-        zh: true
+        zh: false
         en: true
       richText:
-        zh:
-          - type: text
-            text: 配置 BPC_OpenXR手势
+        zh: []
         en:
           - type: text
             text: Setting Up AC_OpenXRGesture
       documentOrder:
-        zh: 0
-        en: 1
+        en: 0
     attachments: []
   review-39-original:
     type: text
@@ -63,9 +60,15 @@ blocks:
       richText:
         zh:
           - type: text
+            marks:
+              - type: bold
             text: 极致简化手势配置流程
           - type: hardBreak
+            marks:
+              - type: bold
           - type: text
+            marks:
+              - type: bold
             text: 现在只需要添加一个手势组件，设置对应左右手的数据资产即可正常运行。
         en:
           - type: text
@@ -75,8 +78,8 @@ blocks:
             text: Add a single gesture component and assign the data asset for the
               corresponding left or right hand to run the setup.
       documentOrder:
-        zh: 2
-        en: 3
+        zh: 1
+        en: 2
     attachments: []
   review-40:
     type: text
@@ -102,8 +105,8 @@ blocks:
           - type: text
             text: Setting Up AC_WidgetInteraction
       documentOrder:
-        zh: 4
-        en: 6
+        zh: 3
+        en: 5
     attachments: []
   review-image-p1792150504802-b1791987675801:
     type: image
@@ -115,7 +118,7 @@ blocks:
       decoration: none
       isSectionHeader: false
       imageWidth: 60
-      documentOrder: 5
+      documentOrder: 4
     imageTranslation:
       srcEn: assets/2677eb0d94933c9a52eb.png
       shareWithEnglish: false
@@ -138,8 +141,8 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 7
-        en: 8
+        zh: 6
+        en: 7
     attachments: []
   review-41-original:
     type: text
@@ -168,15 +171,15 @@ blocks:
             text: "Controller character: attach the component to the index-finger bone of
               the character's hand Skeletal Mesh."
       documentOrder:
-        zh: 9
-        en: 10
+        zh: 8
+        en: 9
     attachments: []
   review-image-p1792150504802-pmvbnn04ad3hdi63:
     type: image
     isFloating: false
     style:
       imageWidth: 56
-      documentOrder: 11
+      documentOrder: 10
     imageTranslation:
       srcEn: assets/1b49fdc7e6d65f8b1794.png
       shareWithEnglish: false
@@ -211,15 +214,15 @@ blocks:
               node in the Construction Script and enable the debug options in
               the Details panel.
       documentOrder:
-        zh: 12
-        en: 13
+        zh: 11
+        en: 12
     attachments: []
   review-image-p1792150504802-pmvbnoo80qphjb0d:
     type: image
     isFloating: false
     style:
       imageWidth: 51
-      documentOrder: 14
+      documentOrder: 13
     imageTranslation:
       srcEn: assets/39592055eebfe07946f0.png
       shareWithEnglish: false
@@ -242,8 +245,8 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 15
-        en: 16
+        zh: 14
+        en: 15
     attachments: []
   review-43:
     type: text
@@ -269,8 +272,8 @@ blocks:
           - type: text
             text: Setting Up AC_WidgetInteraction_Ray
       documentOrder:
-        zh: 17
-        en: 18
+        zh: 16
+        en: 17
     attachments: []
   review-44:
     type: text
@@ -312,8 +315,8 @@ blocks:
             text: "- Controller character: attach the component to the Motion Controller
               Component."
       documentOrder:
-        zh: 19
-        en: 20
+        zh: 18
+        en: 19
     attachments: []
   review-45-original:
     type: text
@@ -338,15 +341,15 @@ blocks:
               button. Use a Boolean value to control pressing and releasing the
               button.
       documentOrder:
-        zh: 21
-        en: 22
+        zh: 20
+        en: 21
     attachments: []
   review-image-p1792150504802-pmvb0tv6x69uso4n:
     type: image
     isFloating: false
     style:
       imageWidth: 35
-      documentOrder: 23
+      documentOrder: 22
     imageTranslation:
       srcEn: assets/0c5dc71917696d90eeaf.png
       shareWithEnglish: false
@@ -369,8 +372,8 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 24
-        en: 25
+        zh: 23
+        en: 24
     attachments: []
   review-46:
     type: text
@@ -396,8 +399,8 @@ blocks:
           - type: text
             text: Setting Up AC_UIDisplay
       documentOrder:
-        zh: 26
-        en: 27
+        zh: 25
+        en: 26
     attachments: []
   review-47-original:
     type: text
@@ -433,15 +436,15 @@ blocks:
             text: "Set ArrowLocation. The arrow acts as the trigger reference: looking
               toward it triggers the UI. It is usually placed at the palm."
       documentOrder:
-        zh: 28
-        en: 29
+        zh: 27
+        en: 28
     attachments: []
   review-image-p1792150504802-pmvb0gwgs1282nbp:
     type: image
     isFloating: false
     style:
       imageWidth: 39
-      documentOrder: 30
+      documentOrder: 29
     imageTranslation:
       srcEn: assets/37f674181498038da2e8.png
       shareWithEnglish: false
@@ -464,6 +467,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 31
-        en: 32
+        zh: 30
+        en: 31
     attachments: []

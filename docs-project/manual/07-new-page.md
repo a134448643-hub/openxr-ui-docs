@@ -1,7 +1,7 @@
 ---
 id: p1791987538788
 title:
-  zh: BPC_OpenXR手势与 PAD_手势配置
+  zh: BPC_OpenXR手势
   en: AC_OpenXRGesture and PAD_GestureConfig
 ---
 
