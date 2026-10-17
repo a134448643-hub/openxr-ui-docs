@@ -1,67 +1,77 @@
 schemaVersion: 1
-sidebarTitle: UE5 Documentation
-docTitle: UE5 OpenXR_UI Documentation
+sidebarTitle: OpenXR_UI 文档
+docTitle: OpenXR_UI 使用文档
+englishTitles:
+  sidebarTitle: OpenXR_UI Documentation
+  docTitle: OpenXR_UI User Guide
+typography:
+  bodySize: 16
+  headingSize: 24
+  headingWeight: 700
+  lineHeight: 1.75
+  paragraphGap: 6
+  headingDivider: true
 pages:
   - id: p1769101542580
     file: manual/01-prerequisites-project-info.md
     layout: layouts/p1769101542580.yaml
     title:
-      zh: 更新说明/项目须知
-      en: Prerequisites/Project Info
+      zh: 更新说明与项目须知
+      en: Release Notes and Project Information
   - id: p1792150504802
     file: manual/08-new-page.md
     layout: layouts/p1792150504802.yaml
     title:
       zh: 配置流程
-      en: New Page
+      en: Setup
   - id: p1792160531812
     file: manual/12-new-page.md
     layout: layouts/p1792160531812.yaml
     title:
-      zh: 手势角色
-      en: New Page
+      zh: 手势角色基础操作
+      en: Basic Hand-Gesture Controls
   - id: p1791987538788
     file: manual/07-new-page.md
     layout: layouts/p1791987538788.yaml
     title:
-      zh: BPC_OpenXR手势
-      en: PAD_GestureConfig
+      zh: BPC_OpenXR手势与 PAD_手势配置
+      en: AC_OpenXRGesture and PAD_GestureConfig
   - id: p-component-widget-interaction
     file: manual/09-bpc-widget-interaction.md
     layout: layouts/p-component-widget-interaction.yaml
     title:
       zh: BPC_控件交互组件
-      en: ""
+      en: AC_WidgetInteraction
   - id: p-component-widget-interaction-ray
     file: manual/10-bpc-widget-interaction-ray.md
     layout: layouts/p-component-widget-interaction-ray.yaml
     title:
       zh: BPC_控件交互组件_射线
-      en: ""
+      en: AC_WidgetInteraction_Ray
   - id: p-component-ui-display
     file: manual/11-bpc-ui-display.md
     layout: layouts/p-component-ui-display.yaml
     title:
       zh: BPC_UI显示组件
-      en: ""
+      en: AC_UIDisplay
   - id: p-component-ui-button
     file: manual/12-bpc-ui-button.md
     layout: layouts/p-component-ui-button.yaml
     title:
       zh: BPC_UI按钮
-      en: ""
+      en: AC_UIButton
   - id: p1
     file: manual/02-import-project.md
     layout: layouts/p1.yaml
     title:
       zh: 项目迁移须知
-      en: Import Project
+      en: Project Migration
   - id: p1792158073395
     file: manual/10-new-page.md
     layout: layouts/p1792158073395.yaml
     title:
-      zh: 低版本须知
-      en: New Page
+      zh: 旧版本项目迁移与节点修复
+      en: Migrating Older Projects and Fixing Nodes
 publication:
   provider: github-pages
   account: a134448643-hub

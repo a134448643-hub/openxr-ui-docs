@@ -28,6 +28,27 @@ const translated = structuredClone(rich); translated[0].data.zh = '不同的译�
 assert.equal(inlineText(documentFromRecords(translated).content[0].content), '不同的译文', 'External text changes must invalidate stale character runs.');
 const noEmptyEnglish = documentFromRecords([record('one', '只有中文')]);
 assert.equal(noEmptyEnglish.content.length, 1, 'New paragraphs must not create artificial English module placeholders.');
+const hiddenOnly = [record('before', '第一条', 'First'), record('hidden', '', 'Keep English'), record('after', '第二条', 'Second')];
+assert.deepEqual(documentFromRecords(hiddenOnly, 'zh').content.map(node => inlineText(node.content)), ['第一条', '第二条'], 'English-only legacy records must not appear as Chinese blank lines.');
+assert.equal(documentFromRecords([record('hidden-zh', '保留中文', ''), record('english', '', 'English')], 'en').content.length, 1, 'Chinese-only records must not introduce English blank lines.');
+const deleted = structuredClone(documentFromRecords(original, 'zh'));
+deleted.content.splice(1, 1);
+let withoutParagraph = recordsFromDocument(deleted, original, 'zh');
+for (let round = 0; round < 4; round += 1) {
+  const reopened = documentFromRecords(JSON.parse(JSON.stringify(withoutParagraph)), 'zh');
+  assert.deepEqual(reopened.content.map(node => inlineText(node.content)), ['第一段'], 'Deleting a paragraph must survive repeated save/reopen cycles without adding a blank line.');
+  withoutParagraph = recordsFromDocument(reopened, withoutParagraph, 'zh');
+  assert.equal(withoutParagraph.find(item => item.id === 'b').data.en, 'Second', 'Deleting Chinese must preserve the hidden English translation.');
+}
+const deliberateBlank = documentFromRecords(original, 'zh');
+deliberateBlank.content[1].content = [];
+const savedBlank = recordsFromDocument(deliberateBlank, original, 'zh');
+assert.deepEqual(documentFromRecords(savedBlank, 'zh').content.map(node => inlineText(node.content)), ['第一段', ''], 'An explicitly retained empty paragraph must survive even when paired with English.');
+const restored = recordsFromDocument(documentFromRecords(original, 'zh'), withoutParagraph, 'zh');
+assert.deepEqual(documentFromRecords(restored, 'zh').content.map(node => inlineText(node.content)), ['第一段', '第二段'], 'Undoing deletion must restore the paragraph rather than leave it hidden.');
+const breaks = [record('breaks', '保留\n手动换行\n', '')];
+assert.equal(inlineText(documentFromRecords(recordsFromDocument(documentFromRecords(breaks, 'zh'), breaks, 'zh'), 'zh').content[0].content), '保留\n手动换行\n', 'Explicit Shift+Enter line breaks must survive unchanged.');
 const report = { passed: ['legacy bilingual import', 'free paragraph ordering roundtrip', 'hidden language preservation across delete/undo', 'partial character marks roundtrip', 'external text update invalidates old runs', 'no generated empty paired module'] };
+report.passed.push('legacy hidden-language rows create no blank lines', 'deleted paragraph remains absent across four save/reopen cycles', 'explicit blank paragraphs and hard breaks remain intact', 'undo restores deleted language presence');
 const output = path.resolve(import.meta.dirname, '../.local/checks/rich-text-records'); await fs.mkdir(output, { recursive: true });
 await fs.writeFile(path.join(output, 'report.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report));

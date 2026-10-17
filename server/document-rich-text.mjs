@@ -18,9 +18,18 @@ export function inlineFor(item, field) {
   return text.split('\n').flatMap((line, index) => [...(index ? [{ type: 'hardBreak' }] : []), ...(line ? [{ type: 'text', text: line, ...(marks.length ? { marks: structuredClone(marks) } : {}) }] : [])]);
 }
 
-function textNodes(item, language) {
-  const fields = language === 'bilingual' ? ['zh', 'en'].filter(field => item.data?.[field]) : [language];
-  if (!fields.length) fields.push('zh');
+function textNodes(item, language, includeEmpty = false) {
+  const presence = item.style?.paragraphPresence || {};
+  const fields = (language === 'bilingual' ? ['zh', 'en'] : [language]).filter(field => {
+    if (typeof presence[field] === 'boolean') return presence[field];
+    if (item.data?.[field]) return true;
+    // Legacy records retained only for the other language are not blank lines.
+    return language !== 'bilingual' && (includeEmpty || !item.data?.[field === 'zh' ? 'en' : 'zh']);
+  });
+  if (!fields.length && language === 'bilingual' && !item.data?.zh && !item.data?.en) {
+    const field = ['zh', 'en'].find(field => presence[field] !== false);
+    if (field) fields.push(field);
+  }
   const legacyStyle = { ...(item.style || {}) }; delete legacyStyle.richText; delete legacyStyle.documentOrder;
   // Character formatting becomes marks, so a selected word can also have an
   // inherited legacy bold/color/underline removed independently.
@@ -40,14 +49,14 @@ export function documentFromRecords(records, language = 'bilingual') {
   for (const record of records || []) {
     const item = structuredClone(record);
     const attachments = item.attachments || []; item.attachments = [];
-    if (item.isFloating && item.type === 'text') content.push({ type: 'floatingText', attrs: { item, anchorId: null }, content: textNodes(item, language) });
+    if (item.isFloating && item.type === 'text') content.push({ type: 'floatingText', attrs: { item, anchorId: null }, content: textNodes(item, language, true) });
     else if (item.type === 'image') content.push({ type: 'documentImage', attrs: { item, anchorId: null } });
     else content.push(...textNodes(item, language));
     for (const attachment of attachments) {
       const floating = { ...attachment, isFloating: true };
       content.push(attachment.type === 'image'
         ? { type: 'documentImage', attrs: { item: floating, anchorId: item.id } }
-        : { type: 'floatingText', attrs: { item: floating, anchorId: item.id }, content: textNodes(floating, language) });
+        : { type: 'floatingText', attrs: { item: floating, anchorId: item.id }, content: textNodes(floating, language, true) });
     }
   }
   const orderOf = node => {
@@ -69,6 +78,7 @@ export function recordsFromDocument(document, previous = [], language = 'bilingu
     target.data[field] = inlineText(node.content);
     target.style.richText = { ...(target.style.richText || {}), [field]: structuredClone(node.content || []) };
     target.style.paragraphTypes = { ...(target.style.paragraphTypes || {}), [field]: { type: node.type, ...(node.type === 'heading' ? { level: node.attrs?.level || 2 } : {}) } };
+    target.style.paragraphPresence = { ...(target.style.paragraphPresence || {}), [field]: true };
   };
   for (const node of document.content || []) {
     if (node.type === 'documentImage' || node.type === 'floatingText') {
@@ -98,6 +108,7 @@ export function recordsFromDocument(document, previous = [], language = 'bilingu
       const original = originals.get(id);
       item = { id, type: 'text', isFloating: false, data: language === 'bilingual' ? { zh: '', en: '' } : { zh: original?.data?.zh || '', en: original?.data?.en || '', [language]: '' }, style: { ...(node.attrs?.legacyStyle || {}), ...(language !== 'bilingual' && original?.style?.richText ? { richText: structuredClone(original.style.richText) } : {}), paragraphTypes: language !== 'bilingual' ? structuredClone(original?.style?.paragraphTypes || Object.fromEntries(['zh','en'].map(field => [field, { type: original?.style?.isSectionHeader ? 'heading' : 'paragraph', level: original?.style?.headingLevel || 2 }]))) : {}, isSectionHeader: node.type === 'heading' }, attachments: [], _fields: new Set() };
       records.push(item); byId.set(id, item);
+      item.style.paragraphPresence = language !== 'bilingual' ? structuredClone(original?.style?.paragraphPresence || {}) : {};
     }
     item._fields.add(field); readParagraph(node, item);
     if (node.type === 'heading') item.style.headingLevel = node.attrs.level || 2;
@@ -111,6 +122,7 @@ export function recordsFromDocument(document, previous = [], language = 'bilingu
       if (old.type !== 'text' || old.isFloating || byId.has(old.id) || !old.data?.[hidden]) continue;
       const kept = { ...structuredClone(old), data: { ...old.data, [language]: '' }, attachments: [] };
       if (kept.style.richText) kept.style.richText[language] = [];
+      kept.style.paragraphPresence = { ...(kept.style.paragraphPresence || {}), [language]: false };
       const nextIndex = records.findIndex(item => previous.findIndex(entry => entry.id === item.id) > index);
       records.splice(nextIndex < 0 ? records.length : nextIndex, 0, kept); byId.set(kept.id, kept);
     }

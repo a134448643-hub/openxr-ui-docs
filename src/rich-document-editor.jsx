@@ -16,6 +16,12 @@ import { normalizeTypography } from '../server/document-typography.mjs';
 
 const INK_COLORS = ['#374151', '#9ca3af', '#dc2626', '#2563eb', '#d97706', '#16a34a'];
 
+function clipboardImages(event) {
+  const clipboard = event.clipboardData;
+  const files = [...(clipboard?.files || [])].filter(file => file.type.startsWith('image/'));
+  return files.length ? files : [...(clipboard?.items || [])].filter(item => item.kind === 'file' && item.type.startsWith('image/')).map(item => item.getAsFile()).filter(Boolean);
+}
+
 function legacyTextStyle(style = {}) {
   const declarations = [];
   if (TEXT_SIZE_PIXELS[style.size]) declarations.push(`--doc-legacy-size:${TEXT_SIZE_PIXELS[style.size]}px`);
@@ -132,7 +138,7 @@ function DocumentImageView({ editor, node, updateAttributes, getPos, selected, d
     const shared = english && item.data?.shareWithEnglish;
     const surfaceItem = english ? { ...item, data: { ...item.data, src: shared ? item.data.src : item.data?.srcEn || '' }, annotations: shared ? item.annotations : item.data?.enAnnotations || [], style: { ...item.style, annotations: shared ? item.style?.annotations : [] } } : item;
     return <ImageSurface key={field} unifiedEditor imageLanguage={field} item={{ ...surfaceItem, isAttachment: Boolean(node.attrs.anchorId) }} editable={editable} selected={selected && activeImage === field} tool={activeImage === field ? tool : 'move'} columnWidth={geometry.width} lang={language}
-    emptyLabel={english ? '待补英文图片 · 可同步中文图片或上传英文截图' : undefined} emptyAspectRatio={english ? aspectRatio : undefined}
+    emptyLabel={english ? '待补英文图片 · 选中后 Ctrl+V 粘贴截图，或同步中文图片' : undefined} emptyAspectRatio={english ? aspectRatio : undefined}
     toolbarContent={english ? <>
       <button type="button" className="doc-text-btn" aria-pressed={Boolean(shared)} disabled={!item.data?.src} onClick={() => { beginGesture(); patch({ data: { ...item.data, shareWithEnglish: !shared } }); }}>{shared ? '取消同步中文图片' : '同步中文图片'}</button>
       <button type="button" className="doc-text-btn" onClick={() => englishFile.current?.click()}>上传英文图片</button>
@@ -147,6 +153,13 @@ function DocumentImageView({ editor, node, updateAttributes, getPos, selected, d
   };
   const picture = <>{item.isFloating && language === 'bilingual' ? renderPicture(activeImage) : <>{language !== 'en' && renderPicture('zh')}{language !== 'zh' && renderPicture('en')}</>}{editable && <input ref={englishFile} type="file" aria-label="选择英文图片" accept="image/*" hidden onChange={event => { void uploadEnglish(event.target.files?.[0]); event.target.value = ''; }}/>}</>;
   return <NodeViewWrapper className={item.isFloating ? 'doc-floating-anchor' : 'doc-rich-image'} data-image-id={item.id} contentEditable={false} data-drag-handle={item.isFloating ? undefined : ''}
+    onPasteCapture={event => {
+      if (!editable || event.target.closest('input,textarea,[data-field]')) return;
+      const files = clipboardImages(event);
+      if (!files.length) return;
+      event.preventDefault(); event.stopPropagation();
+      void editor.storage.documentUI.pasteImages(files, undefined, { id: item.id, field: activeImage });
+    }}
     onDragEnd={() => { editor.storage.documentUI.draggedImageId = null; }}
     onMouseDown={event => { if (event.button === 0 && !event.target.closest('.doc-image-wrap')) continueAfter(event, true); }}
     onKeyDownCapture={event => { if (['Enter', 'ArrowUp'].includes(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey && !event.target.closest('button,input,textarea,select,[data-field]')) continueAfter(event, event.key === 'ArrowUp', event.key === 'ArrowUp'); }}>
@@ -224,9 +237,10 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
     editorProps: {
       attributes: { class: 'doc-surface doc-column', role: 'textbox', 'aria-label': '文档正文', 'aria-multiline': 'true', spellcheck: 'false' },
       handlePaste: (_view, event) => {
-        const files = [...(event.clipboardData?.files || [])].filter(file => file.type.startsWith('image/'));
+        if (!_view.editable) return false;
+        const files = clipboardImages(event);
         if (!files.length) return false;
-        event.preventDefault(); void insertImages(files); return true;
+        event.preventDefault(); void insertImages(files, undefined, undefined, true); return true;
       },
       handleDrop: (view, event, _slice, moved) => {
         const id = view.dom.editor.storage.documentUI.draggedImageId;
@@ -274,20 +288,38 @@ export function RichDocumentEditor({ blocks, typography, editable, lang, onChang
     return () => { painter.current = null; if (paintFrame.current != null) cancelAnimationFrame(paintFrame.current); };
   }, [editor, editable]);
 
-  const insertImages = async (files, position) => {
+  const insertImages = async (files, position, target, replaceSelected = false) => {
     const activeEditor = editorRef.current;
     if (!activeEditor || activeEditor.isDestroyed || !activeEditor.isEditable) return;
     if (position != null) activeEditor.commands.setTextSelection(position);
+    const selected = activeEditor.state.selection.node;
+    const replacement = target || (replaceSelected && position == null && selected?.type.name === 'documentImage' ? { id: selected.attrs.item.id, field: lang === 'en' ? 'en' : lang === 'zh' ? 'zh' : activeEditor.storage.documentUI.imageLanguage || 'zh' } : null);
     const token = { bookmark: activeEditor.state.selection.getBookmark() }; pending.current.add(token);
     try {
-      const images = await Promise.all([...files].map(file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve({ type: 'documentImage', attrs: { item: { id: richId(), type: 'image', data: { src: reader.result }, style: { imageWidth: 72 }, attachments: [] } } }); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); })));
+      const images = await Promise.all((replacement ? [...files].slice(0, 1) : [...files]).map(file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve({ type: 'documentImage', attrs: { item: { id: richId(), type: 'image', data: { src: reader.result }, style: { imageWidth: 72 }, attachments: [] } } }); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); })));
       if (activeEditor.isDestroyed) return;
+      if (replacement) {
+        let found;
+        activeEditor.state.doc.descendants((node, pos) => { if (node.type.name === 'documentImage' && node.attrs.item?.id === replacement.id) found = { node, pos }; });
+        if (!found || !activeEditor.isEditable) return;
+        const original = found.node.attrs.item, src = images[0].attrs.item.data.src;
+        const item = replacement.field === 'en'
+          ? { ...original, data: { ...original.data, srcEn: src, shareWithEnglish: false, enAnnotations: [] } }
+          : { ...original, data: { ...original.data, src }, annotations: [], style: { ...original.style, annotations: [] } };
+        const transaction = closeHistory(activeEditor.state.tr).setNodeMarkup(found.pos, undefined, { ...found.node.attrs, item }).setMeta('uiEvent', 'paste');
+        activeEditor.view.dispatch(transaction);
+        activeEditor.view.dispatch(closeHistory(activeEditor.state.tr));
+        activeEditor.view.focus();
+        return;
+      }
       const selection = token.bookmark.resolve(activeEditor.state.doc);
       activeEditor.view.dispatch(closeHistory(activeEditor.state.tr));
-      activeEditor.chain().focus().setTextSelection({ from: selection.from, to: selection.to }).insertContent(images).setMeta('uiEvent', 'paste').run();
+      const localized = lang === 'en' ? images.map(image => ({ ...image, attrs: { ...image.attrs, item: { ...image.attrs.item, data: { src: '', srcEn: image.attrs.item.data.src, shareWithEnglish: false } } } })) : images;
+      activeEditor.chain().focus().setTextSelection({ from: selection.from, to: selection.to }).insertContent(localized).setMeta('uiEvent', 'paste').run();
     } catch (error) { window.alert(`图片插入失败：${error.message}`); }
     finally { pending.current.delete(token); }
   };
+  if (editor) editor.storage.documentUI.pasteImages = insertImages;
 
   useEffect(() => { if (editor && !editor.isDestroyed) editor.setEditable(editable); }, [editor, editable]);
   useEffect(() => {

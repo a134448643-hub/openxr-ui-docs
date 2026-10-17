@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { readProjectLink, projectApiUrl } from './project-links.js';
 import { RichDocumentEditor } from './rich-document-editor.jsx';
+import { initialDocumentLanguage, rememberDocumentLanguage, documentTitle, updateDocumentTitle } from './document-language.mjs';
 import { DocumentSettings } from './document-settings.jsx';
 import { 
   BookOpen, Image as ImageIcon, ChevronRight, ChevronLeft, Plus, 
@@ -274,8 +275,9 @@ const ProjectHub = ({ workspace, onOpen, onCreate, loadError }) => {
 const App = () => {
   const [isEditMode, setIsEditMode] = useState(!IS_PUBLISHED);
   const [isViewOnly] = useState(IS_PUBLISHED);
-  const [lang, setLanguageState] = useState(() => { try { return sessionStorage.getItem('doc-studio-language') || 'bilingual'; } catch { return 'bilingual'; } });
-  const setLang = (value) => { try { sessionStorage.setItem('doc-studio-language', value); } catch {} setLanguageState(value); };
+  const [lang, setLanguageState] = useState(() => initialDocumentLanguage(IS_PUBLISHED));
+  const setLang = (value) => { if (rememberDocumentLanguage(value, IS_PUBLISHED)) setLanguageState(value); };
+  useEffect(() => { document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN'; }, [lang]);
   const [activePageId, setActivePageId] = useState('p1');
   const [isTranslating, setIsTranslating] = useState(false); 
   const [translatingBlockId, setTranslatingBlockId] = useState(null); 
@@ -758,14 +760,14 @@ const App = () => {
   const handleExportHtml = () => {
     const safeJson = JSON.stringify(docData).replace(/<\/script>/g, '<\\/script>');
     const EDITOR_WIDTH = 642; 
-    const exportLang = lang; 
+    const exportLang = 'en'; 
 
     const htmlContent = `<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${docData.docTitle}</title>
+<title>${documentTitle(docData, 'docTitle', exportLang)}</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   /* 全局样式 */
@@ -850,7 +852,7 @@ const App = () => {
 </head>
 <body>
 <div class="no-print" style="position:fixed;top:0;left:0;width:100%;background:#2563eb;color:white;padding:10px;text-align:center;z-index:1000;box-shadow:0 2px 4px rgba(0,0,0,0.2);">
-  只读文档预览 <button onclick="window.print()" style="margin-left:15px;background:white;color:#2563eb;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-weight:bold;">🖨️ 打印 / 存为 PDF</button>
+  Read-only document <button onclick="window.print()" style="margin-left:15px;background:white;color:#2563eb;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-weight:bold;">🖨️ Print / Save as PDF</button>
 </div>
 
 <div class="container" style="margin-top:60px;">
@@ -864,7 +866,7 @@ const data = ${safeJson};
 const EDITOR_WIDTH = ${EDITOR_WIDTH}; 
 const EXPORT_LANG = "${exportLang}";
 
-document.getElementById('doc-title').textContent = data.docTitle;
+document.getElementById('doc-title').textContent = EXPORT_LANG === 'en' ? data.englishTitles?.docTitle || data.docTitle : data.docTitle;
 const root = document.getElementById('root');
 
 // Determine visibility based on exported lang
@@ -1096,7 +1098,7 @@ data.pages.forEach((p, i) => {
          <div className="p-5 flex items-center gap-3 border-b border-gray-100">
              {!isViewOnly && !IS_DESKTOP_EMBEDDED && <button onClick={() => setShowProjectHub(true)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-500" title={getUi('projectHome', lang)}><Home size={17}/></button>}
              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0"><BookOpen size={18}/></div>
-             {!isViewOnly && isEditMode && activeSection === 'docs' ? <input className="font-bold text-gray-800 bg-transparent outline-none w-full min-w-0" value={docData.sidebarTitle} onChange={(e) => setDocData({...docData, sidebarTitle: e.target.value})}/> : <div className="font-bold truncate">{activeSection === 'docs' ? docData.sidebarTitle : activeSection === 'common' ? '通用规则' : activeProject?.name}</div>}
+             {!isViewOnly && isEditMode && activeSection === 'docs' ? <input className="font-bold text-gray-800 bg-transparent outline-none w-full min-w-0" value={documentTitle(docData, 'sidebarTitle', lang)} onChange={(e) => setDocData(updateDocumentTitle(docData, 'sidebarTitle', lang, e.target.value))}/> : <div className="font-bold truncate">{activeSection === 'docs' ? documentTitle(docData, 'sidebarTitle', lang) : activeSection === 'common' ? '通用规则' : activeProject?.name}</div>}
           </div>
          {!isViewOnly && activeProject && <div className="px-5 py-2 border-b border-gray-100 text-[10px] text-gray-500">所属项目：<strong className="text-gray-700">{activeProject.name}</strong> · {activeProject.id}</div>}
          {!isViewOnly && <div className="p-2 grid grid-cols-3 gap-1 border-b border-gray-100 bg-gray-50">
@@ -1195,7 +1197,7 @@ data.pages.forEach((p, i) => {
               {activeSection === 'docs' && <div>
                 {/* [UPDATE] Added Language Label */}
                 <div className="text-xs font-bold text-gray-500 text-center mb-2">{getUi('langLabel', lang)}</div>
-                <div className="flex bg-white p-1 rounded-lg border shadow-sm">{['zh', 'en', 'bilingual'].map(l => (<button key={l} onClick={() => setLang(l)} className={`flex-1 py-1.5 text-[10px] rounded font-medium uppercase transition-colors ${lang === l ? 'bg-gray-800 text-white shadow' : 'text-gray-400 hover:text-gray-600'}`}>{l}</button>))}</div>
+                <div className="flex bg-white p-1 rounded-lg border shadow-sm">{['zh', 'en'].map(l => (<button key={l} onClick={() => setLang(l)} className={`flex-1 py-1.5 text-[10px] rounded font-medium uppercase transition-colors ${lang === l ? 'bg-gray-800 text-white shadow' : 'text-gray-400 hover:text-gray-600'}`}>{l}</button>))}</div>
               </div>}
               {activeSection === 'development' && <button onClick={() => setShowNewRecordModal(true)} className="w-full py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-2"><Plus size={14}/> 新建决策 / 异常 / 变更</button>}
               {activeSection !== 'docs' && <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] leading-relaxed text-amber-800"><LockKeyhole size={11} className="inline mr-1"/>全部项目资料和通用规则只保存在本机，不会发布到分享页面。</div>}
@@ -1206,7 +1208,7 @@ data.pages.forEach((p, i) => {
         {/* Header */}
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0 z-30 transition-all print:hidden">
           <div className="flex-1 mr-8">
-             {activeSection !== 'docs' ? <div><h2 className="text-xl font-bold text-gray-800">{activeKnowledgeItem?.title || (activeSection === 'common' ? '通用规则' : getUi('development', lang))}</h2><p className="text-xs text-amber-700 mt-0.5 flex items-center gap-1"><LockKeyhole size={11}/> {getUi('localOnly', lang)} · {activeKnowledgeItem?.readOnly ? '工具自动生成' : 'Markdown 文件'}</p></div> : !isViewOnly && isEditMode ? <input className="text-xl font-bold text-gray-800 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none w-full py-1" value={docData.docTitle} onChange={e => setDocData({...docData, docTitle: e.target.value})} placeholder={getUi('docTitlePlaceholder', lang)}/> : <h2 className="text-xl font-bold text-gray-800">{docData.docTitle}</h2>}
+             {activeSection !== 'docs' ? <div><h2 className="text-xl font-bold text-gray-800">{activeKnowledgeItem?.title || (activeSection === 'common' ? '通用规则' : getUi('development', lang))}</h2><p className="text-xs text-amber-700 mt-0.5 flex items-center gap-1"><LockKeyhole size={11}/> {getUi('localOnly', lang)} · {activeKnowledgeItem?.readOnly ? '工具自动生成' : 'Markdown 文件'}</p></div> : !isViewOnly && isEditMode ? <input className="text-xl font-bold text-gray-800 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none w-full py-1" value={documentTitle(docData, 'docTitle', lang)} onChange={e => setDocData(updateDocumentTitle(docData, 'docTitle', lang, e.target.value))} placeholder={getUi('docTitlePlaceholder', lang)}/> : <h2 className="text-xl font-bold text-gray-800">{documentTitle(docData, 'docTitle', lang)}</h2>}
           </div>
           <div className="flex items-center gap-4 shrink-0">
              {!isViewOnly && (activeSection === 'docs' ? (

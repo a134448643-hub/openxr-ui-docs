@@ -1,126 +1,356 @@
 version: 1
 blockOrder:
-  - p-component-widget-interaction-ray-category-0
-  - p-component-widget-interaction-ray-parameters-0
-  - pmvb0tv6x69uso4n
-  - pmvb13zl9mw177ql
+  - review-86
+  - review-87
+  - review-88
+  - review-89
+  - review-90
+  - review-91
+  - pmvcm8uuul7m9ynw
+  - pmvcm8w1451zj0ly
+  - review-92
+  - pmvcm7kysbnxyps2
+  - review-93
+  - review-image-p1792150504802-pmvb0tv6x69uso4n
+  - pmvcm0551j2wvoyd
 blocks:
-  p-component-widget-interaction-ray-category-0:
+  review-86:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: true
+      headingLevel: 2
       paragraphTypes:
         zh:
           type: heading
           level: 2
         en:
-          type: paragraph
-      headingLevel: 2
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
             text: 设置控件交互组件
-        en: []
+        en:
+          - type: text
+            text: Widget Interaction Settings
       documentOrder:
         zh: 0
+        en: 1
     attachments: []
-  p-component-widget-interaction-ray-parameters-0:
+  review-87:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
               - type: bold
             text: 显示调试
+          - type: text
+            text: （布尔）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 开启后显示控件交互的调试信息，方便检查射线检测与命中位置。
-          - type: hardBreak
+            text: 显示射线交互调试信息，便于检查检测结果与命中位置。
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
+              - type: bold
+            text: bShowDebug
+          - type: text
+            text: " (Boolean)"
+          - type: hardBreak
+          - type: text
+            text: Shows ray interaction debug information to help inspect detection results
+              and hit locations.
+      documentOrder:
+        zh: 2
+        en: 3
+    attachments: []
+  review-88:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 交互距离
+          - type: text
+            text: （浮点）
+          - type: hardBreak
+          - type: text
+            text: 设置控件交互检测使用的距离上限
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: InteractionDistance
+          - type: text
+            text: " (Float)"
+          - type: hardBreak
+          - type: text
+            text: Sets the maximum distance used for widget interaction detection.
+      documentOrder:
+        zh: 4
+        en: 5
+    attachments: []
+  review-89:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
               - type: bold
             text: 插值缓动速度
+          - type: text
+            text: （浮点）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置射线跟随手部或控制器移动时的平滑速度，数值越大跟随缓动越大。
-          - type: hardBreak
+            text: 调整射线跟随手部或控制器时的插值响应，数值增大对应更快跟随还是更明显延迟
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
+              - type: bold
+            text: InterpolationSpeed
+          - type: text
+            text: " (Float)"
+          - type: hardBreak
+          - type: text
+            text: Adjusts interpolation as the ray follows the hand or controller. The
+              source description leaves open whether increasing the value
+              produces faster following or a more noticeable delay.
+      documentOrder:
+        zh: 6
+        en: 7
+    attachments: []
+  review-90:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
               - type: bold
             text: 命中 UI圆初始缩放
+          - type: text
+            text: （向量）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置射线命中 UI 时UMG圆的基础缩放大小。
-          - type: hardBreak
+            text: 设置射线命中 UI 时，UMG 圆形指示标记的初始缩放。
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
+              - type: bold
+            text: HitUICircleInitialScale
+          - type: text
+            text: " (Vector)"
+          - type: hardBreak
+          - type: text
+            text: Sets the initial scale of the UMG circular indicator when the ray hits UI.
+      documentOrder:
+        zh: 8
+        en: 9
+    attachments: []
+  review-91:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
               - type: bold
             text: 射线有效距离
+          - type: text
+            text: （二维向量）
           - type: hardBreak
+          - type: text
+            text: 设置射线响应 UI 的最短和最远有效距离。(x最短距离，y最远距离）
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置射线响应 UI 的有效距离范围。(最短距离，最远距离）
+              - type: bold
+            text: RayValidDistance
+          - type: text
+            text: " (Vector2D)"
           - type: hardBreak
           - type: text
-            text: 手柄角色注意，需要绑定一个输入，用于触发鼠标左键按压，布尔控制按下左键和松开左键
+            text: "Sets the minimum and maximum distances at which the ray responds to UI: X
+              is the minimum distance, and Y is the maximum distance."
+      documentOrder:
+        zh: 10
+        en: 11
+    attachments: []
+  pmvcm8uuul7m9ynw:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 38
+      documentOrder: 12
+    imageTranslation:
+      srcEn: assets/8eeec2794636531e8ace.png
+      shareWithEnglish: false
+      enAnnotations: []
+    attachments: []
+  pmvcm8w1451zj0ly:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh: []
         en: []
       documentOrder:
-        zh: 1
+        en: 14
+        zh: 15
     attachments: []
-  pmvb0tv6x69uso4n:
+  review-92:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 手柄输入
+        en:
+          - type: text
+            text: Controller Input
+      documentOrder:
+        zh: 13
+        en: 16
+    attachments: []
+  pmvcm7kysbnxyps2:
+    type: image
+    isFloating: true
+    style:
+      imageWidth: 72
+      documentOrder: 17
+    layout:
+      x: 252.54364640883978
+      y: 143.29723756906077
+      width: 93.28508287292817
+      height: 135.84861878453037
+      rx: 0.39337016574585637
+      ry: 0.22320441988950276
+      rw: 0.1453038674033149
+      rh: 0.21160220994475137
+    imageTranslation:
+      srcEn: assets/53be1455e82f666b3e98.png
+      shareWithEnglish: false
+      enAnnotations: []
+    attachments: []
+  review-93:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 手柄角色注意，需要绑定一个输入，用于触发鼠标左键按压，布尔控制按下左键和松开左键
+        en:
+          - type: text
+            text: For a controller character, bind an input to simulate the left mouse
+              button. Use a Boolean value to control pressing and releasing the
+              button.
+      documentOrder:
+        zh: 18
+        en: 19
+    attachments: []
+  review-image-p1792150504802-pmvb0tv6x69uso4n:
     type: image
     isFloating: false
     style:
       imageWidth: 35
-      documentOrder: 2
+      documentOrder: 20
+    imageTranslation:
+      srcEn: assets/0c5dc71917696d90eeaf.png
+      shareWithEnglish: false
+      enAnnotations: []
     attachments: []
-  pmvb13zl9mw177ql:
+  pmvcm0551j2wvoyd:
     type: text
     isFloating: false
     style:
@@ -129,10 +359,14 @@ blocks:
           type: paragraph
         en:
           type: paragraph
-          level: 2
       isSectionHeader: false
+      paragraphPresence:
+        en: true
+        zh: true
       richText:
+        en: []
         zh: []
       documentOrder:
-        zh: 3
+        en: 21
+        zh: 22
     attachments: []

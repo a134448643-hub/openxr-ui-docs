@@ -1,117 +1,249 @@
 version: 1
 blockOrder:
-  - pmvb2pzk5bf5xlex
-  - pmvbnqz92mv29m8k
-  - pmvb2p0lkwozoy99
-  - pmvb380jnr848mz9
-  - pmvb380018l3uf37
-  - pmvb3ai3kedgadin
-  - pmvb39wdku67m2nc
-  - pmvb39wdkfnqwawe
+  - review-49
+  - review-50-original
+  - review-image-p1792160531812-pmvb2p0lkwozoy99
+  - review-51-original
+  - review-image-p1792160531812-pmvb380018l3uf37
+  - review-52
+  - review-53-original
+  - review-image-p1792160531812-pmvb39wdku67m2nc
+  - review-55
+  - review-56-original
 blocks:
-  pmvb2pzk5bf5xlex:
+  review-49:
     type: text
     isFloating: false
     style:
+      isSectionHeader: true
+      headingLevel: 2
       paragraphTypes:
         zh:
           type: heading
-          level: 1
-      isSectionHeader: true
+          level: 2
+        en:
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: 手势角色基础操作
-      headingLevel: 1
+            text: 旋转
+        en:
+          - type: text
+            text: Turning
       documentOrder:
         zh: 0
+        en: 1
     attachments: []
-  pmvbnqz92mv29m8k:
+  review-50-original:
     type: text
     isFloating: false
     style:
+      isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
-          level: 2
-      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: 中指，无名指，小拇指握拳并且手掌向右垂直，进入旋转模式手变成高亮状态
-      documentOrder:
-        zh: 1
-    attachments: []
-  pmvb2p0lkwozoy99:
-    type: image
-    isFloating: false
-    style:
-      imageWidth: 30
-      documentOrder: 2
-    imageTranslation:
-      srcEn: ""
-      shareWithEnglish: false
-      enAnnotations: []
-    attachments: []
-  pmvb380jnr848mz9:
-    type: text
-    isFloating: false
-    style:
-      paragraphTypes:
-        zh:
-          type: paragraph
-      isSectionHeader: false
-      richText:
-        zh:
+            text: |-
+              手势旋转
+              中指，无名指，小拇指握拳并且手掌向右垂直，进入旋转模式手变成高亮状态
+              保持高亮状态，捏合食指和大拇指，触发向右旋转（左手同理）
+              食指捏合同样作用物体抓取
+        en:
           - type: text
-            text: 保持高亮状态，捏合食指和大拇指，触发向右旋转（左手同理）
+            text: Hand-gesture turning
           - type: hardBreak
           - type: text
-            text: 食指捏合同样作用物体抓取
+            text: Curl the middle, ring, and little fingers into a fist and hold the palm
+              vertically facing right. The hand becomes highlighted when turning
+              mode is active.
+          - type: hardBreak
+          - type: text
+            text: Keep the hand highlighted and pinch the index finger and thumb to turn
+              right. Apply the same gesture with the left hand to turn left.
+          - type: hardBreak
+          - type: text
+            text: The index-finger pinch is also used to grab objects.
       documentOrder:
-        zh: 3
+        zh: 2
+        en: 3
     attachments: []
-  pmvb380018l3uf37:
+  review-image-p1792160531812-pmvb2p0lkwozoy99:
     type: image
     isFloating: false
     style:
       imageWidth: 30
       documentOrder: 4
+    imageTranslation:
+      srcEn: ""
+      shareWithEnglish: true
+      enAnnotations: []
     attachments: []
-  pmvb3ai3kedgadin:
+  review-51-original:
     type: text
     isFloating: false
     style:
+      isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
-      isSectionHeader: false
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: 右手中指，无名指，小拇指握拳并且手掌向上时，进入传送模式手变成高亮状态，捏合食指和大拇指，触发向传送移动。
+            text: |-
+              保持高亮状态，捏合食指和大拇指，触发向右旋转（左手同理）
+              食指捏合同样作用物体抓取
+        en:
+          - type: text
+            text: Keep the hand highlighted and pinch the index finger and thumb to turn
+              right. Apply the same gesture with the left hand to turn left.
+          - type: hardBreak
+          - type: text
+            text: The index-finger pinch is also used to grab objects.
       documentOrder:
         zh: 5
+        en: 6
     attachments: []
-  pmvb39wdku67m2nc:
+  review-image-p1792160531812-pmvb380018l3uf37:
     type: image
     isFloating: false
     style:
       imageWidth: 30
-      documentOrder: 6
+      documentOrder: 7
+    imageTranslation:
+      shareWithEnglish: true
     attachments: []
-  pmvb39wdkfnqwawe:
+  review-52:
     type: text
     isFloating: false
     style:
+      isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 传送
+        en:
+          - type: text
+            text: Teleportation
+      documentOrder:
+        zh: 8
+        en: 9
+    attachments: []
+  review-53-original:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
-      isSectionHeader: false
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
-        zh: []
+        zh:
+          - type: text
+            text: |-
+              手势传送
+              右手中指，无名指，小拇指握拳并且手掌向上时，进入传送模式手变成高亮状态，捏合食指和大拇指，触发向传送移动。
+        en:
+          - type: text
+            text: Hand-gesture teleportation
+          - type: hardBreak
+          - type: text
+            text: With the right palm facing upward, curl the middle, ring, and little
+              fingers into a fist. The hand becomes highlighted when
+              teleportation mode is active. Pinch the index finger and thumb to
+              teleport.
       documentOrder:
-        zh: 7
+        zh: 10
+        en: 11
+    attachments: []
+  review-image-p1792160531812-pmvb39wdku67m2nc:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 30
+      documentOrder: 12
+    imageTranslation:
+      shareWithEnglish: true
+    attachments: []
+  review-55:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 抓取
+        en:
+          - type: text
+            text: Grabbing
+      documentOrder:
+        zh: 13
+        en: 14
+    attachments: []
+  review-56-original:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 食指捏合同样作用物体抓取
+        en:
+          - type: text
+            text: The index-finger pinch is also used to grab objects.
+      documentOrder:
+        zh: 15
+        en: 16
     attachments: []

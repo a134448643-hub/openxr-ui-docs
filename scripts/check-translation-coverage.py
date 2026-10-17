@@ -24,3 +24,18 @@ for file in ['scan-blueprints.py','verify-chinese-residue.py','translation-cover
     compile(source,file,'exec')
 print('Audit omissions restore actionable animation/category/comment targets; repeat is stable; protected/unknown fields never fabricated; Python syntax passed.')
 
+
+# A call site belongs to its caller; its write target belongs to the declaring
+# Blueprint. Reconciliation must never fabricate the declaration on the caller.
+parameter=dict(kind='输入参数',field='Name',original='是否开始按压？',elementName='OnSetPress/Input/是否开始按压？',nodeGuid='event-guid',graphName='EventGraph',pinName='是否开始按压？',parameterScope='custom-event',callableName='OnSetPress',valueType='bool')
+call=dict(owner='/Game/Caller',status='translatable',location='EventGraph/call-guid/是否开始按压？',kind='输入参数',text=parameter['original'],translationEntry=dict(parameter,declarationOwner='/Game/Emitter'))
+result=reconcile(rows,dict(entries=[call]),add)
+assert result['added']==1 and result['missing']==[],result
+assert rows[-1]['owner']=='/Game/Emitter'
+assert rows[-1]['parameterScope']=='custom-event'
+assert reconcile(rows,dict(entries=[call]),add)['added']==0
+# Shared spelling and one event GUID do not conflate two different parameters.
+other=dict(parameter,original='按键输入浮点',elementName='OnSetPress/Input/按键输入浮点',pinName='按键输入浮点',valueType='real')
+call2=dict(call,text=other['original'],translationEntry=dict(other,declarationOwner='/Game/Emitter'))
+assert reconcile(rows,dict(entries=[call2]),add)['added']==1
+print('Custom event calls reconcile to the declaring Blueprint; separate parameters retain their native types.')

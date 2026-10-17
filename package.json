@@ -1,7 +1,7 @@
 {
   "name": "local-doc-studio",
   "private": true,
-  "version": "0.1.137",
+  "version": "0.1.142",
   "type": "module",
   "scripts": {
     "dev": "vite",

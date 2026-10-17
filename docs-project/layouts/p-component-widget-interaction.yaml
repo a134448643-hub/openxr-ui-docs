@@ -1,183 +1,353 @@
 version: 1
 blockOrder:
-  - p-component-widget-interaction-category-0
-  - p-component-widget-interaction-parameters-0
-  - p-component-widget-interaction-category-1
-  - p-component-widget-interaction-parameters-1
+  - review-75
+  - review-76
+  - review-77
+  - review-78
+  - review-79
+  - review-80
+  - review-81
+  - review-82
+  - pmvcmeqgeap4j2a3
+  - pmvcmf836i1zteu4
+  - pmvcmf837xtk2kwv
 blocks:
-  p-component-widget-interaction-category-0:
+  review-75:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: true
+      headingLevel: 2
       paragraphTypes:
         zh:
           type: heading
           level: 2
         en:
-          type: paragraph
-      headingLevel: 2
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
             text: 组件设置
-        en: []
+        en:
+          - type: text
+            text: Component Settings
       documentOrder:
         zh: 0
+        en: 1
     attachments: []
-  p-component-widget-interaction-parameters-0:
+  review-76:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
               - type: bold
             text: 检测通道
+          - type: text
+            text: （枚举）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置检测 UI 时使用的碰撞通道，需要与目标 UI 的碰撞响应对应。
-          - type: hardBreak
+            text: 指定 UI 检测使用的碰撞通道，目标 UI 的碰撞响应需要与它对应。
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
               - type: bold
-            text: 交互距离
+            text: TraceChannel
+          - type: text
+            text: " (Enum)"
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置手指触碰 UI 的有效检测距离，超出距离时不触发交互。
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: 指针索引
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置当前交互指针的编号，用于区分不同的交互指针，组件类别做了编号命名重叠的机制，会获取角色所有控件交互组件自动排序。
-        en: []
+            text: Specifies the collision channel used to detect UI. The target UI's
+              collision responses must match this channel.
       documentOrder:
-        zh: 1
+        zh: 2
+        en: 3
     attachments: []
-  p-component-widget-interaction-category-1:
+  review-77:
     type: text
     isFloating: false
     style:
-      size: text-base
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 交互距离
+          - type: text
+            text: （浮点）
+          - type: hardBreak
+          - type: text
+            text: 设置手指触碰 UI 的有效检测距离。超出有效距离时不触发该交互。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: InteractionDistance
+          - type: text
+            text: " (Float)"
+          - type: hardBreak
+          - type: text
+            text: Sets the effective detection distance for touching UI with a finger. This
+              interaction does not trigger beyond that distance.
+      documentOrder:
+        zh: 4
+        en: 5
+    attachments: []
+  review-78:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 指针索引
+          - type: text
+            text: （整数）
+          - type: hardBreak
+          - type: text
+            text: 设置当前交互指针的编号，用于区分不同的交互指针，组件类别做了编号命名重叠的机制，会获取角色所有控件交互组件自动排序。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: PointerIndex
+          - type: text
+            text: " (Integer)"
+          - type: hardBreak
+          - type: text
+            text: "Sets the interaction pointer's index to distinguish it from other
+              pointers. The component includes a mechanism to avoid duplicate
+              indices: it gathers all widget interaction components on the
+              character and orders them automatically."
+      documentOrder:
+        zh: 6
+        en: 7
+    attachments: []
+  review-79:
+    type: text
+    isFloating: false
+    style:
       isSectionHeader: true
+      headingLevel: 2
       paragraphTypes:
         zh:
           type: heading
           level: 2
         en:
-          type: paragraph
-      headingLevel: 2
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
             text: 调试设置
-        en: []
+        en:
+          - type: text
+            text: Debug Settings
       documentOrder:
-        zh: 2
+        zh: 8
+        en: 9
     attachments: []
-  p-component-widget-interaction-parameters-1:
+  review-80:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
               - type: bold
             text: 是否显示调试
+          - type: text
+            text: （布尔）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 开启后显示交互调试辅助信息，方便检查指尖位置与检测方向。
-          - type: hardBreak
+            text: 显示交互调试辅助信息，便于检查指尖位置和检测方向。
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
+              - type: bold
+            text: bShowDebug
+          - type: text
+            text: " (Boolean)"
+          - type: hardBreak
+          - type: text
+            text: Shows interaction debug information to help check the fingertip position
+              and detection direction.
+      documentOrder:
+        zh: 10
+        en: 11
+    attachments: []
+  review-81:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
               - type: bold
             text: 调试球体线条粗细度
+          - type: text
+            text: （浮点）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
             text: 设置调试球体的线条粗细。
-          - type: hardBreak
+        en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
+              - type: bold
+            text: DebugSphereLineThickness
+          - type: text
+            text: " (Float)"
+          - type: hardBreak
+          - type: text
+            text: Sets the line thickness of the debug sphere.
+      documentOrder:
+        zh: 12
+        en: 13
+    attachments: []
+  review-82:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
               - type: bold
             text: 调试线条粗细度
+          - type: text
+            text: （浮点）
           - type: hardBreak
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
             text: 设置交互检测调试线的粗细。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: DebugLineThickness
+          - type: text
+            text: " (Float)"
+          - type: hardBreak
+          - type: text
+            text: Sets the line thickness of the interaction trace debug lines.
+      documentOrder:
+        zh: 14
+        en: 15
+    attachments: []
+  pmvcmeqgeap4j2a3:
+    type: image
+    isFloating: true
+    style:
+      imageWidth: 72
+      documentOrder: 16
+    layout:
+      x: 315.0366712707183
+      y: 205.72375690607737
+      width: 133.72044198895026
+      height: 125.56243093922652
+      rx: 0.49071132596685085
+      ry: 0.32044198895027626
+      rw: 0.20828729281767955
+      rh: 0.19558011049723756
+    imageTranslation:
+      srcEn: assets/3ae069c90b3f9824fdfb.png
+      shareWithEnglish: false
+      enAnnotations: []
+    attachments: []
+  pmvcmf836i1zteu4:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 47
+      documentOrder: 17
+    imageTranslation:
+      srcEn: assets/21f6e37fa0460b728ff5.png
+      shareWithEnglish: false
+      enAnnotations: []
+    attachments: []
+  pmvcmf837xtk2kwv:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh: []
         en: []
       documentOrder:
-        zh: 3
+        en: 18
+        zh: 19
     attachments: []

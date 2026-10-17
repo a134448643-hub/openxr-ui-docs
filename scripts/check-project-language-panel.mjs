@@ -1,0 +1,72 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { DesktopStateStore } from '../desktop/state-store.mjs';
+const root = process.cwd(), fixture = path.join(root, '.local/checks/language-open-panel-' + Date.now());
+await fs.mkdir(path.join(fixture, 'temp'), { recursive: true }); process.env.TEMP = path.join(fixture, 'temp'); process.env.TMP = process.env.TEMP;
+const projectRoot = path.join(fixture, 'Project'), descriptor = path.join(projectRoot, 'Demo.uproject');
+for (const folder of ['Config', 'Content']) await fs.mkdir(path.join(projectRoot, folder), { recursive: true });
+await fs.writeFile(descriptor, JSON.stringify({ EngineAssociation: '5.3' }));
+const source = { name: 'Demo', descriptorPath: descriptor, projectRoot, engineVersion: '5.3', codeKind: 'blueprint', plugins: [] };
+const project = { id: 'focus', name: 'Demo', type: 'UE 工程', ue: '5.3', path: projectRoot, status: 'active', imported: true, plugins: [], nativeInfo: source };
+const state = new DesktopStateStore(path.join(fixture, '.local/desktop-data')); await state.load();
+await state.set('ue-pm-theme', 'epic-launcher');
+await state.set('ue-nexus-prototype-v1', JSON.stringify({ theme: 'epic-launcher', catalog: [project], order: [project.id], overrides: {} }));
+await state.set('ue-project-workflow-v1', JSON.stringify({ path: descriptor, stage: 'translation', autoClassify: true }));
+const report = { source, summary: { assets: 1, files: 1, bytes: 1, maps: 0 }, rows: [{ id: 0, entryKey: 'test', group: 'assets', kind: '资源名称', field: 'Name', original: 'BP_测试', translated: '', owner: '/Game/BP_测试', relative: 'Content/BP_测试.uasset' }], excluded: [], coverage: { assetNames: true } };
+const translation = { id: 'translation', kind: 'translation', status: 'completed', copyJobId: 'copy', direction: 'zh-en', completed: 1, total: 1, entries: [report.rows[0], { id: 1, entryKey: 'fixed', group: 'assets', kind: '目录', original: '蓝图', owner: '/Game/蓝图', relative: 'Content/蓝图', field: 'Name', translated: 'Blueprints', fixedFabFolderName: 'Blueprints' }, { id: 2, entryKey: 'native', group: 'members', kind: '变量', field: 'Name', owner: '/Game/BP_测试', original: 'NativeName', translated: 'NativeName', preserveOriginalEnglish: true }].map((row,i)=>i===0?{...row,translated:'BP_Test'}:row) };
+let missingEnglish=false;const english=path.join(fixture,'English','Demo.uproject'),chinese=descriptor;
+const calls = [], errors = [], buttonStyles = []; let cleared = false, runningPipeline = false;
+const require = createRequire(import.meta.url), { _electron } = require('C:/Users/10728/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const app = await _electron.launch({ executablePath: path.join(root,'.local/desktop-build/release/0.1.141/PersonalDevPlatform-win32-x64/PersonalDevPlatform.exe'), args: [], cwd: root, env: { ...process.env, UE_DESKTOP_WORKSPACE: fixture, UE_DESKTOP_SMOKE: '1' } });
+let page;
+try {
+  page = await app.firstWindow(); page.setDefaultTimeout(15000); page.on('pageerror', error => errors.push(error.message));page.on('console',message=>{if(message.type()==='error'&&/Render error|ReferenceError|TypeError/.test(message.text()))errors.push(message.text());});
+  await app.evaluate(({ BrowserWindow }) => {const window=BrowserWindow.getAllWindows()[0];window.webContents.setBackgroundThrottling(false);window.setBounds({width:1440,height:1000});});
+  await page.route('**/api/ue/**', async route => {
+    const request = route.request(), url = new URL(request.url()), action = url.pathname.split('/api/ue/')[1];
+    const body = request.method() === 'POST' ? request.postDataJSON() : undefined;
+    calls.push({ action, body });
+    let value = {};
+    if (action === 'delivery/status') value = { report, configured: true, sourceDescriptor: descriptor, latestCopy: { id: 'copy', status: 'completed', target: projectRoot }, latestScan: { kind: 'editor-scan', status: 'completed', copyJobId: 'copy', result: { entries: [], blueprints: [], warnings: [] } }, translation, generatedProjects: [], defaultOutput:path.join(fixture,'Output') };
+    else if(action==='delivery/project-open-targets') value={sourceDescriptor:descriptor,selectedLanguage:'en',items:[{language:'zh',available:true,descriptorPath:chinese,projectRoot:projectRoot},{language:'en',available:true,descriptorPath:english,projectRoot:path.dirname(english)}]};
+    else if(action==='delivery/open-language-project'){if(missingEnglish&&body.language==='en')return route.fulfill({status:400,json:{error:'项目文件已移动或删除，请重新关联中英文项目'}});value={started:true,descriptorPath:body.language==='en'?english:chinese,editorLanguage:body.language==='en'?'en':'zh-Hans'};}
+    else if(action==='delivery/bind-language-project')value={sourceDescriptor:descriptor,selectedLanguage:body.language,items:[{language:'zh',available:true,descriptorPath:chinese,projectRoot:projectRoot},{language:'en',available:true,descriptorPath:english,projectRoot:path.dirname(english)}]};
+    else if (action === 'delivery/job') value = translation;
+    else if (action === 'delivery/one-click-status') value = runningPipeline ? {id:'pipeline',status:'running',source:{descriptorPath:descriptor},phase:'等待处理中',progress:10} : null;
+    else if (action === 'delivery/one-click-job') value = {id:'pipeline',status:'running',source:{descriptorPath:descriptor},phase:'等待处理中',progress:10};
+    else if (action === 'delivery/engines') value = { items: [{ version: '5.3', installed: true }] };
+    else if (action === 'delivery/translation-status') value = { available: true, model: 'gpt-6-luna', provider: 'codex' };
+    else if (action === 'delivery/glossary') value = { terms: [], commonTerms: [], projectTerms: [] };
+    else if (action === 'delivery/cache-records') value = { hasCache: !cleared, cacheRoot: cleared ? null : path.join(projectRoot, '.ue-translation-cache'), bytes: cleared ? 0 : 1234567890, history: [], preserved: [] };
+    else if (action === 'delivery/clear-translation-cache') { cleared = true; value = { cleared: true, removedRoot: true, freedBytes: 1234567890, preserved: [] }; }
+    else if (action === 'pick') value = { path: english };
+    else if (['delivery/processing-preflight', 'delivery/preview-version-projects', 'fab/preview'].includes(action)) return route.fulfill({ status: 400, json: { error: '仅验证当前操作入口，不执行 UE 或模型任务' } });
+    else if (action === 'refresh-projects') value = { items: [], removed: 0, missing: [] };
+    else if (action === 'delivery/generated-projects') value = [];
+    return route.fulfill({ json: value });
+  });
+  const targetUrl=new URL(page.url());targetUrl.searchParams.set('tool','project-translation');await page.goto(targetUrl.href);
+  await page.waitForFunction(() => typeof window.ueDesktopFlush === 'function');
+  for (let i = 0; i < 100 && !calls.some(call => call.action === 'delivery/glossary'); i++) await new Promise(resolve => setTimeout(resolve, 20));
+
+  await page.locator('#pt-project-open-language:enabled').waitFor();
+  assert.equal(await page.locator('#pt-project-open-language').inputValue(),'en');
+  assert.equal(await page.locator('.pt-project-card [data-pt-live="open-language-project"]').count(),1);
+  assert.equal(await page.locator('[data-pt-live="open-export"],#pt-open-version,.pt-export-launcher').count(),0);
+  await page.locator('[data-pt-live="open-language-project"]').click();
+  await page.waitForFunction(()=>document.querySelector('#toast')?.textContent.includes('已打开英文项目'));
+  await page.locator('#pt-project-open-language').selectOption('zh');
+  await page.locator('[data-pt-live="open-language-project"]').click();
+  await page.waitForFunction(()=>document.querySelector('#toast')?.textContent.includes('已打开中文项目'));
+  assert.deepEqual(calls.filter(c=>c.action==='delivery/open-language-project').map(c=>c.body),[{descriptorPath:descriptor,language:'en'},{descriptorPath:descriptor,language:'zh'}]);
+  assert.equal(await page.locator('.pt-project-open-controls small,[data-pt-live="bind-language-project"]').count(),0);
+  await page.locator('#pt-project-open-language').selectOption('en');missingEnglish=true;
+  await page.locator('[data-pt-live="open-language-project"]').click();
+  await page.waitForFunction(()=>document.querySelector('.pt-live-error')?.textContent.includes('已移动或删除'));
+  assert.equal(calls.filter(c=>c.action==='delivery/open-export').length,0);
+  const layout=await page.locator('.pt-project-open-controls').evaluate(node=>{const a=node.querySelector('select').getBoundingClientRect(),b=node.querySelector('.button').getBoundingClientRect(),c=node.closest('.pt-project-actions').querySelector('[data-pt-live="library-projects"]').getBoundingClientRect();return {selectHeight:a.height,buttonHeight:b.height,switchHeight:c.height,aligned:Math.abs(a.top-b.top)<1&&Math.abs(b.top-c.top)<1,overflow:document.documentElement.scrollWidth>innerWidth};});
+  assert.equal(layout.selectHeight,35);assert.equal(layout.buttonHeight,35);assert.equal(layout.switchHeight,35);assert.equal(layout.aligned,true);assert.equal(layout.overflow,false);assert.deepEqual(errors,[]);
+  await fs.writeFile(path.join(fixture,'report.json'),JSON.stringify({passed:true,hidden:true,checks:['project header contains Chinese/English selector and open button','correct source descriptor and selected language sent','path caption and rebind entry removed','missing project gives readable error','old result launcher removed','open controls and switch project aligned at 35px'],layout,calls,errors,actualUELaunched:false},null,2));console.log(JSON.stringify({passed:true,fixture}));
+}finally { const done=app.waitForEvent('close',{timeout:15000});await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().forEach(w=>w.close()));await done;}

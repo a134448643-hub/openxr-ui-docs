@@ -94,7 +94,9 @@ export function createLocalApiHandler({ tools = createUEProjectTools() } = {}) {
             else if(request.method==='POST'&&action==='delivery/import-external')result=await ueTools.delivery.importExternal(body);
             else if(request.method==='GET'&&action==='delivery/glossary')result=await ueTools.delivery.glossary();
             else if(request.method==='POST'&&action==='delivery/glossary')result=await ueTools.delivery.glossary(body.naming?body:body.terms);
-            else if(request.method==='POST'&&action==='delivery/open-export')result=await ueTools.delivery.openExport(body);
+            else if(request.method==='GET'&&action==='delivery/project-open-targets')result=await ueTools.delivery.projectOpenTargets(requestUrl.searchParams.get('descriptorPath'));
+            else if(request.method==='POST'&&action==='delivery/bind-language-project')result=await ueTools.delivery.bindLanguageProject(body);
+            else if(request.method==='POST'&&action==='delivery/open-language-project')result=await ueTools.delivery.openLanguageProject(body);
             else if(request.method==='GET'&&action==='delivery/translation-status')result=await ueTools.delivery.translationStatus();
             else if(request.method==='POST'&&action==='delivery/clear-translation-cache'){if((ueTools.projectRunningJobs?ueTools.projectRunningJobs():ueTools.runningJobs()).length)throw Error('有工程任务正在运行，请结束或暂停后清理缓存');result=await ueTools.delivery.clearTranslationCache();}
             else if(request.method==='POST'&&action==='delivery/pause-translation')result=await ueTools.delivery.pauseTranslation(body.jobId);

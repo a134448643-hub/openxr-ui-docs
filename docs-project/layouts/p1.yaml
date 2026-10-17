@@ -1,177 +1,165 @@
 version: 1
 blockOrder:
-  - b1
-  - b1770631228179
-  - b1769097870950
-  - b1769097976247
-  - b1769015850260
-  - b1769097789400
-  - b1769098258075
-  - b1769098710934
-  - pmvaulylw397l0bg
+  - review-115
+  - review-image-p1-b1769097789400
+  - review-image-p1-a1769861180642
+  - review-118
+  - pmvcm4oacri31xq3
+  - pmvcm4y5em6odl2t
+  - pmvcm2gb2rspivbk
 blocks:
-  b1:
+  review-115:
     type: text
     isFloating: false
     style:
-      size: text-2xl
-      isSectionHeader: true
+      isSectionHeader: false
       paragraphTypes:
         zh:
-          type: heading
-          level: 2
+          type: paragraph
         en:
-          type: heading
-          level: 2
-      headingLevel: 2
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: 1.项目迁移注意事项
+            text: 1. 准备目标 UE VR 模板项目，并导入所需资源。
+          - type: hardBreak
+          - type: text
+            text: "2. 按原文提供的配置文件设置 "
+          - type: text
+            marks:
+              - type: bold
+            text: VRUI 碰撞通道与响应规则
+          - type: text
+            text: 。
+          - type: hardBreak
+          - type: text
+            text: 3. 重启目标项目，确认新增检测通道出现。
+          - type: hardBreak
+          - type: text
+            text: 4. 运行目标项目，分别检查左右手的 UI 交互和按钮响应。
+          - type: hardBreak
+          - type: text
+            text: 碰撞预设文件
+          - type: hardBreak
+          - type: text
+            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
+        en:
+          - type: text
+            text: 1. Prepare the target UE VR Template project and migrate the required
+              assets.
+          - type: hardBreak
+          - type: text
+            text: 2. Configure the VRUI collision channel and response rules using the
+              configuration file provided in the original documentation.
+          - type: hardBreak
+          - type: text
+            text: 3. Restart the target project and confirm that the new trace channel
+              appears.
+          - type: hardBreak
+          - type: text
+            text: 4. Run the target project and check UI interaction and button responses
+              for both hands.
+          - type: hardBreak
+          - type: text
+            text: "Collision preset file:"
+          - type: hardBreak
+          - type: text
+            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
       documentOrder:
         zh: 0
         en: 1
     attachments: []
-  b1770631228179:
-    type: text
+  review-image-p1-b1769097789400:
+    type: image
     isFloating: false
     style:
       size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
       isSectionHeader: false
-      paragraphTypes:
-        zh:
-          type: paragraph
-        en:
-          type: paragraph
-          level: 2
-      richText:
-        zh:
-          - type: text
-            marks:
-              - type: bold
-            text: 由于FAB上传项目命名规范，无法单独上传碰撞预设文件，自行导出配置文件，可以在这里下载：
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: bold
-            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
-      documentOrder:
-        zh: 2
-        en: 3
+      documentOrder: 2
+      imageWidth: 54
+    imageTranslation:
+      srcEn: assets/ccdfb2fa7631a3e055e7.png
+      shareWithEnglish: false
+      enAnnotations: []
     attachments: []
-  b1769097870950:
+  review-image-p1-a1769861180642:
+    type: image
+    isFloating: false
+    style:
+      size: text-xs
+      bgColor: "#fffbeb"
+      documentOrder: 3
+      imageWidth: 54
+    imageTranslation:
+      shareWithEnglish: true
+    attachments: []
+  review-118:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
-          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: 新建UE5VR模板项目，打开压缩包将VRUI碰撞配置文件复制到新建的项目文件夹
+            text: 将配置文件“导入碰撞配置”
+        en:
+          - type: text
+            text: Import the configuration file using Import Collision Configuration.
       documentOrder:
         zh: 4
         en: 5
     attachments: []
-  b1769097976247:
-    type: text
+  pmvcm4oacri31xq3:
+    type: image
     isFloating: false
     style:
       size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
       isSectionHeader: false
+      documentOrder: 6
+      imageWidth: 54
+    imageTranslation:
+      srcEn: assets/ccdfb2fa7631a3e055e7.png
+      shareWithEnglish: false
+      enAnnotations: []
+    attachments: []
+  pmvcm4y5em6odl2t:
+    type: text
+    isFloating: false
+    style:
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
-          level: 2
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh: []
+        en: []
       documentOrder:
-        zh: 6
         en: 7
-    attachments: []
-  b1769015850260:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      isSectionHeader: false
-      paragraphTypes:
-        zh:
-          type: paragraph
-        en:
-          type: paragraph
-          level: 2
-      richText:
-        zh: []
-      documentOrder:
         zh: 8
-        en: 9
     attachments: []
-  b1769097789400:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-      documentOrder: 10
-    attachments:
-      - id: a1769861180642
-        type: image
-        isFloating: true
-        layout:
-          x: 259.82672119140625
-          y: 184.66761779785156
-          width: 259
-          height: 165
-        data:
-          src: assets/336f99af980033f2f75a.png
-        style:
-          size: text-xs
-          bgColor: "#fffbeb"
-          documentOrder: 11
-  b1769098258075:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      isSectionHeader: false
-      paragraphTypes:
-        zh:
-          type: paragraph
-        en:
-          type: paragraph
-          level: 2
-      richText:
-        zh:
-          - type: text
-            text: 导入VRUI碰撞配置文件重启项目，重启完成会看到新增的检测通道
-      documentOrder:
-        zh: 12
-        en: 13
-    attachments: []
-  b1769098710934:
-    type: image
-    isFloating: false
-    style:
-      size: text-base
-      weight: font-normal
-      color: "#374151"
-      decoration: none
-      isSectionHeader: false
-      documentOrder: 14
-    attachments: []
-  pmvaulylw397l0bg:
+  pmvcm2gb2rspivbk:
     type: text
     isFloating: false
     style:
@@ -180,10 +168,14 @@ blocks:
           type: paragraph
         en:
           type: paragraph
-          level: 2
       isSectionHeader: false
+      paragraphPresence:
+        en: true
+        zh: true
       richText:
+        en: []
         zh: []
       documentOrder:
-        zh: 15
+        en: 9
+        zh: 10
     attachments: []

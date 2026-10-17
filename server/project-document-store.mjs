@@ -255,6 +255,7 @@ async function saveDocumentSnapshot(document, projectId) {
     schemaVersion: 1,
     sidebarTitle: normalized.sidebarTitle || '',
     docTitle: normalized.docTitle || '',
+    ...(normalized.englishTitles ? { englishTitles: { sidebarTitle: String(normalized.englishTitles.sidebarTitle || ''), docTitle: String(normalized.englishTitles.docTitle || '') } } : {}),
     ...(normalizeTypography(normalized.typography) ? { typography: normalizeTypography(normalized.typography) } : {}),
     pages: manifestPages,
     publication: previousManifest?.publication || {
@@ -270,6 +271,7 @@ export async function loadDocument(projectId) {
   const manifest = await readYaml(paths.manifestPath, null);
   if (!manifest) return null;
   const document = { sidebarTitle: manifest.sidebarTitle || '', docTitle: manifest.docTitle || '', pages: [], content: {} };
+  if (manifest.englishTitles) document.englishTitles = { sidebarTitle: String(manifest.englishTitles.sidebarTitle || ''), docTitle: String(manifest.englishTitles.docTitle || '') };
   if (normalizeTypography(manifest.typography)) document.typography = normalizeTypography(manifest.typography);
 
   for (const manifestPage of manifest.pages || []) {

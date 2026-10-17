@@ -2,62 +2,53 @@
 id: p1
 title:
   zh: 项目迁移须知
-  en: Import Project
+  en: Project Migration
 ---
 
-<!-- DOCBLOCK id="b1" type="text" -->
+<!-- DOCBLOCK id="review-115" type="text" -->
 <!-- ZH -->
-1.项目迁移注意事项
-<!-- EN -->
-Import Project
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1770631228179" type="text" -->
-<!-- ZH -->
-由于FAB上传项目命名规范，无法单独上传碰撞预设文件，自行导出配置文件，可以在这里下载：
+1. 准备目标 UE VR 模板项目，并导入所需资源。
+2. 按原文提供的配置文件设置 VRUI 碰撞通道与响应规则。
+3. 重启目标项目，确认新增检测通道出现。
+4. 运行目标项目，分别检查左右手的 UI 交互和按钮响应。
+碰撞预设文件
 https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
 <!-- EN -->
-Due to the FAB project naming convention for uploads, the collision preset file cannot be uploaded separately and can be downloaded here:
+1. Prepare the target UE VR Template project and migrate the required assets.
+2. Configure the VRUI collision channel and response rules using the configuration file provided in the original documentation.
+3. Restart the target project and confirm that the new trace channel appears.
+4. Run the target project and check UI interaction and button responses for both hands.
+Collision preset file:
 https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769097870950" type="text" -->
+<!-- DOCBLOCK id="review-image-p1-b1769097789400" type="image" -->
+![review-image-p1-b1769097789400](../assets/f0a0ab1240f72a9b3ae8.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-image-p1-a1769861180642" type="image" -->
+![review-image-p1-a1769861180642](../assets/336f99af980033f2f75a.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-118" type="text" -->
 <!-- ZH -->
-新建UE5VR模板项目，打开压缩包将VRUI碰撞配置文件复制到新建的项目文件夹
+将配置文件“导入碰撞配置”
 <!-- EN -->
-Create a new UE5 VR Template Project. Open the archive and copy the VR UI Collision Configuration File into the new project folder.
+Import the configuration file using Import Collision Configuration.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769097976247" type="text" -->
+<!-- DOCBLOCK id="pmvcm4oacri31xq3" type="image" -->
+![pmvcm4oacri31xq3](../assets/f0a0ab1240f72a9b3ae8.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvcm4y5em6odl2t" type="text" -->
 <!-- ZH -->
 
 <!-- EN -->
-Open the Content folder of the archive, and copy the UI folder into the Content directory of your new project.
+
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769015850260" type="text" -->
-<!-- ZH -->
-
-<!-- EN -->
-Open Project Settings, find the Collision option, import the VRUI Collision Configuration
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769097789400" type="image" -->
-![b1769097789400](../assets/f0a0ab1240f72a9b3ae8.png)
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769098258075" type="text" -->
-<!-- ZH -->
-导入VRUI碰撞配置文件重启项目，重启完成会看到新增的检测通道
-<!-- EN -->
-Import the VRUI collision profile and restart the project. Once restarted, you will see the newly added trace channel.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769098710934" type="image" -->
-![b1769098710934](../assets/ffa66de06b8af88be4cc.png)
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="pmvaulylw397l0bg" type="text" -->
+<!-- DOCBLOCK id="pmvcm2gb2rspivbk" type="text" -->
 <!-- ZH -->
 
 <!-- EN -->

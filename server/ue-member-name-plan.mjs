@@ -1,12 +1,13 @@
 import {originalNameSuffix} from './translation-name-qualifiers.mjs';
 
-const classKinds=new Set(['变量','组件','UMG控件','UMG动画','组件绑定回调','函数','宏','折叠图','事件','自定义事件','事件分发器','时间轴']);
+const classKinds=new Set(['变量','组件','UMG控件','UMG动画','组件绑定回调','函数','宏','折叠图','事件图表','事件','自定义事件','事件分发器','时间轴']);
 const localKinds=new Set(['局部变量','输入参数','输出参数']);
-const roles={'变量':'Variable','组件':'Component','UMG控件':'Widget','UMG动画':'Animation','函数':'Function','宏':'Macro','折叠图':'Graph','事件':'Event','自定义事件':'Event','事件分发器':'Dispatcher','时间轴':'Timeline','局部变量':'Local','输入参数':'Input','输出参数':'Output'};
+const roles={'变量':'Variable','组件':'Component','UMG控件':'Widget','UMG动画':'Animation','函数':'Function','宏':'Macro','折叠图':'Graph','事件图表':'Graph','事件':'Event','自定义事件':'Event','事件分发器':'Dispatcher','时间轴':'Timeline','局部变量':'Local','输入参数':'Input','输出参数':'Output'};
 const priorities={'变量':0,'事件分发器':1,'函数':2,'组件':3,'UMG控件':4,'UMG动画':4,'事件':5,'自定义事件':5};
 const fold=value=>String(value||'').toLowerCase();
 export function memberNameScope(row){
  if(row.group==='assets'||row.field!=='Name'||!row.owner)return null;
+ if(row.parameterScope==='custom-event')return row.nodeGuid?row.owner+'|event|'+fold(row.nodeGuid).replaceAll('-',''):null;
  if(classKinds.has(row.kind))return row.owner+'|class';
  if(localKinds.has(row.kind)){
   const graph=row.graphName||row.elementName?.split('/').slice(0,-2).join('/');

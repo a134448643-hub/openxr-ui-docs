@@ -1,284 +1,455 @@
 version: 1
 blockOrder:
-  - b1791987903275
-  - b1791987925760
-  - b1791987613677
-  - pmvawx0utxw8payq
-  - b1791987724721
+  - review-59
+  - review-60
+  - review-61
+  - review-62
+  - review-63
+  - review-64
+  - review-65
+  - review-66
+  - review-67
+  - review-68
+  - review-69
+  - review-70
+  - review-image-p1791987538788-b1791987613677
+  - pmvclwiwd14mxvrh
 blocks:
-  b1791987903275:
+  review-59:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: true
+      headingLevel: 2
       paragraphTypes:
         zh:
           type: heading
-          level: 1
+          level: 2
         en:
           type: heading
-          level: 1
-      headingLevel: 1
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: PAD_手势配置
+            text: 组件自身的设置
         en:
           - type: text
-            text: Gesture Data Asset
+            text: Component Settings
       documentOrder:
         zh: 0
         en: 1
     attachments: []
-  b1791987925760:
+  review-60:
     type: text
     isFloating: false
     style:
-      size: text-base
       isSectionHeader: false
       paragraphTypes:
         zh:
           type: paragraph
         en:
           type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
       richText:
         zh:
           - type: text
-            text: 该组件所有设置都在这个数据资产里面
-          - type: hardBreak
-          - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
               - type: bold
-            text: 是否开启调试？
-          - type: hardBreak
+            text: PAD_手势配置
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 开启调试后会显示所有OpenXR的手势骨骼
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: ""
-              - type: bold
-            text: E_控制器手
-          - type: hardBreak
-          - type: text
-            text: 设置左右手
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: XR手势/自定义骨骼映射
-          - type: hardBreak
-          - type: text
-            text: OpenXR手势骨骼和手势模型骨骼之间的名称映射，按照我的模板填入自定义模型骨骼名称即可驱动手势模型。
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: 设置手势相对偏移
-          - type: hardBreak
-          - type: text
-            text: 设置手势模型整体位置
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: 设置手势相对旋转
-          - type: hardBreak
-          - type: text
-            text: 设置手势模型整体旋转
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: 手势骨骼旋转校准
-          - type: hardBreak
-          - type: text
-            text: 设置手势模型所有骨骼旋转，用于与openxr手势轴向对齐
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: XR手势参照网格体
-          - type: hardBreak
-          - type: text
-            text: 设置调试显示的OpenXR手势骨骼参考点模型
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: 骨骼网格体样式
-          - type: hardBreak
-          - type: text
-            text: 设置手势骨骼网格体模型
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: BPC_控件交互组件偏移
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: 设置手指控件交互组件偏移
+            text: ：指定当前手使用的手势数据资产。手势模型、骨骼映射及相关偏移均在该数据资产中配置。
         en:
           - type: text
             marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
               - type: bold
-            text: Is Debug Enabled
-          - type: hardBreak
+            text: GestureConfig
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: "#9ca3af"
-            text: Enables debug visualization of all OpenXR hand joints.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: XRGesture Custom Bone Map
-          - type: hardBreak
-          - type: text
-            text: Maps OpenXR hand joint names to the bone names in your hand model. Follow
-              the provided template and enter your custom bone names to drive
-              the model.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: Gesture Relative Offset
-          - type: hardBreak
-          - type: text
-            text: Sets the overall relative position of the hand model.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: Gesture Relative Rotation
-          - type: hardBreak
-          - type: text
-            text: Sets the overall relative rotation of the hand model.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: Gesture Bone Rotation Calibration
-          - type: hardBreak
-          - type: text
-            text: Applies a rotation correction to all bones in the hand model to align
-              their axes with OpenXR hand tracking.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: XRGesture Reference Mesh
-          - type: hardBreak
-          - type: text
-            text: Sets the static mesh used to visualize OpenXR hand joint reference points
-              during debugging.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: Skeletal Mesh Style
-          - type: hardBreak
-          - type: text
-            text: Sets the skeletal mesh used for the hand model.
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 18px
-                  color: null
-              - type: bold
-            text: Widget Interaction Offset
-          - type: hardBreak
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 16px
-                  color: null
-            text: Sets the relative transform of the finger widget interaction component.
+            text: ": assigns the gesture data asset for the current hand. Configure the hand
+              model, bone mapping, and related offsets in that data asset."
       documentOrder:
         zh: 2
         en: 3
     attachments: []
-  b1791987613677:
+  review-61:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: true
+      headingLevel: 2
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: PAD_手势配置参数
+        en:
+          - type: text
+            text: PAD_GestureConfig Parameters
+      documentOrder:
+        zh: 4
+        en: 5
+    attachments: []
+  review-62:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 是否开启调试？
+          - type: text
+            text: （布尔）
+          - type: hardBreak
+          - type: text
+            text: 开启手部追踪调试显示，用于检查 OpenXR 手势关节参考点。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: bIsDebugEnabled
+          - type: text
+            text: " (Boolean)"
+          - type: hardBreak
+          - type: text
+            text: Enables hand-tracking debug visualization to inspect the OpenXR hand joint
+              reference points.
+      documentOrder:
+        zh: 6
+        en: 7
+    attachments: []
+  review-63:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: E 控制器手
+          - type: text
+            text: （枚举）
+          - type: hardBreak
+          - type: text
+            text: 指定左手或右手；数据资产的选择应与组件实际用于的手一致。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: ControllerHand
+          - type: text
+            text: " (Enum)"
+          - type: hardBreak
+          - type: text
+            text: Selects the left or right hand. The data asset must match the hand that
+              uses the component.
+      documentOrder:
+        zh: 8
+        en: 9
+    attachments: []
+  review-64:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: XR手势/自定义骨骼映射
+          - type: text
+            text: （名称映射）
+          - type: hardBreak
+          - type: text
+            text: 将 OpenXR 手势骨骼名称映射到自定义手模型的骨骼名称。按现有模板填写，检查是否漏项或拼写不一致。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: XRGestureToCustomBoneMap
+          - type: text
+            text: " (Name Map)"
+          - type: hardBreak
+          - type: text
+            text: Maps OpenXR hand bone names to the bone names of a custom hand model.
+              Follow the existing template and check for missing entries or
+              inconsistent spelling.
+      documentOrder:
+        zh: 10
+        en: 11
+    attachments: []
+  review-65:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 设置手势相对偏移
+          - type: text
+            text: （向量）
+          - type: hardBreak
+          - type: text
+            text: 调整手势模型的整体相对位置。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: GestureRelativeOffset
+          - type: text
+            text: " (Vector)"
+          - type: hardBreak
+          - type: text
+            text: Adjusts the overall relative position of the hand model.
+      documentOrder:
+        zh: 12
+        en: 13
+    attachments: []
+  review-66:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 设置手势相对旋转
+          - type: text
+            text: （旋转）
+          - type: hardBreak
+          - type: text
+            text: 调整手势模型的整体相对旋转。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: GestureRelativeRotation
+          - type: text
+            text: " (Rotator)"
+          - type: hardBreak
+          - type: text
+            text: Adjusts the overall relative rotation of the hand model.
+      documentOrder:
+        zh: 14
+        en: 15
+    attachments: []
+  review-67:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 手势骨骼旋转校准
+          - type: text
+            text: （旋转）
+          - type: hardBreak
+          - type: text
+            text: 调整骨骼旋转校准值，使自定义模型的骨骼轴向与手部追踪数据匹配。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: GestureBoneRotationCalibration
+          - type: text
+            text: " (Rotator)"
+          - type: hardBreak
+          - type: text
+            text: Adjusts bone rotation calibration to align the custom model's bone axes
+              with hand-tracking data.
+      documentOrder:
+        zh: 16
+        en: 17
+    attachments: []
+  review-68:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: XR手势参照网格体
+          - type: text
+            text: （静态网格体）
+          - type: hardBreak
+          - type: text
+            text: 指定用于调试显示手势关节参考点的模型。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: XRGestureReferenceMesh
+          - type: text
+            text: " (Static Mesh)"
+          - type: hardBreak
+          - type: text
+            text: Specifies the mesh used to visualize hand joint reference points for
+              debugging.
+      documentOrder:
+        zh: 18
+        en: 19
+    attachments: []
+  review-69:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: 骨骼网格体样式
+          - type: text
+            text: （骨骼网格体）
+          - type: hardBreak
+          - type: text
+            text: 指定实际显示的手势模型。
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: SkeletalMeshStyle
+          - type: text
+            text: " (Skeletal Mesh)"
+          - type: hardBreak
+          - type: text
+            text: Specifies the hand model displayed at runtime.
+      documentOrder:
+        zh: 20
+        en: 21
+    attachments: []
+  review-70:
+    type: text
+    isFloating: false
+    style:
+      isSectionHeader: false
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            marks:
+              - type: bold
+            text: BPC_控件交互组件偏移（变换）
+          - type: hardBreak
+          - type: text
+            text: 设置手指控件交互组件的相对变换，包括位置、旋转和缩放；
+        en:
+          - type: text
+            marks:
+              - type: bold
+            text: WidgetInteractionOffset
+          - type: text
+            text: " (Transform)"
+          - type: hardBreak
+          - type: text
+            text: Sets the relative transform of the finger's widget interaction component,
+              including location, rotation, and scale.
+      documentOrder:
+        zh: 22
+        en: 23
+    attachments: []
+  review-image-p1791987538788-b1791987613677:
     type: image
     isFloating: false
     style:
@@ -287,32 +458,29 @@ blocks:
       color: "#374151"
       decoration: none
       isSectionHeader: false
-      documentOrder: 4
+      documentOrder: 24
+    imageTranslation:
+      srcEn: assets/95f6a65adabf166047d9.png
+      shareWithEnglish: false
+      enAnnotations: []
     attachments: []
-  pmvawx0utxw8payq:
+  pmvclwiwd14mxvrh:
     type: text
     isFloating: false
     style:
       paragraphTypes:
         zh:
           type: paragraph
-      isSectionHeader: false
-      richText:
-        zh: []
-      documentOrder:
-        zh: 5
-    attachments: []
-  b1791987724721:
-    type: text
-    isFloating: false
-    style:
-      size: text-base
-      isSectionHeader: false
-      paragraphTypes:
-        zh:
+        en:
           type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        en: true
+        zh: true
       richText:
+        en: []
         zh: []
       documentOrder:
-        zh: 6
+        en: 25
+        zh: 26
     attachments: []

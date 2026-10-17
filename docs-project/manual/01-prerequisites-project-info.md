@@ -1,254 +1,211 @@
 ---
 id: p1769101542580
 title:
-  zh: 更新说明/项目须知
-  en: Prerequisites/Project Info
+  zh: 更新说明与项目须知
+  en: Release Notes and Project Information
 ---
 
-<!-- DOCBLOCK id="b1769102094154" type="text" -->
+<!-- DOCBLOCK id="review-12" type="text" -->
 <!-- ZH -->
-更新说明
+本次更新
 <!-- EN -->
-Prerequisites
+What's New
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb3elmhpg2u270" type="text" -->
+<!-- DOCBLOCK id="review-13-original" type="text" -->
 <!-- ZH -->
-新增
-1.适配SteamVR手势追踪
-2.添加手势角色基础交互：传送移动，旋转，抓取功能
-3.新增控件交互组件_射线
-常规的远程UI交互，捏合点击UI触发交互
+新增：
+<!-- EN -->
+Added:
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-14" type="text" -->
+<!-- ZH -->
+- 适配 SteamVR 手势追踪。
+- 为手势角色添加传送、旋转和抓取等基础交互。
+- 添加 BPC_控件交互组件_射线，支持远距离 UI 交互与捏合点击。
+<!-- EN -->
+- Added support for SteamVR hand tracking.
+- Added basic teleportation, turning, and grabbing interactions to the hand-tracking character.
+- Added AC_WidgetInteraction_Ray for distance-based UI interaction and pinch clicks.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-15" type="text" -->
+<!-- ZH -->
+调整：
+<!-- EN -->
+Updated:
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-15-original" type="text" -->
+<!-- ZH -->
 优化重置
-1.优化蓝图逻辑，简化配置流程。
-2.重置手势模型更新功能，现在只需要调用对应节点，切换对应手势数据资产即可切换手势模型，而不是之前通过切换玩家Pawn。
-3.重置滚动框逻辑，变回模拟鼠标右键拖拽滚动框
 <!-- EN -->
-
+Improvements and Reworked Features
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb3e8xajlphza4" type="text" -->
+<!-- DOCBLOCK id="review-16" type="text" -->
 <!-- ZH -->
-前置条件
+- 优化蓝图逻辑，简化组件配置流程。
+- 重置手势模型更新流程，可通过对应节点切换手势数据资产，更新手势模型。
+- 重置滚动框交互逻辑，恢复通过模拟鼠标右键拖拽滚动框的方式进行滚动。
 <!-- EN -->
-
+- Optimized Blueprint logic and simplified component setup.
+- Reworked the hand model update flow. Use the corresponding node to switch the gesture data asset and update the hand model.
+- Reworked Scroll Box interaction to restore scrolling by simulating a right mouse button drag.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1770631134935" type="text" -->
+<!-- DOCBLOCK id="review-18" type="text" -->
+<!-- ZH -->
+开始前的检查
+<!-- EN -->
+Before You Begin
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-19" type="text" -->
+<!-- ZH -->
+1. 确认 VR 开发环境可用：已开启设备开发者权限，可以正常串流或运行 VR 项目，并能够识别手部追踪。
+2. 项目必须启用 OpenXR 和 OpenXRHandTracking。缺少依赖插件时，相关蓝图可能报错。
+3. 手势追踪效果受设备、环境及硬件能力影响。排查识别问题时，应先确认设备本身能稳定输出手部追踪数据。
+<!-- EN -->
+1. Verify that your VR development environment works: enable developer permissions on the device, confirm that VR streaming or standalone VR applications run correctly, and check that hand tracking is recognized.
+2. Enable OpenXR and OpenXRHandTracking in the project. Missing dependencies may cause errors in the related Blueprints.
+3. Hand tracking depends on the device, environment, and hardware capabilities. When troubleshooting recognition issues, first confirm that the device provides stable hand-tracking data.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-20" type="text" -->
+<!-- ZH -->
+前置条件视频：
+<!-- EN -->
+Prerequisites Video:
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-20-original" type="text" -->
 <!-- ZH -->
 使用此项目前置条件视频
+<!-- EN -->
+Video: Prerequisites for Using This Project
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-21" type="text" -->
+<!-- ZH -->
 https://www.youtube.com/watch?v=pUs-mc1Vdtw
 <!-- EN -->
-Prerequisite Video for using this project:
 https://www.youtube.com/watch?v=pUs-mc1Vdtw
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1770630818555" type="text" -->
-<!-- ZH -->
-
-<!-- EN -->
-PC Streaming Instructions
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1770630924744" type="text" -->
-<!-- ZH -->
-开发环境说明
-手势追踪识别的精度与设备等硬件设备有关，与项目功能无关。
-<!-- EN -->
-Development Environment Notes
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769101719820" type="text" -->
-<!-- ZH -->
-1.确保你有正常的VR开发环境，开发者权限/虚幻引擎VR串流/手势能正常工作。
-<!-- EN -->
-1. Ensure you have a functioning VR development environment, developer permissions, Unreal Engine VR Streaming/Link setup, and that hand tracking/gestures are working correctly.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1791986912346" type="text" -->
-<!-- ZH -->
-
-<!-- EN -->
-...
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1770631382759" type="text" -->
-<!-- ZH -->
-2.此项目必须开启Openxr和OpenXRHandTracking，缺少插件蓝图会报错！
-<!-- EN -->
-2. This project must have OpenXR and OpenXRHandTracking enabled. Blueprints will throw an error if these plugins are missing.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769101784227" type="text" -->
-<!-- ZH -->
-3.测试平台Quest3/Pico4pro,打包Demo版本为5.6
-<!-- EN -->
-3.Supports UE 5.3 - 5.7, tested platforms Quest 3 / Pico 4 Pro, packaged demo version is 5.6.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1770631522831" type="text" -->
+<!-- DOCBLOCK id="review-22" type="text" -->
 <!-- ZH -->
 更换手势模型
 <!-- EN -->
-Gesture Model
+Changing the Hand Model
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769102137437" type="text" -->
+<!-- DOCBLOCK id="review-23" type="text" -->
 <!-- ZH -->
-1.手势模型需要与openxr骨骼相近的模型，并且骨骼坐标旋转统一
-2.需要准备两只手的模型（如何你需要双手UI交互）
-PC串流平台
-Meta Horizon Link
-SteamVR
-PICO 互联
+1. 准备与 OpenXR 手部骨骼结构相适配的模型，检查骨骼名称、层级及旋转轴向。
+2. 如需双手 UI 交互，准备左右手模型，并分别设置对应的手势数据资产。
+3. 在 PAD_手势配置 中填写骨骼映射，设置位置偏移、整体旋转及骨骼旋转校准。
 <!-- EN -->
-1. The gesture model needs to be close to the OpenXR skeleton model, including bone coordinates and rotation.
-2. Two hand models are required (if you need two-hand UI interaction).
+1. Prepare a model compatible with the OpenXR hand skeleton. Check bone names, hierarchy, and rotation axes.
+2. For UI interaction with both hands, prepare left- and right-hand models and assign the corresponding gesture data assets separately.
+3. In PAD_GestureConfig, configure XRGestureToCustomBoneMap, GestureRelativeOffset, GestureRelativeRotation, and GestureBoneRotationCalibration.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769102318681" type="text" -->
+<!-- DOCBLOCK id="review-24" type="text" -->
 <!-- ZH -->
-
+原文列出的测试设备为 Quest 3、PICO 4 Pro；PC 串流平台为 Meta Horizon Link、SteamVR、PICO 互联。
 <!-- EN -->
-Project Version Differences / Fixes
+The original documentation lists Quest 3 and PICO 4 Pro as test devices, with Meta Horizon Link, SteamVR, and PICO Connect used for PC streaming.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769772192795" type="text" -->
+<!-- DOCBLOCK id="review-25" type="text" -->
 <!-- ZH -->
-Quest须知
+Quest 注意事项
 <!-- EN -->
 Quest Notes
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769772212293" type="text" -->
+<!-- DOCBLOCK id="review-26" type="text" -->
 <!-- ZH -->
-UE5.6之前版本Quest打包安卓手势无效
+原文记录：UE 5.6 之前的版本在 Quest 安卓打包后，出现手势无效的情况。
+<!-- EN -->
+Recorded behavior: hand tracking did not work in Quest Android builds made with UE versions earlier than 5.6.
+<!-- /DOCBLOCK -->
 
-解决方法：
+<!-- DOCBLOCK id="review-27" type="text" -->
+<!-- ZH -->
+原有处理方法一：下载补充文件的 ZIP 压缩包，将其中的 Build 文件夹解压到项目根目录，再重新打包。
+https://drive.google.com/drive/folders/1sM8ENQs16vU-sUkuhrR8MW-gbacvxulv?usp=drive_link
+<!-- EN -->
+Original workaround 1: download the supplementary ZIP archive, extract its Build folder into the project root, and package the project again.
+https://drive.google.com/drive/folders/1sM8ENQs16vU-sUkuhrR8MW-gbacvxulv?usp=drive_link
+<!-- /DOCBLOCK -->
 
-1.Quest需要开启metaxr，项目设置找到metaxr
+<!-- DOCBLOCK id="review-image-p1769101542580-pmvcctrhp0jpzwo9" type="image" -->
+![review-image-p1769101542580-pmvcctrhp0jpzwo9](../assets/29dd2eded361c7ade979.png)
+<!-- /DOCBLOCK -->
 
-2.XR API选用Epic Native OpenXR with Oculus vendor extensions
+<!-- DOCBLOCK id="review-30" type="text" -->
+<!-- ZH -->
+原有处理方法二：启用 MetaXR，并在项目设置中检查以下配置：
+<!-- EN -->
+Original workaround 2: enable MetaXR and check the following options in Project Settings:
+<!-- /DOCBLOCK -->
 
-3.Hand Tracking Support选择Controllers and Hands
+<!-- DOCBLOCK id="review-31" type="text" -->
+<!-- ZH -->
+1. XR API：Epic Native OpenXR with Oculus vendor extensions。
+2. Hand Tracking Support：Controllers and Hands。
+<!-- EN -->
+1. XR API: Epic Native OpenXR with Oculus vendor extensions.
+2. Hand Tracking Support: Controllers and Hands.
+<!-- /DOCBLOCK -->
 
-MetaXR下载链接：
+<!-- DOCBLOCK id="review-32" type="text" -->
+<!-- ZH -->
+MetaXR 下载：
+<!-- EN -->
+Download MetaXR:
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-33" type="text" -->
+<!-- ZH -->
 https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
 <!-- EN -->
-Hand gestures fail when packaging Quest for Android in UE versions prior to 5.6.
-
-Solution:
-
-1. MetaXR must be enabled for Quest. Locate MetaXR in Project Settings.
-
-2. Select "Epic Native OpenXR with Oculus vendor extensions" for the XR API.
-
-3. Set Hand Tracking Support to "Controllers and Hands."
-
-MetaXR Download Link:
 https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769773154230" type="image" -->
-![b1769773154230](../assets/b736d1dd67a0ffe2078d.png)
+<!-- DOCBLOCK id="review-image-p1769101542580-b1769773154230" type="image" -->
+![review-image-p1769101542580-b1769773154230](../assets/b736d1dd67a0ffe2078d.png)
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769101967375" type="text" -->
+<!-- DOCBLOCK id="review-35" type="text" -->
 <!-- ZH -->
-PICO须知
+PICO 注意事项
 <!-- EN -->
-PICO Notice
+PICO Notes
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769101929413" type="text" -->
+<!-- DOCBLOCK id="review-36" type="text" -->
 <!-- ZH -->
-1.PICO安卓打包5.7，一体机运行闪退。与本项目无关，即使打包pico官方示例依然会出现这个问题。（截止文档日期2026.1.23）
+1. 原文记录：在 UE 5.7 中，PICO 安卓包可能在一体机启动时闪退；原文同时说明官方示例也曾出现同类现象。
+2. PICO 安卓打包需要配合PICO OpenXR或者PICO XR 插件。
 <!-- EN -->
-1.PICO Android packaging using version 5.7 results in a crash upon launch on the standalone headset. This is unrelated to the current project, as the issue still occurs even when packaging the official PICO sample project. (As of 2026.1.23)
+1. Recorded behavior: PICO Android builds in UE 5.7 may crash at startup on the standalone headset. The original documentation reports the same behavior in the official sample.
+2. PICO Android packaging requires the PICO OpenXR or PICO XR plugin.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769102970651" type="text" -->
+<!-- DOCBLOCK id="review-36-part-4" type="text" -->
 <!-- ZH -->
-
+3. 原文记录：UE 5.5 下，PICO 插件可能导致控件交互 UI 异常，当时暂无解决方法。
 <!-- EN -->
-2. BP_Controller Character (5.7 Error)
-UE5.7 VR template modifications and folder/Blueprint name changes have resulted in the loss of the character index from pre-5.7 versions.
-Therefore, 5.7 requires the XRPawn to be reconfigured. "2. Quick Configuration" will provide detailed instructions on how to set up the new character.
+3. Recorded behavior: the PICO plugin may cause incorrect widget UI interaction in UE 5.5. No workaround was available at the time of writing.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1769102275493" type="text" -->
+<!-- DOCBLOCK id="review-36-part-6" type="text" -->
 <!-- ZH -->
-2.Pico安卓打包需要picoopenxr/picoxr插件
+4. 原文要求替换绑定 PICO 的输入文件。IMC_Default_PICO，IMC_Hands_PICO
 <!-- EN -->
-2.Pico Android packaging requires the picoopenxr/picoxr plugin.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769860394222" type="text" -->
-<!-- ZH -->
-3.UE5.5一体机安卓测试，控件交互UI异常，与pico插件BUG有关（暂无解决方法）
-<!-- EN -->
-3. UE 5.5 Standalone Android Test: Abnormal Widget Interaction UI due to Pico plugin bug (No current solution).
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769103626628" type="text" -->
-<!-- ZH -->
-4.pico默认手势骨骼与openxr手势骨骼存在偏移，需要手动矫正（已配置对应的数据资产）
-
-项目版本差异/修复
-<!-- EN -->
-4. The default Pico hand skeleton is misaligned with the OpenXR hand skeleton, requiring manual correction (the corresponding Data Asset has been configured)
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769102332387" type="text" -->
-<!-- ZH -->
-由于虚幻引擎VR模板版本更迭的原因，VR模板变更，节点被弃用，若你使用低版本：5.3→5.7需要手动修复。在 2.快速配置 中会详细教学如何修复！
-<!-- EN -->
-Due to the version iteration of the Unreal Engine VR Template, the VR Template has changed, and nodes have been deprecated. If you are using a lower version: 5.3 -> 5.7, manual repair is required. The detailed instructions on how to repair will be provided in the 2. Quick Configuration section!
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="b1769102693857" type="text" -->
-<!-- ZH -->
-1.BPC_OpenXR手势
-GetMotionControllerData节点，5.5之后变更，5.7被弃用
-需要变更为GetHandTrackingState节点
-<!-- EN -->
-1.BPC_OpenXRGesture
-The `GetMotionControllerData` node was modified after 5.5 and deprecated in 5.7.
-Requires migration/change to the `GetHandTrackingState` node.
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="a1792076102619" type="text" -->
-<!-- ZH -->
-...
-<!-- EN -->
-
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="a1792076112551" type="image" -->
-![a1792076112551]()
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="a1792076114095" type="text" -->
-<!-- ZH -->
-...
-<!-- EN -->
-
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="bmv9glrhpb1xn" type="image" -->
-![bmv9glrhpb1xn](../assets/cc279cee8940d4ae8f59.png)
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="pmvaulp3uyukcz4o" type="text" -->
-<!-- ZH -->
-
-<!-- EN -->
-
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="pmvaulp3uw59yam7" type="text" -->
-<!-- ZH -->
-
-<!-- EN -->
-
+4. Replace the PICO input bindings with IMC_Default_PICO and IMC_Hands_PICO, as specified in the original documentation.
 <!-- /DOCBLOCK -->

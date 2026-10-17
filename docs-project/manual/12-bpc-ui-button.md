@@ -2,71 +2,73 @@
 id: p-component-ui-button
 title:
   zh: BPC_UI按钮
-  en: ""
+  en: AC_UIButton
 ---
 
-<!-- DOCBLOCK id="p-component-ui-button-group-0" type="text" -->
+<!-- DOCBLOCK id="review-104" type="text" -->
 <!-- ZH -->
 控件设置
 <!-- EN -->
-
+Widget Settings
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="p-component-ui-button-body-0" type="text" -->
+<!-- DOCBLOCK id="review-105" type="text" -->
 <!-- ZH -->
-按钮名称
-设置按钮上显示的文字。
-按钮图像
+按钮名称（文本）
+设置按钮显示的文字。
+<!-- EN -->
+ButtonName (Text)
+Sets the text displayed on the button.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-106" type="text" -->
+<!-- ZH -->
+按钮图像（二维纹理）
 设置按钮显示的图像纹理。
-最小按压距离（x轴）
-设置按钮沿自身 X 轴完成按压所需的距离，用于调整按钮的触发深度。
 <!-- EN -->
-
+ButtonImage (Texture2D)
+Sets the image texture displayed on the button.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="p-component-ui-button-group-1" type="text" -->
+<!-- DOCBLOCK id="review-107" type="text" -->
 <!-- ZH -->
-事件分发器
+最小按压距离（x轴）（浮点）
+设置按钮沿组件局部 X 轴触发按压所需的距离阈值，用于调整触发深度。
 <!-- EN -->
-
+MinPressDistanceX (Float)
+Sets the distance threshold along the component's local X axis required to trigger a press, allowing you to adjust the activation depth.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="p-component-ui-button-body-1" type="text" -->
+<!-- DOCBLOCK id="review-111" type="text" -->
 <!-- ZH -->
-完成按压时
-按钮达到设定的按压深度、完成按压时触发，可绑定需要执行的按钮功能。
-取消按压时
-取消按压并让按钮回弹时触发，可绑定松开按钮后的处理逻辑。
-
-
+设置按钮样式
 <!-- EN -->
-
+Setting the Button Style
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb21hj5wiiiq9k" type="text" -->
+<!-- DOCBLOCK id="review-112" type="text" -->
 <!-- ZH -->
-需要在运行时添加设置按压按钮UMG样式节点
-如果需要在蓝图视口看到UI的情况，需要在构造脚本里面添加设置按压按钮UMG样式节点
+运行时需要调用“设置按压按钮UMG样式”节点。如果还需要在蓝图视口预览按钮 UI，可在构造脚本中调用同一节点。
 <!-- EN -->
-
+Call SetPressButtonUMGStyle at runtime. To also preview the button UI in the Blueprint viewport, call the same node in the Construction Script.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb1zzofl302xb3" type="image" -->
-![pmvb1zzofl302xb3](../assets/65b28dafb15a92e13070.png)
+<!-- DOCBLOCK id="review-image-p-component-ui-button-pmvb1zzofl302xb3" type="image" -->
+![review-image-p-component-ui-button-pmvb1zzofl302xb3](../assets/65b28dafb15a92e13070.png)
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb23af3mxj1f8h" type="text" -->
+<!-- DOCBLOCK id="pmvcis3863wti1z6" type="text" -->
 <!-- ZH -->
 
 <!-- EN -->
 
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb20o5rvok4qgs" type="image" -->
-![pmvb20o5rvok4qgs](../assets/8f94c99004a05a129248.png)
+<!-- DOCBLOCK id="review-image-p-component-ui-button-pmvb20o5rvok4qgs" type="image" -->
+![review-image-p-component-ui-button-pmvb20o5rvok4qgs](../assets/8f94c99004a05a129248.png)
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvb20r6h8ca6u60" type="text" -->
+<!-- DOCBLOCK id="pmvcirpmab83c037" type="text" -->
 <!-- ZH -->
 
 <!-- EN -->

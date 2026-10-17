@@ -1,69 +1,117 @@
 ---
 id: p1791987538788
 title:
-  zh: BPC_OpenXR手势
-  en: PAD_GestureConfig
+  zh: BPC_OpenXR手势与 PAD_手势配置
+  en: AC_OpenXRGesture and PAD_GestureConfig
 ---
 
-<!-- DOCBLOCK id="b1791987903275" type="text" -->
+<!-- DOCBLOCK id="review-59" type="text" -->
 <!-- ZH -->
-PAD_手势配置
+组件自身的设置
 <!-- EN -->
-Gesture Data Asset
+Component Settings
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1791987925760" type="text" -->
+<!-- DOCBLOCK id="review-60" type="text" -->
 <!-- ZH -->
-该组件所有设置都在这个数据资产里面
-是否开启调试？
-开启调试后会显示所有OpenXR的手势骨骼
-E_控制器手
-设置左右手
-XR手势/自定义骨骼映射
-OpenXR手势骨骼和手势模型骨骼之间的名称映射，按照我的模板填入自定义模型骨骼名称即可驱动手势模型。
-设置手势相对偏移
-设置手势模型整体位置
-设置手势相对旋转
-设置手势模型整体旋转
-手势骨骼旋转校准
-设置手势模型所有骨骼旋转，用于与openxr手势轴向对齐
-XR手势参照网格体
-设置调试显示的OpenXR手势骨骼参考点模型
-骨骼网格体样式
-设置手势骨骼网格体模型
-BPC_控件交互组件偏移
-设置手指控件交互组件偏移
+PAD_手势配置：指定当前手使用的手势数据资产。手势模型、骨骼映射及相关偏移均在该数据资产中配置。
 <!-- EN -->
-Is Debug Enabled
-Enables debug visualization of all OpenXR hand joints.
-XRGesture Custom Bone Map
-Maps OpenXR hand joint names to the bone names in your hand model. Follow the provided template and enter your custom bone names to drive the model.
-Gesture Relative Offset
-Sets the overall relative position of the hand model.
-Gesture Relative Rotation
-Sets the overall relative rotation of the hand model.
-Gesture Bone Rotation Calibration
-Applies a rotation correction to all bones in the hand model to align their axes with OpenXR hand tracking.
-XRGesture Reference Mesh
-Sets the static mesh used to visualize OpenXR hand joint reference points during debugging.
-Skeletal Mesh Style
-Sets the skeletal mesh used for the hand model.
-Widget Interaction Offset
-Sets the relative transform of the finger widget interaction component.
+GestureConfig: assigns the gesture data asset for the current hand. Configure the hand model, bone mapping, and related offsets in that data asset.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1791987613677" type="image" -->
-![b1791987613677](../assets/819bcdcc117e67580c66.png)
-<!-- /DOCBLOCK -->
-
-<!-- DOCBLOCK id="pmvawx0utxw8payq" type="text" -->
+<!-- DOCBLOCK id="review-61" type="text" -->
 <!-- ZH -->
-
+PAD_手势配置参数
 <!-- EN -->
-
+PAD_GestureConfig Parameters
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="b1791987724721" type="text" -->
+<!-- DOCBLOCK id="review-62" type="text" -->
+<!-- ZH -->
+是否开启调试？（布尔）
+开启手部追踪调试显示，用于检查 OpenXR 手势关节参考点。
+<!-- EN -->
+bIsDebugEnabled (Boolean)
+Enables hand-tracking debug visualization to inspect the OpenXR hand joint reference points.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-63" type="text" -->
+<!-- ZH -->
+E 控制器手（枚举）
+指定左手或右手；数据资产的选择应与组件实际用于的手一致。
+<!-- EN -->
+ControllerHand (Enum)
+Selects the left or right hand. The data asset must match the hand that uses the component.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-64" type="text" -->
+<!-- ZH -->
+XR手势/自定义骨骼映射（名称映射）
+将 OpenXR 手势骨骼名称映射到自定义手模型的骨骼名称。按现有模板填写，检查是否漏项或拼写不一致。
+<!-- EN -->
+XRGestureToCustomBoneMap (Name Map)
+Maps OpenXR hand bone names to the bone names of a custom hand model. Follow the existing template and check for missing entries or inconsistent spelling.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-65" type="text" -->
+<!-- ZH -->
+设置手势相对偏移（向量）
+调整手势模型的整体相对位置。
+<!-- EN -->
+GestureRelativeOffset (Vector)
+Adjusts the overall relative position of the hand model.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-66" type="text" -->
+<!-- ZH -->
+设置手势相对旋转（旋转）
+调整手势模型的整体相对旋转。
+<!-- EN -->
+GestureRelativeRotation (Rotator)
+Adjusts the overall relative rotation of the hand model.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-67" type="text" -->
+<!-- ZH -->
+手势骨骼旋转校准（旋转）
+调整骨骼旋转校准值，使自定义模型的骨骼轴向与手部追踪数据匹配。
+<!-- EN -->
+GestureBoneRotationCalibration (Rotator)
+Adjusts bone rotation calibration to align the custom model's bone axes with hand-tracking data.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-68" type="text" -->
+<!-- ZH -->
+XR手势参照网格体（静态网格体）
+指定用于调试显示手势关节参考点的模型。
+<!-- EN -->
+XRGestureReferenceMesh (Static Mesh)
+Specifies the mesh used to visualize hand joint reference points for debugging.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-69" type="text" -->
+<!-- ZH -->
+骨骼网格体样式（骨骼网格体）
+指定实际显示的手势模型。
+<!-- EN -->
+SkeletalMeshStyle (Skeletal Mesh)
+Specifies the hand model displayed at runtime.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-70" type="text" -->
+<!-- ZH -->
+BPC_控件交互组件偏移（变换）
+设置手指控件交互组件的相对变换，包括位置、旋转和缩放；
+<!-- EN -->
+WidgetInteractionOffset (Transform)
+Sets the relative transform of the finger's widget interaction component, including location, rotation, and scale.
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-image-p1791987538788-b1791987613677" type="image" -->
+![review-image-p1791987538788-b1791987613677](../assets/819bcdcc117e67580c66.png)
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvclwiwd14mxvrh" type="text" -->
 <!-- ZH -->
 
 <!-- EN -->
