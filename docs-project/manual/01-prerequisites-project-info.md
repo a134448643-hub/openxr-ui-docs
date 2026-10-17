@@ -82,7 +82,7 @@ Prerequisites Video:
 
 <!-- DOCBLOCK id="review-20-original" type="text" -->
 <!-- ZH -->
-使用此项目前置条件视频
+使用此项目前置条件视频（最新版本待更新）
 <!-- EN -->
 Video: Prerequisites for Using This Project
 <!-- /DOCBLOCK -->

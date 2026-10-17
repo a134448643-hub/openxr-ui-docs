@@ -45,6 +45,14 @@ blocks:
             text: 碰撞预设文件
           - type: hardBreak
           - type: text
+            marks:
+              - type: link
+                attrs:
+                  href: https://drive.google.com/file/d/1a5X_iyQsLW5UJ8i9AAxmHiAJhQbfmG8P/view?usp=drive_link
+                  target: _blank
+                  rel: noopener noreferrer nofollow
+                  class: null
+                  title: null
             text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
         en:
           - type: text
@@ -67,6 +75,14 @@ blocks:
             text: "Collision preset file:"
           - type: hardBreak
           - type: text
+            marks:
+              - type: link
+                attrs:
+                  href: https://drive.google.com/file/d/1a5X_iyQsLW5UJ8i9AAxmHiAJhQbfmG8P/view?usp=drive_link
+                  target: _blank
+                  rel: noopener noreferrer nofollow
+                  class: null
+                  title: null
             text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
       documentOrder:
         zh: 0
@@ -156,8 +172,8 @@ blocks:
         zh: []
         en: []
       documentOrder:
-        en: 7
-        zh: 8
+        zh: 7
+        en: 8
     attachments: []
   pmvcm2gb2rspivbk:
     type: text
@@ -176,6 +192,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        en: 9
-        zh: 10
+        zh: 9
+        en: 10
     attachments: []

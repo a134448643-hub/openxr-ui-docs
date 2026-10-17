@@ -21,15 +21,15 @@ Simplified hand-tracking setup
 Add a single gesture component and assign the data asset for the corresponding left or right hand to run the setup.
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="review-image-p1792150504802-b1791987675801" type="image" -->
-![review-image-p1792150504802-b1791987675801](../assets/beb5217e7e010f47a697.png)
-<!-- /DOCBLOCK -->
-
 <!-- DOCBLOCK id="review-40" type="text" -->
 <!-- ZH -->
 配置 BPC_控件交互组件
 <!-- EN -->
 Setting Up AC_WidgetInteraction
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="review-image-p1792150504802-b1791987675801" type="image" -->
+![review-image-p1792150504802-b1791987675801](../assets/beb5217e7e010f47a697.png)
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="pmvcjr6syn44kns0" type="text" -->

@@ -61,18 +61,18 @@ Sets the minimum and maximum distances at which the ray responds to UI: X is the
 ![pmvcm8uuul7m9ynw](../assets/5f7cd2ecc367ba8de15d.png)
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvcm8w1451zj0ly" type="text" -->
-<!-- ZH -->
-
-<!-- EN -->
-
-<!-- /DOCBLOCK -->
-
 <!-- DOCBLOCK id="review-92" type="text" -->
 <!-- ZH -->
 手柄输入
 <!-- EN -->
 Controller Input
+<!-- /DOCBLOCK -->
+
+<!-- DOCBLOCK id="pmvcm8w1451zj0ly" type="text" -->
+<!-- ZH -->
+
+<!-- EN -->
+
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="pmvcm7kysbnxyps2" type="image" -->

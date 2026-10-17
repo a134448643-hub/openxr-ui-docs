@@ -330,7 +330,12 @@ blocks:
       richText:
         zh:
           - type: text
-            text: 使用此项目前置条件视频
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#dc2626"
+            text: 使用此项目前置条件视频（最新版本待更新）
         en:
           - type: text
             text: "Video: Prerequisites for Using This Project"
@@ -354,6 +359,11 @@ blocks:
       richText:
         zh:
           - type: text
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#dc2626"
             text: https://www.youtube.com/watch?v=pUs-mc1Vdtw
         en:
           - type: text
