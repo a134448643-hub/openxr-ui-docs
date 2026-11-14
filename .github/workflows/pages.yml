@@ -30,7 +30,24 @@ jobs:
           ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
         run: npm ci
       - name: Build documentation site
-        run: npm run build:site
+        env:
+          DOC_VIEWS_ENDPOINT: ${{ vars.DOC_VIEWS_ENDPOINT || 'https://xiaomeng-document-views.document-views.workers.dev' }}
+        run: |
+          node --input-type=module <<'JS'
+          import { documentViewsEndpoint } from './shared/document-views.mjs';
+          const endpoint = documentViewsEndpoint(process.env.DOC_VIEWS_ENDPOINT);
+          if (!endpoint) throw Error('Invalid document analytics endpoint');
+          const url = new URL('/v1/stats', endpoint);
+          url.searchParams.set('site', 'https://a134448643-hub.github.io/openxr-ui-docs/');
+          const response = await fetch(url, { redirect: 'error', signal: AbortSignal.timeout(15000) });
+          if (!response.ok) throw Error('Analytics health check HTTP ' + response.status);
+          const stats = await response.json();
+          if (![stats.totalViews, stats.recentViews, stats.recentVisitors].every(Number.isSafeInteger) || !Array.isArray(stats.regions)) {
+            throw Error('Invalid analytics response');
+          }
+          console.log('Public document analytics endpoint is ready.');
+          JS
+          npm run build:site
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact

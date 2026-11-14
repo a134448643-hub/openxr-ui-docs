@@ -3,6 +3,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { APP_ROOT, getDocumentRoot, loadDocument } from '../server/project-document-store.mjs';
 
+import { documentViewsEndpoint } from '../shared/document-views.mjs';
+
+const counterSetting = (process.env.DOC_VIEWS_ENDPOINT || '').trim();
+const counter = documentViewsEndpoint(counterSetting);
+if (counterSetting && !counter) throw Error('DOC_VIEWS_ENDPOINT must be a Cloudflare Worker HTTPS URL');
+
 const SITE_DIR = path.join(APP_ROOT, 'site-dist');
 
 function runViteBuild() {
@@ -42,5 +48,6 @@ await fs.writeFile(
   JSON.stringify(assetsForPublishedSite(document)),
   'utf8',
 );
+await fs.writeFile(path.join(SITE_DIR, 'document-views.json'), JSON.stringify({ endpoint: counter }), 'utf8');
 await fs.cp(path.join(docsRoot, 'assets'), path.join(SITE_DIR, 'docs-assets'), { recursive: true });
 console.log(`Static documentation site generated at ${SITE_DIR}`);

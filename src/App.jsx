@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { reportPublishedDocumentOpen } from './published-document-views.js';
 import { readProjectLink, projectApiUrl } from './project-links.js';
 import { RichDocumentEditor } from './rich-document-editor.jsx';
 import { initialDocumentLanguage, rememberDocumentLanguage, documentTitle, updateDocumentTitle } from './document-language.mjs';
@@ -399,7 +400,10 @@ const App = () => {
           const response = await fetch('./document-data.json', { cache: 'no-store' });
           if (!response.ok) throw new Error(`Document load failed (${response.status})`);
           const document = await response.json();
-          if (!cancelled) applyLoadedDocument(document);
+          if (!cancelled) {
+            applyLoadedDocument(document);
+            reportPublishedDocumentOpen();
+          }
           return;
         }
         const workspaceResponse = await fetch('/api/workspace', { cache: 'no-store' });
