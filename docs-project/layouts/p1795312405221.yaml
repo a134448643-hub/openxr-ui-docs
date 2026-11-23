@@ -1,0 +1,135 @@
+version: 1
+blockOrder:
+  - review-35
+  - review-36
+  - review-36-part-4
+  - review-36-part-6
+blocks:
+  review-35:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      isSectionHeader: true
+      paragraphPresence:
+        zh: true
+        en: true
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: PICO 注意事项
+        en:
+          - type: text
+            text: PICO Notes
+      documentOrder:
+        zh: 0
+        en: 0
+    attachments: []
+  review-36:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 1. 使用 UE 5.7 打包的 PICO Android 应用可能在一体机上启动时闪退。此前在官方示例中也观察到类似现象。
+          - type: hardBreak
+          - type: text
+            text: "2. 为 PICO 打包 Android 应用时，需要启用 "
+          - type: text
+            text: PICO OpenXR
+            marks:
+              - type: bold
+          - type: text
+            text: " "
+          - type: text
+            text: 或
+            marks:
+              - type: bold
+          - type: text
+            text: " "
+          - type: text
+            text: PICO XR
+            marks:
+              - type: bold
+          - type: text
+            text: " 插件。"
+        en:
+          - type: text
+            text: 1. PICO Android builds made with UE 5.7 may crash at launch on the
+              headset. Similar behavior was previously observed in the official
+              sample.
+          - type: hardBreak
+          - type: text
+            text: 2. Enable the PICO OpenXR or PICO XR plugin when packaging an Android
+              application for PICO.
+      documentOrder:
+        zh: 1
+        en: 1
+    attachments: []
+  review-36-part-4:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 3. 在 UE 5.5 中，PICO 插件可能导致 UI 控件交互异常。当时尚无解决方法。
+        en:
+          - type: text
+            text: 3. In UE 5.5, the PICO plugin may interfere with widget interaction. No
+              workaround was available when this issue was observed.
+      documentOrder:
+        zh: 2
+        en: 2
+    attachments: []
+  review-36-part-6:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 4. 将输入映射上下文替换为 PICO 版本：IMC_Default_PICO 和 IMC_Hands_PICO。
+        en:
+          - type: text
+            text: 4. Replace the input mapping contexts with IMC_Default_PICO and
+              IMC_Hands_PICO.
+      documentOrder:
+        zh: 3
+        en: 3
+    attachments: []

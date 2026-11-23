@@ -1,0 +1,36 @@
+version: 1
+blockOrder:
+  - pmwr6ff9w6i9jza8
+  - pmwr6h061h0kyf7o
+blocks:
+  pmwr6ff9w6i9jza8:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 72
+      documentOrder: 0
+    imageTranslation:
+      srcEn: assets/3eb944886bf349b2563f.png
+      shareWithEnglish: false
+      enAnnotations: []
+    attachments: []
+  pmwr6h061h0kyf7o:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh: []
+        en: []
+      documentOrder:
+        zh: 1
+        en: 2
+    attachments: []

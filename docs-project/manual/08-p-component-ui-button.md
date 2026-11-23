@@ -64,7 +64,7 @@ Call SetPressButtonUMGStyle at runtime. To also preview the button UI in the Blu
 ![review-image-p-component-ui-button-pmvb1zzofl302xb3](../assets/65b28dafb15a92e13070.png)
 <!-- /DOCBLOCK -->
 
-<!-- DOCBLOCK id="pmvcis3863wti1z6" type="text" -->
+<!-- DOCBLOCK id="pmwr6ffxafm23fpy" type="text" -->
 <!-- ZH -->
 
 <!-- EN -->

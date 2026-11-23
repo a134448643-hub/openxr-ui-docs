@@ -177,19 +177,18 @@ blocks:
             text: （变换）
           - type: hardBreak
           - type: text
-            text: 设置显示检测参考箭头的相对变换。箭头作为检测参考，通常放在掌心附近；
+            text: 设置检测参考箭头的相对变换，通常将箭头放在掌心附近。
         en:
           - type: text
+            text: ArrowLocation
             marks:
               - type: bold
-            text: ArrowLocation
           - type: text
             text: " (Transform)"
           - type: hardBreak
           - type: text
-            text: Sets the relative transform of the reference arrow used for display
-              detection. The arrow acts as the detection reference and is
-              usually placed near the palm.
+            text: Sets the relative transform of the detection arrow. The arrow is usually
+              placed near the palm.
       documentOrder:
         zh: 8
         en: 9

@@ -28,26 +28,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 30px
-                  color: null
-            text: 手势角色基础操作
-        en:
-          - type: text
-            text: Basic Hand-Gesture Controls
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: 30px
-                  color: null
+      richText: {}
       documentOrder:
         zh: 0
-        en: 1
+        en: 0
     attachments: []
   review-49:
     type: text
@@ -65,16 +49,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: 旋转
-        en:
-          - type: text
-            text: Turning
+      richText: {}
       documentOrder:
         zh: 2
-        en: 3
+        en: 2
     attachments: []
   review-50-original:
     type: text
@@ -89,32 +67,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: |-
-              手势旋转
-              中指，无名指，小拇指握拳并且手掌向右垂直，进入旋转模式手变成高亮状态
-              保持高亮状态，捏合食指和大拇指，触发向右旋转（左手同理）
-              食指捏合同样作用物体抓取
-        en:
-          - type: text
-            text: Hand-gesture turning
-          - type: hardBreak
-          - type: text
-            text: Curl the middle, ring, and little fingers into a fist and hold the palm
-              vertically facing right. The hand becomes highlighted when turning
-              mode is active.
-          - type: hardBreak
-          - type: text
-            text: Keep the hand highlighted and pinch the index finger and thumb to turn
-              right. Apply the same gesture with the left hand to turn left.
-          - type: hardBreak
-          - type: text
-            text: The index-finger pinch is also used to grab objects.
+      richText: {}
       documentOrder:
         zh: 4
-        en: 5
+        en: 4
     attachments: []
   review-image-p1792160531812-pmvb2p0lkwozoy99:
     type: image
@@ -140,22 +96,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: |-
-              保持高亮状态，捏合食指和大拇指，触发向右旋转（左手同理）
-              食指捏合同样作用物体抓取
-        en:
-          - type: text
-            text: Keep the hand highlighted and pinch the index finger and thumb to turn
-              right. Apply the same gesture with the left hand to turn left.
-          - type: hardBreak
-          - type: text
-            text: The index-finger pinch is also used to grab objects.
+      richText: {}
       documentOrder:
         zh: 7
-        en: 8
+        en: 7
     attachments: []
   review-image-p1792160531812-pmvb380018l3uf37:
     type: image
@@ -182,16 +126,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: 传送
-        en:
-          - type: text
-            text: Teleportation
+      richText: {}
       documentOrder:
         zh: 10
-        en: 11
+        en: 10
     attachments: []
   review-53-original:
     type: text
@@ -206,24 +144,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: |-
-              手势传送
-              右手中指，无名指，小拇指握拳并且手掌向上时，进入传送模式手变成高亮状态，捏合食指和大拇指，触发向传送移动。
-        en:
-          - type: text
-            text: Hand-gesture teleportation
-          - type: hardBreak
-          - type: text
-            text: With the right palm facing upward, curl the middle, ring, and little
-              fingers into a fist. The hand becomes highlighted when
-              teleportation mode is active. Pinch the index finger and thumb to
-              teleport.
+      richText: {}
       documentOrder:
         zh: 12
-        en: 13
+        en: 12
     attachments: []
   review-image-p1792160531812-pmvb39wdku67m2nc:
     type: image
@@ -250,16 +174,10 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: 抓取
-        en:
-          - type: text
-            text: Grabbing
+      richText: {}
       documentOrder:
         zh: 15
-        en: 16
+        en: 15
     attachments: []
   review-56-original:
     type: text
@@ -274,14 +192,8 @@ blocks:
       paragraphPresence:
         zh: true
         en: true
-      richText:
-        zh:
-          - type: text
-            text: 食指捏合同样作用物体抓取
-        en:
-          - type: text
-            text: The index-finger pinch is also used to grab objects.
+      richText: {}
       documentOrder:
         zh: 17
-        en: 18
+        en: 17
     attachments: []

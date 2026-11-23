@@ -171,27 +171,26 @@ blocks:
       richText:
         zh:
           - type: text
+            text: 指针索引
             marks:
               - type: bold
-            text: 指针索引
           - type: text
             text: （整数）
           - type: hardBreak
           - type: text
-            text: 设置当前交互指针的编号，用于区分不同的交互指针，组件类别做了编号命名重叠的机制，会获取角色所有控件交互组件自动排序。
+            text: 区分不同的交互指针。组件会获取角色身上的所有控件交互组件并自动分配索引，避免编号重复。
         en:
           - type: text
+            text: PointerIndex
             marks:
               - type: bold
-            text: PointerIndex
           - type: text
             text: " (Integer)"
           - type: hardBreak
           - type: text
-            text: "Sets the interaction pointer's index to distinguish it from other
-              pointers. The component includes a mechanism to avoid duplicate
-              indices: it gathers all widget interaction components on the
-              character and orders them automatically."
+            text: Distinguishes interaction pointers. The component gathers the character’s
+              widget interaction components and assigns indices automatically to
+              avoid duplicates.
       documentOrder:
         zh: 8
         en: 9

@@ -31,7 +31,7 @@ Shows ray interaction debug information to help inspect detection results and hi
 <!-- DOCBLOCK id="review-88" type="text" -->
 <!-- ZH -->
 交互距离（浮点）
-设置控件交互检测使用的距离上限
+设置控件交互检测的距离上限。
 <!-- EN -->
 InteractionDistance (Float)
 Sets the maximum distance used for widget interaction detection.
@@ -40,10 +40,10 @@ Sets the maximum distance used for widget interaction detection.
 <!-- DOCBLOCK id="review-89" type="text" -->
 <!-- ZH -->
 插值缓动速度（浮点）
-调整射线跟随手部或控制器时的插值响应，数值增大对应更快跟随还是更明显延迟
+控制射线跟随手部或控制器时的插值响应。
 <!-- EN -->
 InterpolationSpeed (Float)
-Adjusts interpolation as the ray follows the hand or controller. Confirm whether increasing the value produces faster following or a more noticeable delay.
+Controls interpolation as the ray follows the hand or controller.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-90" type="text" -->
@@ -58,7 +58,7 @@ Sets the initial scale of the UMG circular indicator when the ray hits UI.
 <!-- DOCBLOCK id="review-91" type="text" -->
 <!-- ZH -->
 射线有效距离（二维向量）
-设置射线响应 UI 的最短和最远有效距离。(x最短距离，y最远距离）
+设置射线响应 UI 的有效距离。X 为最短距离，Y 为最远距离。
 <!-- EN -->
 RayValidDistance (Vector2D)
 Sets the minimum and maximum distances at which the ray responds to UI: X is the minimum distance, and Y is the maximum distance.
@@ -95,9 +95,9 @@ Controller Input
 
 <!-- DOCBLOCK id="review-93" type="text" -->
 <!-- ZH -->
-手柄角色注意，需要绑定一个输入，用于触发鼠标左键按压，布尔控制按下左键和松开左键
+手柄角色需要绑定输入，调用 BPC_控件交互组件_射线 的「设置按压」。用布尔值控制模拟鼠标左键的按下和松开。
 <!-- EN -->
-For a controller character, bind an input to simulate the left mouse button. Use a Boolean value to control pressing and releasing the button.
+For a controller character, bind an input and call OnSetPress on AC_WidgetInteraction_Ray. Use a Boolean to control when the simulated left mouse button is pressed or released.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-image-p1792150504802-pmvb0tv6x69uso4n" type="image" -->

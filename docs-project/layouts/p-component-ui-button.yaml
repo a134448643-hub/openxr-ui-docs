@@ -8,7 +8,7 @@ blockOrder:
   - review-111
   - review-112
   - review-image-p-component-ui-button-pmvb1zzofl302xb3
-  - pmvcis3863wti1z6
+  - pmwr6ffxafm23fpy
   - review-image-p-component-ui-button-pmvb20o5rvok4qgs
   - pmvcirpmab83c037
 blocks:
@@ -39,12 +39,12 @@ blocks:
             text: BPC_UI按钮
         en:
           - type: text
-            text: AC_UIButton
             marks:
               - type: textStyle
                 attrs:
                   fontSize: 30px
                   color: null
+            text: AC_UIButton
       documentOrder:
         zh: 0
         en: 1
@@ -259,7 +259,7 @@ blocks:
       shareWithEnglish: false
       enAnnotations: []
     attachments: []
-  pmvcis3863wti1z6:
+  pmwr6ffxafm23fpy:
     type: text
     isFloating: false
     style:

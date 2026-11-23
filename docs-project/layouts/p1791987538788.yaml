@@ -43,12 +43,12 @@ blocks:
             text: BPC_OpenXR手势
         en:
           - type: text
-            text: AC_OpenXRGesture and PAD_GestureConfig
             marks:
               - type: textStyle
                 attrs:
                   fontSize: 30px
                   color: null
+            text: AC_OpenXRGesture and PAD_GestureConfig
       documentOrder:
         zh: 0
         en: 1
@@ -100,7 +100,7 @@ blocks:
               - type: bold
             text: PAD_手势配置
           - type: text
-            text: ：指定当前手使用的手势数据资产。手势模型、骨骼映射及相关偏移均在该数据资产中配置。
+            text: ：指定当前使用的手势数据资产。手势模型、骨骼映射及相关偏移均在该数据资产中配置。
         en:
           - type: text
             marks:
@@ -471,7 +471,7 @@ blocks:
             text: BPC_控件交互组件偏移（变换）
           - type: hardBreak
           - type: text
-            text: 设置手指控件交互组件的相对变换，包括位置、旋转和缩放；
+            text: 设置手指控件交互组件的相对变换，包括位置、旋转和缩放。
         en:
           - type: text
             marks:

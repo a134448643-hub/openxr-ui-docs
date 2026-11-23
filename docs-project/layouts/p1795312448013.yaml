@@ -1,0 +1,259 @@
+version: 1
+blockOrder:
+  - review-25
+  - review-26
+  - review-27
+  - review-image-p1769101542580-pmvcctrhp0jpzwo9
+  - review-30
+  - review-31
+  - review-32
+  - review-33
+  - review-image-p1769101542580-b1769773154230
+  - pmwr6nndk7ihb1nv
+blocks:
+  review-25:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: heading
+          level: 2
+        en:
+          type: heading
+          level: 2
+      isSectionHeader: true
+      paragraphPresence:
+        zh: true
+        en: true
+      headingLevel: 2
+      richText:
+        zh:
+          - type: text
+            text: Quest 注意事项
+        en:
+          - type: text
+            text: Quest Notes
+      documentOrder:
+        zh: 0
+        en: 0
+    attachments: []
+  review-26:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 使用早于 UE 5.6 的版本打包 Quest Android 应用后，可能出现手部追踪失效。
+        en:
+          - type: text
+            text: Hand tracking may fail in Quest Android builds made with UE versions
+              earlier than 5.6.
+      documentOrder:
+        zh: 1
+        en: 1
+    attachments: []
+  review-27:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: "处理方法一：下载补充文件的 ZIP 压缩包，将其中的 "
+          - type: text
+            marks:
+              - type: bold
+            text: Build
+          - type: text
+            text: " 文件夹解压到项目根目录，再重新打包。"
+          - type: hardBreak
+          - type: text
+            text: https://drive.google.com/drive/folders/1sM8ENQs16vU-sUkuhrR8MW-gbacvxulv?usp=drive_link
+        en:
+          - type: text
+            text: "Workaround 1: download the supplementary ZIP archive, extract its Build
+              folder into the project root, and package the project again."
+          - type: hardBreak
+          - type: text
+            text: https://drive.google.com/drive/folders/1sM8ENQs16vU-sUkuhrR8MW-gbacvxulv?usp=drive_link
+      documentOrder:
+        zh: 2
+        en: 2
+    attachments: []
+  review-image-p1769101542580-pmvcctrhp0jpzwo9:
+    type: image
+    isFloating: false
+    style:
+      imageWidth: 37
+      documentOrder: 3
+    imageTranslation:
+      shareWithEnglish: true
+    attachments: []
+  review-30:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: 处理方法二：启用 MetaXR，并在项目设置中检查以下配置：
+        en:
+          - type: text
+            text: "Workaround 2: enable MetaXR and check the following options in Project
+              Settings:"
+      documentOrder:
+        zh: 4
+        en: 4
+    attachments: []
+  review-31:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: "1. "
+          - type: text
+            marks:
+              - type: bold
+            text: XR API
+          - type: text
+            text: ：Epic Native OpenXR with Oculus vendor extensions。
+          - type: hardBreak
+          - type: text
+            text: "2. "
+          - type: text
+            marks:
+              - type: bold
+            text: Hand Tracking Support
+          - type: text
+            text: ：Controllers and Hands。
+        en:
+          - type: text
+            text: "1. XR API: Epic Native OpenXR with Oculus vendor extensions."
+          - type: hardBreak
+          - type: text
+            text: "2. Hand Tracking Support: Controllers and Hands."
+      documentOrder:
+        zh: 5
+        en: 5
+    attachments: []
+  review-32:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: MetaXR 下载：
+        en:
+          - type: text
+            text: "Download MetaXR:"
+      documentOrder:
+        zh: 6
+        en: 6
+    attachments: []
+  review-33:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh:
+          - type: text
+            text: https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
+        en:
+          - type: text
+            text: https://developers.meta.com/horizon/downloads/package/unreal-engine-5-integration/
+      documentOrder:
+        zh: 7
+        en: 7
+    attachments: []
+  review-image-p1769101542580-b1769773154230:
+    type: image
+    isFloating: false
+    style:
+      size: text-base
+      weight: font-normal
+      color: "#374151"
+      decoration: none
+      isSectionHeader: false
+      documentOrder: 8
+    imageTranslation:
+      shareWithEnglish: true
+    attachments: []
+  pmwr6nndk7ihb1nv:
+    type: text
+    isFloating: false
+    style:
+      paragraphTypes:
+        zh:
+          type: paragraph
+        en:
+          type: paragraph
+      isSectionHeader: false
+      paragraphPresence:
+        zh: true
+        en: true
+      richText:
+        zh: []
+        en: []
+      documentOrder:
+        zh: 9
+        en: 10
+    attachments: []

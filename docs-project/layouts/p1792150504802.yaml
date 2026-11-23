@@ -47,12 +47,12 @@ blocks:
             text: 配置流程
         en:
           - type: text
-            text: Setup
             marks:
               - type: textStyle
                 attrs:
                   fontSize: 30px
                   color: null
+            text: Setup
       documentOrder:
         zh: 0
         en: 1
@@ -75,14 +75,42 @@ blocks:
           - type: text
             marks:
               - type: bold
-            text: 极致简化手势配置流程
+            text: 简化手势配置流程
           - type: hardBreak
-            marks:
-              - type: bold
           - type: text
             marks:
               - type: bold
-            text: 现在只需要添加一个手势组件，设置对应左右手的数据资产即可正常运行。
+            text: 添加一个
+          - type: text
+            text: " BPC_OpenXR"
+          - type: text
+            marks:
+              - type: bold
+            text: 手势
+          - type: text
+            text: " "
+          - type: text
+            marks:
+              - type: bold
+            text: 组件，
+          - type: text
+            text: 并为需要的
+          - type: text
+            marks:
+              - type: bold
+            text: 左右手
+          - type: text
+            text: 分配对应
+          - type: text
+            marks:
+              - type: bold
+            text: 的
+          - type: text
+            text: 手势
+          - type: text
+            marks:
+              - type: bold
+            text: 数据资产。
         en:
           - type: text
             text: Simplified hand-tracking setup
@@ -90,8 +118,61 @@ blocks:
               - type: bold
           - type: hardBreak
           - type: text
-            text: Add a single gesture component and assign the data asset for the
-              corresponding left or right hand to run the setup.
+            text: "Add "
+            marks:
+              - type: bold
+          - type: text
+            text: AC_Op
+          - type: text
+            text: e
+            marks:
+              - type: bold
+          - type: text
+            text: nXRG
+          - type: text
+            text: "esture and assign the corresponding "
+            marks:
+              - type: bold
+          - type: text
+            text: g
+          - type: text
+            text: e
+            marks:
+              - type: bold
+          - type: text
+            text: s
+          - type: text
+            text: t
+            marks:
+              - type: bold
+          - type: text
+            text: ure
+          - type: text
+            text: " "
+            marks:
+              - type: bold
+          - type: text
+            text: data asset f
+          - type: text
+            text: "or "
+            marks:
+              - type: bold
+          - type: text
+            text: eac
+          - type: text
+            text: "h hand "
+            marks:
+              - type: bold
+          - type: text
+            text: y
+          - type: text
+            text: "ou "
+            marks:
+              - type: bold
+          - type: text
+            text: u
+          - type: text
+            text: se.
             marks:
               - type: bold
       documentOrder:
@@ -177,16 +258,17 @@ blocks:
       richText:
         zh:
           - type: text
-            text: |-
-              手势角色：添加到BPC_OpenXR手势组件下
-              手柄角色：添加到角色手部骨骼网格体的食指骨骼上
+            text: 手势角色：将组件添加到 BPC_OpenXR手势 下。
+          - type: hardBreak
+          - type: text
+            text: 手柄角色：将组件添加到角色手部骨骼网格体的食指骨骼上。
         en:
           - type: text
             text: "Hand-tracking character: attach the component to AC_OpenXRGesture."
           - type: hardBreak
           - type: text
             text: "Controller character: attach the component to the index-finger bone of
-              the character's hand Skeletal Mesh."
+              the character’s hand Skeletal Mesh."
       documentOrder:
         zh: 9
         en: 10
@@ -351,12 +433,12 @@ blocks:
       richText:
         zh:
           - type: text
-            text: BPC_控件交互组件_射线，需要绑定一个输入，用于触发鼠标左键按压，布尔控制按下左键和松开左键
+            text: 为 BPC_控件交互组件_射线 绑定输入并调用「设置按压」。用布尔值控制模拟鼠标左键的按下和松开。
         en:
           - type: text
-            text: Bind an input to AC_WidgetInteraction_Ray to simulate the left mouse
-              button. Use a Boolean value to control pressing and releasing the
-              button.
+            text: Bind an input to AC_WidgetInteraction_Ray and call OnSetPress. Use a
+              Boolean to control when the simulated left mouse button is pressed
+              or released.
       documentOrder:
         zh: 21
         en: 22
@@ -435,23 +517,26 @@ blocks:
       richText:
         zh:
           - type: text
-            text: |-
-              添加你的需要显示UI Actor
-              在构造脚本，拖出BPC_UI显示组件，连接编辑器调试节点，可在编辑器里观察设置位置（手势模式不太好定位，需要运行时预览效果）
-              设置箭头位置，箭头是触发器，看向箭头才会触发UI,一般箭头位置在掌心
+            text: 指定包含要显示的 UI 的 Actor 类。
+          - type: hardBreak
+          - type: text
+            text: 在构造脚本中调用 BPC_UI显示组件 的「编辑器调试」节点，可在编辑器中预览放置位置。手势模式下的位置以运行时预览为准。
+          - type: hardBreak
+          - type: text
+            text: 设置检测箭头的位置，通常放在掌心附近。视线朝向箭头并满足检测条件时，UI 才会显示。
         en:
           - type: text
-            text: Assign the Actor containing the UI you want to display.
+            text: Assign the Actor class that contains the UI you want to display.
           - type: hardBreak
           - type: text
-            text: In the Construction Script, drag out AC_UIDisplay and connect its
-              OnEditorDebug node to preview the configured position in the
-              editor. Positioning is harder in hand-tracking mode, so preview
-              the result at runtime.
+            text: Call OnEditorDebug on AC_UIDisplay in the Construction Script to preview
+              its placement. For hand tracking, check the final placement at
+              runtime.
           - type: hardBreak
           - type: text
-            text: "Set ArrowLocation. The arrow acts as the trigger reference: looking
-              toward it triggers the UI. It is usually placed at the palm."
+            text: Position the detection arrow, usually near the palm. The UI appears when
+              the viewer looks toward the arrow and the detection conditions are
+              met.
       documentOrder:
         zh: 28
         en: 29

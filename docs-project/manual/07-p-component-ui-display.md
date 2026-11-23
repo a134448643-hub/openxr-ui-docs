@@ -40,10 +40,10 @@ Specifies the Actor Blueprint class containing the target UI. Select the Actor c
 <!-- DOCBLOCK id="review-99" type="text" -->
 <!-- ZH -->
 设置箭头位置（变换）
-设置显示检测参考箭头的相对变换。箭头作为检测参考，通常放在掌心附近；
+设置检测参考箭头的相对变换，通常将箭头放在掌心附近。
 <!-- EN -->
 ArrowLocation (Transform)
-Sets the relative transform of the reference arrow used for display detection. The arrow acts as the detection reference and is usually placed near the palm.
+Sets the relative transform of the detection arrow. The arrow is usually placed near the palm.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-100" type="text" -->

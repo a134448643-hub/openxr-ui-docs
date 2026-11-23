@@ -66,11 +66,11 @@ blocks:
             text: 1. 准备目标 UE VR 模板项目，并导入所需资源。
           - type: hardBreak
           - type: text
-            text: "2. 按原文提供的配置文件设置 "
+            text: "2. 使用下方的配置文件设置 "
           - type: text
+            text: VRUI 碰撞通道与响应规则
             marks:
               - type: bold
-            text: VRUI 碰撞通道与响应规则
           - type: text
             text: 。
           - type: hardBreak
@@ -81,9 +81,10 @@ blocks:
             text: 4. 运行目标项目，分别检查左右手的 UI 交互和按钮响应。
           - type: hardBreak
           - type: text
-            text: 碰撞预设文件
+            text: 碰撞预设文件：
           - type: hardBreak
           - type: text
+            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
             marks:
               - type: link
                 attrs:
@@ -92,7 +93,6 @@ blocks:
                   rel: noopener noreferrer nofollow
                   class: null
                   title: null
-            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
         en:
           - type: text
             text: 1. Prepare the target UE VR Template project and migrate the required
@@ -100,7 +100,7 @@ blocks:
           - type: hardBreak
           - type: text
             text: 2. Configure the VRUI collision channel and response rules using the
-              configuration file provided in the original documentation.
+              configuration file linked below.
           - type: hardBreak
           - type: text
             text: 3. Restart the target project and confirm that the new trace channel
@@ -114,6 +114,7 @@ blocks:
             text: "Collision preset file:"
           - type: hardBreak
           - type: text
+            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
             marks:
               - type: link
                 attrs:
@@ -122,7 +123,6 @@ blocks:
                   rel: noopener noreferrer nofollow
                   class: null
                   title: null
-            text: https://drive.google.com/file/d/1jaX7la-9HJ1zJZ9v6rJ5z97edTT0YeuN/view?usp=drive_link
       documentOrder:
         zh: 2
         en: 3

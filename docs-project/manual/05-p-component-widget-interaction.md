@@ -40,10 +40,10 @@ Sets the effective detection distance for touching UI with a finger. This intera
 <!-- DOCBLOCK id="review-78" type="text" -->
 <!-- ZH -->
 指针索引（整数）
-设置当前交互指针的编号，用于区分不同的交互指针，组件类别做了编号命名重叠的机制，会获取角色所有控件交互组件自动排序。
+区分不同的交互指针。组件会获取角色身上的所有控件交互组件并自动分配索引，避免编号重复。
 <!-- EN -->
 PointerIndex (Integer)
-Sets the interaction pointer's index to distinguish it from other pointers. The component includes a mechanism to avoid duplicate indices: it gathers all widget interaction components on the character and orders them automatically.
+Distinguishes interaction pointers. The component gathers the character’s widget interaction components and assigns indices automatically to avoid duplicates.
 <!-- /DOCBLOCK -->
 
 <!-- DOCBLOCK id="review-79" type="text" -->

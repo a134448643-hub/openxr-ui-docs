@@ -34,12 +34,12 @@ blocks:
             text: 旧版本迁移节点修复
         en:
           - type: text
-            text: Migrating Older Projects and Fixing Nodes
             marks:
               - type: textStyle
                 attrs:
                   fontSize: 30px
                   color: null
+            text: Migrating Older Projects and Fixing Nodes
       documentOrder:
         zh: 0
         en: 1
@@ -60,20 +60,18 @@ blocks:
       richText:
         zh:
           - type: text
-            text: 建议使用UE5.66及以上版本开发，由于虚幻引擎VR模板版本更迭的原因，VR模板变更，节点被弃用。
+            text: 建议使用 UE 5.6 或更高版本进行开发。随 UE 版本变更，VR 模板和部分蓝图节点也会更新。
           - type: hardBreak
           - type: text
-            text: 如果你使用低版本的项目5.3导入高版本例如5.5/5.7，BPC_OpenXR手势会报错，5.3的节点被启用
+            text: 将 UE 5.3 工程迁移至 UE 5.5 或 5.7 时，旧版手部追踪节点可能导致 BPC_OpenXR手势 编译报错。
         en:
           - type: text
-            text: The source recommends UE 5.66 or later for development. Changes between
-              Unreal Engine VR Template versions have replaced template content
-              and deprecated nodes.
+            text: UE 5.6 or later is recommended for development. The VR Template and some
+              Blueprint nodes change between Unreal Engine versions.
           - type: hardBreak
           - type: text
-            text: When a project made in an older version such as 5.3 is migrated to a newer
-              version such as 5.5 or 5.7, AC_OpenXRGesture may report errors
-              involving nodes from 5.3.
+            text: When migrating a UE 5.3 project to UE 5.5 or 5.7, older hand-tracking
+              nodes may cause compilation errors in AC_OpenXRGesture.
       documentOrder:
         zh: 2
         en: 3
@@ -110,35 +108,53 @@ blocks:
           - type: text
             text: "1. 打开 "
           - type: text
-            marks:
-              - type: bold
             text: BPC_OpenXR手势
-          - type: text
-            text: ，定位编译错误所在的手部追踪节点。
-          - type: hardBreak
-          - type: text
-            text: "2. 原文给出的修复方案是改用 "
-          - type: text
             marks:
               - type: bold
-            text: GetHandTrackingState
           - type: text
-            text: ，并重新连接报错引脚。
+            text: ，定位编译报错的手部追踪节点。
           - type: hardBreak
           - type: text
-            text: 3. 完成后编译蓝图，运行项目，检查左右手数据、骨骼姿态和 UI 交互。
+            text: "2. 将旧的 "
+          - type: text
+            text: Get
+            marks:
+              - type: bold
+          - type: text
+            text: " Motion Controller Data 节点替换为 Get "
+          - type: text
+            text: Hand
+            marks:
+              - type: bold
+          - type: text
+            text: " "
+          - type: text
+            text: Tracking
+            marks:
+              - type: bold
+          - type: text
+            text: " "
+          - type: text
+            text: State
+            marks:
+              - type: bold
+          - type: text
+            text: ，再重新连接受影响的引脚。
+          - type: hardBreak
+          - type: text
+            text: 3. 编译蓝图并运行项目，检查左右手数据、骨骼姿态和 UI 交互。
         en:
           - type: text
-            text: 1. Open AC_OpenXRGesture and locate the hand-tracking nodes causing
-              compilation errors.
+            text: 1. Open AC_OpenXRGesture and locate the hand-tracking node reported by the
+              compiler.
           - type: hardBreak
           - type: text
-            text: 2. The original documentation recommends switching to GetHandTrackingState
-              and reconnecting the affected pins.
+            text: 2. Replace Get Motion Controller Data with Get Hand Tracking State and
+              reconnect the affected pins.
           - type: hardBreak
           - type: text
-            text: 3. Compile the Blueprint, run the project, and check left- and right-hand
-              data, bone poses, and UI interaction.
+            text: 3. Compile the Blueprint and run the project to check tracking data for
+              both hands, bone poses, and UI interaction.
       documentOrder:
         zh: 5
         en: 6
@@ -173,6 +189,6 @@ blocks:
         en: []
         zh: []
       documentOrder:
-        zh: 8
-        en: 9
+        en: 8
+        zh: 9
     attachments: []
