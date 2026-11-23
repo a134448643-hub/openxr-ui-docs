@@ -5,7 +5,6 @@ blockOrder:
   - review-13-original
   - review-14
   - review-15
-  - review-15-original
   - review-16
   - review-18
   - review-19
@@ -14,7 +13,6 @@ blockOrder:
   - review-21
   - review-22
   - review-23
-  - review-24
 blocks:
   review-12:
     type: text
@@ -75,7 +73,7 @@ blocks:
             text: 本次更新（2026-11-24）
         en:
           - type: text
-            text: November 22, 2026 Update
+            text: November 24, 2026 Update
       documentOrder:
         zh: 2
         en: 3
@@ -190,30 +188,6 @@ blocks:
         zh: 8
         en: 9
     attachments: []
-  review-15-original:
-    type: text
-    isFloating: false
-    style:
-      isSectionHeader: false
-      paragraphTypes:
-        zh:
-          type: paragraph
-        en:
-          type: paragraph
-      paragraphPresence:
-        zh: true
-        en: true
-      richText:
-        zh:
-          - type: text
-            text: 优化与重置
-        en:
-          - type: text
-            text: Improvements and Reworked Features
-      documentOrder:
-        zh: 10
-        en: 11
-    attachments: []
   review-16:
     type: text
     isFloating: false
@@ -256,8 +230,8 @@ blocks:
           - type: text
             text: "- Added the ability to grab and move UI panels."
       documentOrder:
-        zh: 12
-        en: 13
+        zh: 11
+        en: 12
     attachments: []
   review-18:
     type: text
@@ -283,8 +257,8 @@ blocks:
           - type: text
             text: Before You Begin
       documentOrder:
-        zh: 14
-        en: 15
+        zh: 13
+        en: 14
     attachments: []
   review-19:
     type: text
@@ -331,8 +305,8 @@ blocks:
               capabilities. When troubleshooting recognition issues, first
               confirm that the device provides stable hand-tracking data.
       documentOrder:
-        zh: 16
-        en: 17
+        zh: 15
+        en: 16
     attachments: []
   review-20:
     type: text
@@ -355,8 +329,8 @@ blocks:
           - type: text
             text: "Prerequisites Video:"
       documentOrder:
-        zh: 18
-        en: 19
+        zh: 17
+        en: 18
     attachments: []
   review-20-original:
     type: text
@@ -374,36 +348,28 @@ blocks:
       richText:
         zh:
           - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: null
-                  color: "#dc2626"
-            text: 项目
-          - type: text
-            text: 使用
+            text: 项目使用前置条件视频，
           - type: text
             marks:
               - type: textStyle
                 attrs:
                   fontSize: null
                   color: "#dc2626"
-            text: 前置条件视频（新版
-          - type: text
-            text: 视频
-          - type: text
-            marks:
-              - type: textStyle
-                attrs:
-                  fontSize: null
-                  color: "#dc2626"
-            text: 待更新）
+            text: 视频为旧版本视频，当前已经支持SteamVR，开启手势设置的相关内容依然适用！
         en:
           - type: text
-            text: Project Prerequisites Video (updated video pending)
+            text: "Project prerequisites video. "
+          - type: text
+            text: The video shows an older version. SteamVR is now supported, and the
+              instructions for enabling hand tracking still apply.
+            marks:
+              - type: textStyle
+                attrs:
+                  fontSize: null
+                  color: "#dc2626"
       documentOrder:
-        zh: 20
-        en: 21
+        zh: 19
+        en: 20
     attachments: []
   review-21:
     type: text
@@ -422,17 +388,88 @@ blocks:
         zh:
           - type: text
             marks:
-              - type: textStyle
+              - type: link
                 attrs:
-                  fontSize: null
-                  color: "#dc2626"
+                  href: https://www.youtube.com/watch?v=pUs-mc1Vdtw
+                  target: _blank
+                  rel: noopener noreferrer nofollow
+                  class: null
+                  title: null
             text: https://www.youtube.com/watch?v=pUs-mc1Vdtw
+          - type: hardBreak
+          - type: text
+            text: "测试设备为 "
+          - type: text
+            marks:
+              - type: bold
+            text: Quest 3
+          - type: text
+            text: " 和 "
+          - type: text
+            marks:
+              - type: bold
+            text: PICO 4 Pro
+          - type: text
+            text: "。PC 串流平台为 "
+          - type: text
+            marks:
+              - type: bold
+            text: Meta Horizon Link、SteamVR
+          - type: text
+            text: " 和 "
+          - type: text
+            marks:
+              - type: bold
+            text: PICO 互联
+          - type: text
+            text: 。
         en:
           - type: text
+            marks:
+              - type: link
+                attrs:
+                  href: https://www.youtube.com/watch?v=pUs-mc1Vdtw
+                  target: _blank
+                  rel: noopener noreferrer nofollow
+                  class: null
+                  title: null
             text: https://www.youtube.com/watch?v=pUs-mc1Vdtw
+          - type: hardBreak
+          - type: text
+            text: "Tested on "
+          - type: text
+            text: Quest 3
+            marks:
+              - type: bold
+          - type: text
+            text: " and "
+          - type: text
+            text: PICO 4 Pro
+            marks:
+              - type: bold
+          - type: text
+            text: ". PC streaming was tested with "
+          - type: text
+            text: Meta Horizon Link
+            marks:
+              - type: bold
+          - type: text
+            text: ", "
+          - type: text
+            text: SteamVR
+            marks:
+              - type: bold
+          - type: text
+            text: ", and "
+          - type: text
+            text: PICO Connect
+            marks:
+              - type: bold
+          - type: text
+            text: .
       documentOrder:
-        zh: 22
-        en: 23
+        zh: 21
+        en: 22
     attachments: []
   review-22:
     type: text
@@ -458,8 +495,8 @@ blocks:
           - type: text
             text: Changing the Hand Model
       documentOrder:
-        zh: 24
-        en: 25
+        zh: 23
+        en: 24
     attachments: []
   review-23:
     type: text
@@ -504,55 +541,6 @@ blocks:
               GestureRelativeOffset, GestureRelativeRotation, and
               GestureBoneRotationCalibration.
       documentOrder:
-        zh: 26
-        en: 27
-    attachments: []
-  review-24:
-    type: text
-    isFloating: false
-    style:
-      isSectionHeader: false
-      paragraphTypes:
-        zh:
-          type: paragraph
-        en:
-          type: paragraph
-      paragraphPresence:
-        zh: true
-        en: true
-      richText:
-        zh:
-          - type: text
-            text: "测试设备为 "
-          - type: text
-            marks:
-              - type: bold
-            text: Quest 3
-          - type: text
-            text: " 和 "
-          - type: text
-            marks:
-              - type: bold
-            text: PICO 4 Pro
-          - type: text
-            text: "。PC 串流平台为 "
-          - type: text
-            marks:
-              - type: bold
-            text: Meta Horizon Link、SteamVR
-          - type: text
-            text: " 和 "
-          - type: text
-            marks:
-              - type: bold
-            text: PICO 互联
-          - type: text
-            text: 。
-        en:
-          - type: text
-            text: Tested on Quest 3 and PICO 4 Pro. PC streaming was tested with Meta
-              Horizon Link, SteamVR, and PICO Connect.
-      documentOrder:
-        zh: 28
-        en: 29
+        zh: 25
+        en: 26
     attachments: []
